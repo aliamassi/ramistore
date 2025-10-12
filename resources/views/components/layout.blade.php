@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+{{--    <meta name="csrf-token" content="{{ csrf_token() }}">--}}
     <title>Café Menu</title>
 
     {{-- If you use Vite + Tailwind in Laravel, keep this and remove the CDN below --}}
@@ -11,7 +11,7 @@
 
     {{-- Quick start (remove in production if using Vite) --}}
     {{--    <script src="https://cdn.tailwindcss.com"></script>--}}
-    @vite(['resources/js/app.js','resources/css/app.css'])
+{{--    @vite(['resources/js/app.js','resources/css/app.css'])--}}
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
