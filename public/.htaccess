@@ -1,3 +1,10 @@
+# --- Nuxt SSG under /frontend ---
+RewriteCond %{REQUEST_URI} ^/frontend/ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^frontend(?:/.*)?$ /frontend/index.html [L]
+# --- end Nuxt block ---
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
