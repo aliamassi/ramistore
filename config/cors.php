@@ -19,7 +19,8 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        'http://store.reallyvoice.com:3000',
+        'http://store.reallyvoice.com',
+        'https://store.reallyvoice.com',
     ],
 
     'allowed_origins_patterns' => [],
