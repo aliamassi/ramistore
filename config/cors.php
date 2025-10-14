@@ -19,8 +19,8 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        'http://store.reallyvoice.com',
         'https://store.reallyvoice.com',
+        'https://ramistore.ktel-uae.com',
     ],
 
     'allowed_origins_patterns' => [],
