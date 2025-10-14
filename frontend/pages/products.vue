@@ -647,7 +647,7 @@ const duplicateCategory = () => {
       />
     </div>
     <div v-if="categoryCount == 0" class="d-flex justify-center">
-      <v-btn
+      <v-btn @click="handleAddCategory"
           prepend-icon="bx-plus"
       >
         <template v-slot:prepend>
