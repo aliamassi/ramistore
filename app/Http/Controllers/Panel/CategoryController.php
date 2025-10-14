@@ -13,7 +13,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::with('products')->latest()->paginate(20);
+        $user = auth()->user();
+        $categories = $user->categories()->with('products')->latest()->paginate(20);
         return response()->json([
             'status' => true,
             'categories' => $categories

@@ -42,4 +42,8 @@ class Admin extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function categories(){
+        return $this->hasMany(Category::class,'admin_id');
+    }
 }
