@@ -30,6 +30,7 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required'
         ]);
+        $request['admin_id'] = auth()->user()->id;
         Category::create($request->all());
         return response()->json([
             'status' => true,

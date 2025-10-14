@@ -14,9 +14,7 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Admin::class)
-                ->constrained()
-                ->cascadeOnDelete();
+            $table->unsignedBigInteger('admin_id');
             $table->text('name');
             $table->timestamps();
         });
