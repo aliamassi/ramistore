@@ -1,6 +1,6 @@
-<IfModule mod_rewrite.c>
-  RewriteEngine On
-  RewriteBase /
-  RewriteRule ^(.*)$ http://localhost:3000/$1 [P,L]
-  RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
-</IfModule>
+RewriteEngine On
+RewriteBase /frontend/
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /frontend/index.html [L]
