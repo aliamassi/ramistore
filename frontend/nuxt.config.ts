@@ -18,9 +18,9 @@ export default defineNuxtConfig({
 
     runtimeConfig: {
         public: {
-            apiBase: 'http://store.reallyvoice.com',
+            apiBase: 'https://store.reallyvoice.com',
             laravelSanctum: {
-                apiUrl: 'http://store.reallyvoice.com',
+                apiUrl: 'https://store.reallyvoice.com',
                 authMode: 'cookie',
                 sanctumEndpoints: {
                     csrf: '/sanctum/csrf-cookie',
