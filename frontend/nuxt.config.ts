@@ -19,8 +19,10 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             apiBase: 'https://ramistore.ktel-uae.com',
+            // apiBase: 'http://localhost:8000',
             laravelSanctum: {
                 apiUrl: 'https://ramistore.ktel-uae.com',
+                // apiUrl: 'http://localhost:8000',
                 authMode: 'cookie',
                 sanctumEndpoints: {
                     csrf: '/sanctum/csrf-cookie',
@@ -39,6 +41,7 @@ export default defineNuxtConfig({
 
     app: {
         baseURL: '/frontend/',
+        // baseURL: '/',
         head: {
             titleTemplate: 'Rami Store Panel',
             title: 'Store',

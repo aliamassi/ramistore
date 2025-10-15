@@ -13,11 +13,17 @@ class MenuController extends Controller
 
     public function index(Request $request)
     {
+
         $cart = $this->getCart();
         $total = $this->cartTotal($cart);
 
         $waLink = $this->buildWhatsappLink($cart, $total);
-        $categories = Category::with('products')->get();
+        if($request->id){
+            $categories = Category::where('admin_id',$request->id)->with('products')->get();
+        }else{
+            $categories = Category::with('products')->get();
+        }
+
         return view('menu', [
             'categories' => $categories,
             'cart' => $cart,

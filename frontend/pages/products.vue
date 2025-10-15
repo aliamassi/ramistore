@@ -1,4 +1,3 @@
-
 <script setup lang="ts">
 // definePageMeta({ middleware: ['require-auth'] })
 // definePageMeta({ middleware: ['require-auth'] })
@@ -6,7 +5,74 @@ import {ref, computed, watch, onMounted} from 'vue'
 import {useProduct} from '~/composables/useProduct'
 import ProductEditDrawer from '~/components/ProductEditDrawer.vue'
 import DeleteConfirmDialog from '~/components/DeleteConfirmDialog.vue'
+import {useSanctumFetch} from "#imports";
+const $sf = useSanctumFetch<AnyObj>
+import ImageUploadDialog from '@/components/ImageUploadDialog.vue'
 
+const uploaderRef = ref<InstanceType<typeof ImageUploadDialog> | null>(null)
+
+const logoPreview = ref<string>('')     // preview URL
+const logoFile    = ref<File | null>(null)
+
+
+const copying = ref(false)
+const copied  = ref(false)
+
+async function copyDomain(domain) {
+  const text = domain
+  console.log('domain',text);
+  if (!text) return
+
+  copying.value = true
+  try {
+    // Prefer modern API (works on https or localhost)
+    await navigator.clipboard.writeText(text)
+  } catch {
+    // Fallback for http origins
+    const ta = document.createElement('textarea')
+    ta.value = text
+    ta.style.position = 'fixed'
+    ta.style.opacity = '0'
+    document.body.appendChild(ta)
+    ta.select()
+    document.execCommand('copy')
+    document.body.removeChild(ta)
+  } finally {
+    copying.value = false
+    copied.value = true
+    setTimeout(() => (copied.value = false), 1200)
+  }
+}
+
+function openImagePicker() {
+  uploaderRef.value?.pick()
+}
+
+function onImageSelected(p: {
+  file: File, url: string, width: number, height: number,
+  type: string, fileName: string, size: number
+}) {
+  logoPreview.value = p.url
+  logoFile.value = p.file
+}
+
+// Your existing upload function
+async function uploadLogo(file?: File) {
+  const toSend = file ?? logoFile.value
+  if (!toSend) return
+  const fd = new FormData()
+  fd.append('logo', toSend, toSend.name || 'logo.png')
+  // Example:
+  // await $fetch('/api/upload', { method: 'POST', body: fd })
+  const res = await $sf('/panel/admin/upload', {
+    method: 'POST',
+    // IMPORTANT: do not set Content-Type for FormData
+    body: fd,
+  })
+  logoImage.value = res.url;
+}
+
+const cfg = useRuntimeConfig()
 // Props
 const props = defineProps({
   categoryId: {
@@ -40,7 +106,7 @@ const {
   fetchProductImages,
   duplicateProduct
 } = useProduct()
-const { user } = useSanctum()
+const {user} = useSanctum()
 
 // Local state
 const expanded = ref(true)
@@ -51,7 +117,7 @@ const selectedProduct = ref(null)
 
 
 const bannerImage = ref('https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=1200')
-const logoImage = ref('') // Set to empty for placeholder
+const logoImage = ref() // Set to empty for placeholder
 const isFavorite = ref(false)
 const isActive = ref(true)
 
@@ -160,6 +226,7 @@ const handleDuplicateProduct = async (id) => {
 }
 
 const showDeleteDialog = ref(false)
+
 const deleteDialog = ref({
   title: 'Delete Product',
   message: 'Are you sure you want to delete this product? This action cannot be undone.',
@@ -176,6 +243,11 @@ const handleDeleteProduct = (id) => {
     itemType: 'product'
   }
   showDeleteDialog.value = true
+}
+const showCropDialog = ref(false)
+const handleAddCropImage = () => {
+
+  showCropDialog.value = true
 }
 
 const handleDeleteCategory = (id) => {
@@ -250,6 +322,7 @@ const duplicateCategory = () => {
             color="white"
             class="ma-4 text-none"
             elevation="2"
+            @click="copyDomain(user.domain)"
         >
           Get your .com domain
         </v-btn>
@@ -306,6 +379,13 @@ const duplicateCategory = () => {
                   cover
                   height="100%"
               ></v-img>
+              <v-img
+                  v-else-if="user?.logo"
+                  :src="user?.logo"
+                  cover
+                  height="100%"
+              ></v-img>
+
               <div v-else class="d-flex align-center justify-center fill-height">
                 <i class='bx bx-store' style="font-size: 64px; color: #9e9e9e;"></i>
               </div>
@@ -317,6 +397,7 @@ const duplicateCategory = () => {
                   size="small"
                   class="logo-camera-btn"
                   elevation="3"
+                  @click="openImagePicker"
               >
                 <i class='bx bx-camera' style="font-size: 18px;"></i>
               </v-btn>
@@ -327,6 +408,7 @@ const duplicateCategory = () => {
           <v-col class="ml-4">
             <div class="text-caption text-grey-darken-1 mb-1">Business</div>
             <v-text-field
+                v-model="user.name"
                 variant="underlined"
                 density="compact"
                 hide-details
@@ -384,7 +466,7 @@ const duplicateCategory = () => {
     <div v-if="categoryCount > 0">
       <div class="mb-4">
         <v-row>
-          <v-col cols="auto" >
+          <v-col cols="auto">
             <v-menu>
               <template v-slot:activator="{ props }">
                 <v-btn v-bind="props"
@@ -424,7 +506,7 @@ const duplicateCategory = () => {
                 align-tabs="center"
                 color="deep-purple-accent-4"
             >
-              <v-tab v-for="category in categories" :value="category.id">{{category.name}}</v-tab>
+              <v-tab v-for="category in categories" :value="category.id">{{ category.name }}</v-tab>
             </v-tabs>
           </v-col>
         </v-row>
@@ -457,7 +539,7 @@ const duplicateCategory = () => {
 
             <!-- Product Count Badge -->
             <v-col cols="auto" class="mr-3">
-              <v-chip variant="outlined" size="large">
+              <v-chip variant="outlined" size="small">
                 {{ category.products ? category.products.length : 0 }}
               </v-chip>
             </v-col>
@@ -467,9 +549,9 @@ const duplicateCategory = () => {
               <v-btn
                   color="primary"
                   variant="outlined"
-                  size="large"
+                  size="small"
                   rounded="lg"
-                  class="text-none px-6"
+                  class="text-none"
                   @click="handleAddProduct(category.id)"
                   :loading="loading"
               >
@@ -645,10 +727,29 @@ const duplicateCategory = () => {
           @confirm="confirmDelete"
           @cancel="cancelDelete"
       />
+      <ClientOnly>
+        <ImageUploadDialog
+            ref="uploaderRef"
+            title="Upload product image"
+            accept="image/*"
+            :maxSizeMB="10"
+            @selected="onImageSelected"
+        >
+          <!-- 👇 Your UPLOAD BUTTON now lives INSIDE the dialog -->
+          <template #actions="{ file, close, useImage }">
+            <v-btn variant="text" @click="close()">Cancel</v-btn>
+            <v-btn color="tonal" :disabled="!file" @click="useImage()">Use image</v-btn>
+            <v-btn color="primary" :disabled="!file" @click="uploadLogo(file)">
+              Upload
+            </v-btn>
+          </template>
+        </ImageUploadDialog>
+      </ClientOnly>
+
     </div>
     <div v-if="categoryCount == 0" class="d-flex justify-center">
       <v-btn @click="handleAddCategory"
-          prepend-icon="bx-plus"
+             prepend-icon="bx-plus"
       >
         <template v-slot:prepend>
           <v-icon></v-icon>
@@ -659,7 +760,6 @@ const duplicateCategory = () => {
     </div>
   </v-container>
 </template>
-
 
 
 <style scoped>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Panel\AdminController;
 use App\Http\Controllers\Panel\CategoryController;
 use App\Http\Controllers\Panel\ProductController;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::post('product/{product}/images', [ProductController::class,'uploadImage']);
     Route::get('product/{product}/images', [ProductController::class,'getImages']);
     Route::apiResource('category', CategoryController::class);
+    Route::post('admin/upload', [AdminController::class,'uploadImage']);
 });
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //

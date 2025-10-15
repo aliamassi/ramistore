@@ -15,7 +15,7 @@ const loading = ref(false)
 const alertMessage = ref('')
 const alertType = ref<'error' | 'success'>('error')
 
-const { login, isLoggedIn, errors, processing } = useSanctum()
+const { login, isLoggedIn } = useSanctum()
 const alertMsg = ref('')
 
 
