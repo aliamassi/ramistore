@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -16,10 +17,11 @@ class MenuController extends Controller
 
         $cart = $this->getCart();
         $total = $this->cartTotal($cart);
-
+        $user = null;
         $waLink = $this->buildWhatsappLink($cart, $total);
         if($request->id){
             $categories = Category::where('admin_id',$request->id)->with('products')->get();
+            $user = Admin::find($request->id);
         }else{
             $categories = Category::with('products')->get();
         }
@@ -29,6 +31,7 @@ class MenuController extends Controller
             'cart' => $cart,
             'cartTotal' => $total,
             'waLink' => $waLink,
+            'user' => $user,
         ]);
     }
 

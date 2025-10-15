@@ -13,7 +13,7 @@
     {{--    <script src="https://cdn.tailwindcss.com"></script>--}}
 {{--    @vite(['resources/js/app.js','resources/css/app.css'])--}}
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
 
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <style>
@@ -88,7 +88,7 @@
         <div class="max-w-7xl mx-auto  py-3 flex items-center justify-between">
             <!-- Logo -->
             <a href="{{ url('/') }}" class="flex items-center">
-                <img style="height: 80px;" src="{{ asset('images/logo.jpeg') }}" alt="Logo" class="h-10 w-auto">
+                <img style="height: 80px;" src="{{ !empty($user->logo)?$user->logo:asset('/logo.png') }}" alt="Logo" class="h-10 w-auto">
                 {{--                <span class="ml-2 text-xl font-bold text-gray-700">Scoop</span>--}}
             </a>
         </div>

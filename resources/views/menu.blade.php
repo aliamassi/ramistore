@@ -1,3 +1,3 @@
-<x-layout :categories="$categories" :cart="$cart" :cartTotal="$cartTotal" :waLink="$waLink">
+<x-layout :categories="$categories" :user="$user" :cart="$cart" :cartTotal="$cartTotal" :waLink="$waLink">
 
 </x-layout>
