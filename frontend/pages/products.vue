@@ -322,7 +322,8 @@ const duplicateCategory = () => {
             color="white"
             class="ma-4 text-none"
             elevation="2"
-            @click="copyDomain(user.domain)"
+            :href="user?.domain"
+            target="_blank"
         >
           Get your .com domain
         </v-btn>

@@ -16,19 +16,18 @@ const alertMessage = ref('')
 const alertType = ref<'error' | 'success'>('error')
 
 const { login, isLoggedIn } = useSanctum()
-const alertMsg = ref('')
 
 
 const handleLogin = async () => {
   loading.value = true
-  alertMsg.value = ''
+  alertMessage.value = ''
   try {
     await login({ email: email.value, password: password.value, remember: remember.value })
     if (isLoggedIn) {                 // 👈 no `.value`
       await navigateTo('/products')   // or '/'
     }
   } catch (e: any) {
-    alertMsg.value = e?.data?.message || 'Login failed'
+    alertMessage.value = e?.data?.message || 'Login failed'
   } finally {
     loading.value = false
   }

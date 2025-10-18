@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Front\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Front\MenuController;
 
@@ -45,7 +46,8 @@ Route::get('/store-data',function(){
     }
 
 });
-Route::get('/', fn () => redirect()->route('menu.index'));
+Route::get('/', [HomeController::class, 'index'])->name('home');
+//Route::get('/', fn () => redirect()->route('menu.index'));
 Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 
 Route::post('/cart/add', [MenuController::class, 'add'])->name('cart.add');
