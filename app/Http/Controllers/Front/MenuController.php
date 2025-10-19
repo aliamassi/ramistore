@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
@@ -25,6 +26,7 @@ class MenuController extends Controller
         }else{
             $categories = Category::with('products')->get();
         }
+        $setting = Setting::all()->keyBy('key');
 
         return view('menu', [
             'categories' => $categories,
@@ -32,6 +34,7 @@ class MenuController extends Controller
             'cartTotal' => $total,
             'waLink' => $waLink,
             'user' => $user,
+            'setting' => $setting,
         ]);
     }
 

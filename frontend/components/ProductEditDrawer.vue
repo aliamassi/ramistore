@@ -309,7 +309,7 @@ console.log('productData', props.productData);
 const emit = defineEmits(['update:modelValue', 'save'])
 
 const drawer = ref(props.modelValue)
-let priceType = ref('variants')
+let priceType = ref('simple')
 
 const existingImages = ref(productImages);
 const product = ref({

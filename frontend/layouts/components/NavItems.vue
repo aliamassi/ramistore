@@ -37,6 +37,21 @@ import VerticalNavLink from "@layouts/components/VerticalNavLink.vue";
     />
   </VerticalNavGroup>
 
+  <VerticalNavGroup
+    :item="{
+      title: 'Settings',
+      icon: 'bx-cog',
+    }"
+  >
+    <VerticalNavLink
+      :item="{
+        title: 'Business Information',
+        to: '/business-settings',
+        // href: '/order-settings',
+      }"
+    />
+  </VerticalNavGroup>
+
 <!--  <VerticalNavGroup-->
 <!--    :item="{-->
 <!--      title: 'Front Pages',-->

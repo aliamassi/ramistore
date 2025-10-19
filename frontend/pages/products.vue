@@ -1,14 +1,16 @@
 <script setup lang="ts">
 // definePageMeta({ middleware: ['require-auth'] })
 // definePageMeta({ middleware: ['require-auth'] })
-import {ref, computed, watch, onMounted} from 'vue'
+import {ref, computed, watch, onMounted, reactive} from 'vue'
 import {useProduct} from '~/composables/useProduct'
 import ProductEditDrawer from '~/components/ProductEditDrawer.vue'
 import DeleteConfirmDialog from '~/components/DeleteConfirmDialog.vue'
 import {useSanctumFetch} from "#imports";
 const $sf = useSanctumFetch<AnyObj>
 import ImageUploadDialog from '@/components/ImageUploadDialog.vue'
-
+const setting = reactive({
+  currency: 'JOD',
+})
 const uploaderRef = ref<InstanceType<typeof ImageUploadDialog> | null>(null)
 
 const logoPreview = ref<string>('')     // preview URL
@@ -130,10 +132,22 @@ watch(error, (newError) => {
 
 onMounted(async () => {
   await fetchCategories()
+  await fetchSettings()
   console.log(categoryCount.value)
 })
 // Methods
+const fetchSettings = async () => {
+  loading.value = true;
+  error.value = null
+  try {
+    const res = await $sf('/panel/settings?key=business_settings')
+    setting.currency = res.settings.currency.value
+  } catch (e) {
 
+  } finally {
+    loading.value = false
+  }
+}
 const toggleFavorite = () => {
   isFavorite.value = !isFavorite.value
 }
@@ -652,7 +666,7 @@ const duplicateCategory = () => {
                   <!-- Price -->
                   <v-col cols="auto" class="mr-3">
                     <div class="text-h6 font-weight-semibold">
-                      {{ product.currency || 'JD' }} {{ product.price }}
+                      {{ setting.currency || 'JD' }} {{ product.price }}
                     </div>
                   </v-col>
 
