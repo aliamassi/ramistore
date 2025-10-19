@@ -26,7 +26,7 @@ const form = reactive({
 })
 
 const loading = ref(false)
-const error = ref<string | null>(null)
+// const error = ref<string | null>(null)
 
 
 // Simple rules
@@ -35,7 +35,7 @@ const req = (v: any) => (!!v && String(v).trim().length > 0) || 'Required'
 
 const onSave = async () => {
   loading.value = true;
-  error.value = null
+  // error.value = null
   try {
     const payload = {
       business_name: form.businessName,
@@ -50,8 +50,8 @@ const onSave = async () => {
 
     setAlert?.('Product added successfully!', 'success')
   } catch (e) {
-    error.value = e?.message || 'Failed to save'
-    setAlert?.(error.value, 'error')
+    // error.value = e?.message || 'Failed to save'
+    // setAlert?.(error.value, 'error')
   } finally {
     loading.value = false
   }
@@ -59,15 +59,15 @@ const onSave = async () => {
 
 const fetchSettings = async () => {
   loading.value = true;
-  error.value = null
+  // error.value = null
   try {
     const res = await $sf('/panel/settings?key=business_settings')
     settings.value = res.settings
     currencies.value = res.currency
     form.currency = res.settings.currency.value
   } catch (e) {
-    error.value = e?.message || 'Failed to fetch settings'
-    setAlert?.(error.value, 'error')
+    // error.value = e?.message || 'Failed to fetch settings'
+    // setAlert?.(error.value, 'error')
 
   } finally {
     loading.value = false
@@ -123,7 +123,7 @@ onMounted(async () => {
           <VBtn type="submit" color="primary" :loading="loading">
             Save
           </VBtn>
-          <span v-if="error" class="text-error text-body-2">{{ error }}</span>
+<!--          <span v-if="error" class="text-error text-body-2">{{ error }}</span>-->
         </div>
       </VForm>
     </VCardText>
