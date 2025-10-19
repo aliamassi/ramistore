@@ -127,7 +127,7 @@
 
                     <div class="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
                         @foreach ($category->products as $item)
-                            <x-tab-content :item="$item"></x-tab-content>
+                            <x-tab-content :setting="$setting" :item="$item"></x-tab-content>
                         @endforeach
                     </div>
                 </div>

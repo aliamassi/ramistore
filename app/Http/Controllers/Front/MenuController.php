@@ -27,7 +27,6 @@ class MenuController extends Controller
             $categories = Category::with('products')->get();
         }
         $setting = Setting::all()->keyBy('key');
-
         return view('menu', [
             'categories' => $categories,
             'cart' => $cart,
