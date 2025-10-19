@@ -195,7 +195,7 @@
                     <div class="border-t mt-4 pt-4">
                         <div class="flex items-center justify-between text-lg font-semibold">
                             <span>Total</span>
-                            <span>{{$setting->currency->value??"$"}}{{ number_format($cartTotal, 2) }}</span>
+                            <span>{{$setting['currency']->value??"$"}}{{ number_format($cartTotal, 2) }}</span>
                         </div>
 
                         <a href="{{ $waLink }}"

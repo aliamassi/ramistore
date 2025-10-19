@@ -6,7 +6,7 @@
         <div class="flex items-start justify-between">
             <div>
                 <h3 class="font-semibold text-lg">{{ $item->name }}</h3>
-                <p class="text-emerald-700 font-bold mt-1">{{$setting->currency->value??"$"}}{{ number_format($item->price, 2) }}</p>
+                <p class="text-emerald-700 font-bold mt-1">{{$setting['currency']->value??"$"}}{{ number_format($item->price, 2) }}</p>
             </div>
                 <button data-id="{{ $item->id }}" type="button"
                         class="cart-add inline-flex items-center gap-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm px-3 py-2">
