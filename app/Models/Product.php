@@ -15,7 +15,7 @@ class Product extends Model implements HasMedia
     use InteractsWithMedia;
 
 //    public array $translatable = ['name', 'description'];
-    protected $fillable = ['category_id', 'name', 'description', 'price', 'type'];
+    protected $fillable = ['category_id', 'name', 'description', 'price', 'type','is_visible'];
 
     // Optional: Append translated attribute to JSON
 //    protected $appends = ['translated_name','translated_description'];

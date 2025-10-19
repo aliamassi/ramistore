@@ -229,10 +229,23 @@ export const useProduct = () => {
         try {
             await $sf(`/panel/category/${id}`, {
                 method: 'PUT',
-                body: { category_id: id, name },
+                body: { category_id: id, name:name },
             })
             const idx = categories.value.findIndex(c => c?.id === id)
             if (idx !== -1) categories.value[idx] = { ...categories.value[idx], name }
+            setAlert?.('Category updated successfully!', 'success')
+        } catch (e) { onErr(e, 'Failed to update category') }
+        finally { loading.value = false }
+    }
+ const changeProductVisibility = async (id: Id, action: string) => {
+        loading.value = true; error.value = null
+        try {
+           const res = await $sf(`/panel/product/${id}/visibility`, {
+                method: 'PUT',
+                body: { id: id, action:action },
+            })
+            const idx = categories.value.findIndex(c => c?.id === res.category.id)
+            if (idx !== -1) categories.value[idx] = res.category
             setAlert?.('Category updated successfully!', 'success')
         } catch (e) { onErr(e, 'Failed to update category') }
         finally { loading.value = false }
@@ -307,7 +320,7 @@ export const useProduct = () => {
         updateProduct, updateCategory,
         deleteProduct, deleteCategory,
         duplicateProduct, reorderProducts,
-        uploadProductImages,updateProductWithImages,fetchProductImages
+        uploadProductImages,updateProductWithImages,fetchProductImages,changeProductVisibility
 
     }
 }

@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { useSanctum } from '#imports'
 import avatar1 from '@images/avatars/avatar-1.png'
-const { logout } = useSanctum()
+const { logout,user } = useSanctum()
 const router = useRouter()
 const loggingOut = ref(false)
-
 const handleLogout = async () => {
   if (loggingOut.value) return
   loggingOut.value = true
@@ -67,7 +66,7 @@ const handleLogout = async () => {
             </template>
 
             <VListItemTitle class="font-weight-semibold">
-              John Doe
+              {{  user?.name }}
             </VListItemTitle>
             <VListItemSubtitle>Admin</VListItemSubtitle>
           </VListItem>
@@ -87,7 +86,7 @@ const handleLogout = async () => {
           </VListItem>
 
           <!-- 👉 Settings -->
-          <VListItem link>
+          <VListItem link href="/business-settings">
             <template #prepend>
               <VIcon
                 class="me-2"
@@ -99,31 +98,6 @@ const handleLogout = async () => {
             <VListItemTitle>Settings</VListItemTitle>
           </VListItem>
 
-          <!-- 👉 Pricing -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="bx-dollar"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>Pricing</VListItemTitle>
-          </VListItem>
-
-          <!-- 👉 FAQ -->
-          <VListItem link>
-            <template #prepend>
-              <VIcon
-                class="me-2"
-                icon="bx-help-circle"
-                size="22"
-              />
-            </template>
-
-            <VListItemTitle>FAQ</VListItemTitle>
-          </VListItem>
 
           <!-- Divider -->
           <VDivider class="my-2" />

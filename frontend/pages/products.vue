@@ -1,28 +1,31 @@
 <script setup lang="ts">
 // definePageMeta({ middleware: ['require-auth'] })
 // definePageMeta({ middleware: ['require-auth'] })
-import {ref, computed, watch, onMounted, reactive} from 'vue'
+import {ref, computed, watch, onMounted, reactive, inject} from 'vue'
 import {useProduct} from '~/composables/useProduct'
 import ProductEditDrawer from '~/components/ProductEditDrawer.vue'
 import DeleteConfirmDialog from '~/components/DeleteConfirmDialog.vue'
 import {useSanctumFetch} from "#imports";
+
 const $sf = useSanctumFetch<AnyObj>
 import ImageUploadDialog from '@/components/ImageUploadDialog.vue'
+
+const setAlert = inject<(msg: string, type?: 'success' | 'error' | 'info') => void>('setAlert')
 const setting = reactive({
   currency: 'JOD',
 })
 const uploaderRef = ref<InstanceType<typeof ImageUploadDialog> | null>(null)
 
 const logoPreview = ref<string>('')     // preview URL
-const logoFile    = ref<File | null>(null)
+const logoFile = ref<File | null>(null)
 
 
 const copying = ref(false)
-const copied  = ref(false)
+const copied = ref(false)
 
 async function copyDomain(domain) {
   const text = domain
-  console.log('domain',text);
+  console.log('domain', text);
   if (!text) return
 
   copying.value = true
@@ -72,6 +75,10 @@ async function uploadLogo(file?: File) {
     body: fd,
   })
   logoImage.value = res.url;
+  uploaderRef.value?.close();
+  setAlert?.('Logo updaed successfully!', 'success')
+
+
 }
 
 const cfg = useRuntimeConfig()
@@ -106,6 +113,7 @@ const {
   deleteCategory,
   updateCategory,
   fetchProductImages,
+  changeProductVisibility,
   duplicateProduct
 } = useProduct()
 const {user} = useSanctum()
@@ -216,7 +224,15 @@ const handleEditProduct = async (id) => {
 
 const handleSaveProduct = async (productData) => {
   try {
-    await updateProduct(productData.id, productData)
+    await updateProduct(productData.id, productData, type)
+    console.log('Product updated successfully')
+  } catch (err) {
+    console.error('Failed to update product:', err)
+  }
+}
+const handleChangeProductVisibility = async (id,action) => {
+  try {
+    await changeProductVisibility(id, action)
     console.log('Product updated successfully')
   } catch (err) {
     console.error('Failed to update product:', err)
@@ -548,8 +564,19 @@ const duplicateCategory = () => {
                   @blur="handleUpdateCategory(category.id, category.name)"
                   label="Category name"
                   variant="plain"
-              ></v-text-field>
-              <v-divider class="mt-2" style="max-width: 500px;"></v-divider>
+                  density="compact"
+                  hide-details
+                  class="infield tf-hover pr-10"
+                  :counter="30"
+                  maxlength="30"
+                  height="30px"
+                  width="40%"
+              >
+                <template #append-inner>
+                  <span class="infield-counter">{{ (category?.name?.length || 0) }}/30</span>
+                </template>
+              </v-text-field>
+
             </v-col>
 
             <!-- Product Count Badge -->
@@ -601,6 +628,12 @@ const duplicateCategory = () => {
                       <i class='bx bx-copy' style="font-size: 20px; margin-right: 12px;"></i>
                     </template>
                     <v-list-item-title>Duplicate Category</v-list-item-title>
+                  </v-list-item>
+                  <v-list-item @click="handleChangeProductVisibility(category.id,'all')">
+                    <template v-slot:prepend>
+                      <i class='bx bx-show' style="font-size: 20px; margin-right: 12px;"></i>
+                    </template>
+                    <v-list-item-title>Change products to visible</v-list-item-title>
                   </v-list-item>
                 </v-list>
               </v-menu>
@@ -672,8 +705,9 @@ const duplicateCategory = () => {
 
                   <!-- View Button -->
                   <v-col cols="auto" class="mr-2">
-                    <v-btn icon color="primary" @click="viewProduct(product.id)">
-                      <i class='bx bx-show' style="font-size: 20px;"></i>
+                    <v-btn icon color="primary" @click="handleChangeProductVisibility(product.id,'specific')">
+                      <i :class="[{'bx bx-show':product.is_visible,'bx bx-hide':!product.is_visible}]" style="font-size: 20px;"></i>
+
                     </v-btn>
                   </v-col>
 
@@ -753,7 +787,6 @@ const duplicateCategory = () => {
           <!-- 👇 Your UPLOAD BUTTON now lives INSIDE the dialog -->
           <template #actions="{ file, close, useImage }">
             <v-btn variant="text" @click="close()">Cancel</v-btn>
-            <v-btn color="tonal" :disabled="!file" @click="useImage()">Use image</v-btn>
             <v-btn color="primary" :disabled="!file" @click="uploadLogo(file)">
               Upload
             </v-btn>
@@ -888,5 +921,85 @@ i.bx {
 .business-name-field :deep(.v-field__outline) {
   display: none;
 }
+
+/* base shape + default (non-hover) background */
+.tf-hover :deep(.v-field) {
+  position: relative;
+}
+
+.tf-hover :deep(.v-field__overlay) {
+  border-radius: inherit;
+  background: #eeeeee; /* light grey base */
+  transition: background .15s ease, box-shadow .15s ease;
+}
+
+/* on hover: darker grey fill + subtle emphasis */
+.tf-hover :deep(.v-field:hover .v-field__overlay) {
+  background: #cfcfcf; /* darker grey like the screenshot */
+}
+
+/* black underline that appears on hover */
+.tf-hover :deep(.v-field)::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 2px;
+  height: 3px; /* thicker underline */
+  background: #000000;
+  transform: scaleX(0.6);
+  transform-origin: left;
+  opacity: 0;
+  transition: transform .15s ease, opacity .15s ease;
+}
+
+.tf-hover :deep(.v-field:hover)::after {
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+/* make room for the counter inside the input */
+.tf-hover :deep(.v-field__input) {
+  padding-right: 64px;
+}
+
+/* counter style (top-right inside the field) */
+.infield-counter {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1;
+  margin-top: 2px;
+  user-select: none;
+  pointer-events: none;
+  /* keep it visually higher like the screenshot */
+  position: relative;
+  top: -2px;
+}
+
+/* align append-inner nicely */
+.tf-hover :deep(.v-field__append-inner) {
+  align-items: flex-start;
+}
+.infield :deep(.v-field__input) {
+  padding-right: 64px;
+}
+
+/* place the append content inside, aligned to the top (like your screenshot) */
+.infield :deep(.v-field__append-inner) {
+  align-items: flex-start;     /* push counter up */
+  padding-top: 4px;            /* fine-tune vertical */
+}
+
+/* counter look */
+.infield :deep(.infield-counter) {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  opacity: .75;
+  user-select: none;
+  pointer-events: none;
+}
+
+
 
 </style>

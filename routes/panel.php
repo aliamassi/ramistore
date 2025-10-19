@@ -22,6 +22,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/user', fn() => request()->user());     // used by Nuxt to check auth
     Route::apiResource('product', ProductController::class);
     Route::post('product/{product}/images', [ProductController::class,'uploadImage']);
+    Route::put('product/{product}/visibility', [ProductController::class,'changeVisibility']);
     Route::get('product/{product}/images', [ProductController::class,'getImages']);
     Route::apiResource('category', CategoryController::class);
     Route::post('admin/upload', [AdminController::class,'uploadImage']);

@@ -18,6 +18,7 @@ return new class extends Migration {
                 ->cascadeOnDelete();
             $table->text('name');
             $table->text('description')->nullable();
+            $table->unsignedTinyInteger('is_visible')->default(1);
             $table->enum('type', ['simple', 'variable'])->default('simple');
             $table->decimal('price', 10, 2);
             $table->timestamps();
