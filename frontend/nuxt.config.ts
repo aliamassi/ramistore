@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     modules: ['@vueuse/nuxt', '@nuxtjs/device', '@pinia/nuxt', '@qirolab/nuxt-sanctum-authentication'],
     css: [
         'vuetify/styles',
-        '@mdi/font/css/materialdesignicons.min.css',
+        '@mdi/font/css/materialdesignicons.css',
         '@styles/styles.scss',
         '@/plugins/iconify/icons.css',
         '@layouts/styles/index.scss',

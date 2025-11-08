@@ -2,11 +2,14 @@
 <template>
   <v-dialog v-model="open" max-width="860" persistent>
     <v-card rounded="xl">
-      <v-card-title class="py-3">
+      <v-card-title class="py-3  d-flex align-center justify-space-between">
         <div class="text-h6">Product images</div>
+        <button  @click="onCancel"  type="button" class="float-right  v-btn v-btn--icon v-theme--light v-btn--density-comfortable v-btn--size-default v-btn--variant-text">
+          <i  class="mdi-close mdi v-icon  v-theme--light v-icon--size-default" aria-hidden="true"></i>
+        </button>
       </v-card-title>
 
-      <v-divider />
+      <v-divider/>
 
       <v-card-text class="pt-4">
         <!-- Info banner -->
@@ -23,12 +26,12 @@
             @click="pickFiles(true)"
         >
           <template v-if="mainTileSrc">
-            <v-img :src="mainTileSrc" aspect-ratio="1" cover class="rounded-lg w-100" :max-height="260" />
+            <v-img :src="mainTileSrc" aspect-ratio="1" cover class="rounded-lg upload-image"/>
           </template>
           <template v-else>
             <div class="tile-placeholder">
-              <v-icon size="28" class="mb-2">bx-up-arrow-alt</v-icon>
-              <div class="font-medium">Your product image here</div>
+              <div class="font-medium mb-2">Your product image here</div>
+              <v-icon size="20">mdi-tray-arrow-up</v-icon>
             </div>
           </template>
         </div>
@@ -44,8 +47,8 @@
                 @drop.prevent="handleDrop($event)"
                 @click="pickFiles(false)"
             >
-              <v-icon size="28" class="mb-2">bx-up-arrow-alt</v-icon>
               <div class="font-medium">Upload another image</div>
+              <v-icon size="20" class="mb-2">mdi-tray-arrow-up</v-icon>
             </div>
           </v-col>
 
@@ -56,28 +59,44 @@
               cols="12" sm="6" md="4" lg="3"
           >
             <v-card class="thumb-card" variant="outlined">
-              <v-img :src="img.thumb || img.url" aspect-ratio="1" cover />
-              <v-card-actions class="justify-space-between py-2">
-                <v-btn
-                    size="small"
-                    variant="text"
-                    :color="isMainExisting(img.id) ? 'primary' : ''"
-                    @click="setAsMainExisting(img.id)"
-                >
-                  <v-icon size="16" class="mr-1" :icon="isMainExisting(img.id) ? 'bx-star' : 'bx-star-outline'" />
-                  {{ isMainExisting(img.id) ? 'Main' : 'Set main' }}
-                </v-btn>
+              <!-- Image container with relative position -->
+              <div class="image-wrapper">
+                <v-img class="upload-image" :src="img.thumb || img.url" aspect-ratio="1" cover/>
 
+                <!-- Remove button in top-left corner -->
                 <v-btn
+                    icon
                     size="small"
                     variant="text"
                     color="error"
                     @click="removeExisting(img.id)"
+                    class="remove-btn"
                 >
-                  <v-icon size="16" class="mr-1">bx-bxs-x-circle</v-icon>
-                  Remove
+                  <v-icon size="20">bx-bxs-x-circle</v-icon>
                 </v-btn>
-              </v-card-actions>
+                <v-btn
+                    icon
+                    size="small"
+                    variant="text"
+                    color="primary"
+                    @click="editImage(img.id)"
+                    class="edit-btn"
+                >
+                  <v-icon size="20">mdi-pencil</v-icon>
+                </v-btn>
+              </div>
+
+              <!-- Star button centered at bottom -->
+<!--              <v-card-actions class="d-flex align-center justify-center">-->
+<!--                <v-btn-->
+<!--                    size="small"-->
+<!--                    variant="text"-->
+<!--                    :color="isMainExisting(img.id) ? 'primary' : ''"-->
+<!--                    @click="setAsMainExisting(img.id)"-->
+<!--                >-->
+<!--                  <v-icon size="16" class="mr-1" :icon="isMainExisting(img.id) ? 'bx-star' : 'bx-star-outline'"/>-->
+<!--                </v-btn>-->
+<!--              </v-card-actions>-->
             </v-card>
           </v-col>
 
@@ -88,23 +107,34 @@
               cols="12" sm="6" md="4" lg="3"
           >
             <v-card class="thumb-card" variant="outlined">
-              <v-img :src="src" aspect-ratio="1" cover />
-              <v-card-actions class="justify-space-between py-2">
-                <v-btn
-                    size="small"
-                    variant="text"
-                    :color="isMainNew(i) ? 'primary' : ''"
-                    @click="setAsMainNew(i)"
-                >
-                  <v-icon size="16" class="mr-1" :icon="isMainNew(i) ? 'bx-star' : 'bx-star-outline'" />
-                  {{ isMainNew(i) ? 'Main' : 'Set main' }}
-                </v-btn>
+              <div class="image-wrapper">
+              <v-img style="width: 120px;height: 120px" class="upload-image" :src="src" aspect-ratio="1" cover/>
 
-                <v-btn size="small" variant="text" color="error" @click="removeNew(i)">
-                  <v-icon size="16" class="mr-1">bx-bxs-x-circle</v-icon>
-                  Remove
-                </v-btn>
-              </v-card-actions>
+              <v-btn
+                  icon
+                  size="small"
+                  variant="text"
+                  color="primary"
+                  @click="editNewImage(i)"
+                  class="edit-btn"
+              >
+                <v-icon size="20">mdi-pencil</v-icon>
+              </v-btn>
+              </div>
+<!--              <v-card-actions class="d-flex align-center justify-center">-->
+<!--                <v-btn-->
+<!--                    size="small"-->
+<!--                    variant="text"-->
+<!--                    :color="isMainNew(i) ? 'primary' : ''"-->
+<!--                    @click="setAsMainNew(i)"-->
+<!--                >-->
+<!--                  <v-icon size="16" class="mr-1" :icon="isMainNew(i) ? 'bx-star' : 'bx-star-outline'"/>-->
+<!--                </v-btn>-->
+
+<!--                <v-btn size="small" variant="text" color="error" @click="removeNew(i)">-->
+<!--                  <v-icon size="16" class="mr-1">bx-bxs-x-circle</v-icon>-->
+<!--                </v-btn>-->
+<!--              </v-card-actions>-->
             </v-card>
           </v-col>
         </v-row>
@@ -133,10 +163,10 @@
         />
       </v-card-text>
 
-      <v-divider />
+      <v-divider/>
 
       <v-card-actions class="px-4 py-3">
-        <v-spacer />
+        <v-spacer/>
         <v-btn variant="text" @click="onCancel">Cancel</v-btn>
         <v-btn color="primary" :disabled="!canSave" @click="onSave">Save</v-btn>
       </v-card-actions>
@@ -145,7 +175,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref, watch } from 'vue'
+import {computed, onBeforeUnmount, ref, watch} from 'vue'
 
 type ExistingImage = {
   id: number | string
@@ -193,11 +223,11 @@ const errors = ref<string[]>([])
 const MAX = computed(() => props.maxSizeMB * 1024 * 1024)
 
 /** Main selection can point to an existing image or a new file */
-const mainSel = ref<{ type: 'existing' | 'new' | null, id?: number | string, newIndex?: number }>({ type: null })
+const mainSel = ref<{ type: 'existing' | 'new' | null, id?: number | string, newIndex?: number }>({type: null})
 
 // ---------- INIT / RESET ----------
 const resetState = () => {
-  existingLocal.value = (props.existing || []).map(x => ({ ...x }))
+  existingLocal.value = (props.existing || []).map(x => ({...x}))
   removedExistingIds.value = []
   newFiles.value = []
   newBlobUrls.value.forEach(u => URL.revokeObjectURL(u))
@@ -207,16 +237,20 @@ const resetState = () => {
   // pick initial main
   const pre = existingLocal.value.find(x => x.is_main)
   if (pre) {
-    mainSel.value = { type: 'existing', id: pre.id }
+    mainSel.value = {type: 'existing', id: pre.id}
   } else if (existingLocal.value.length) {
-    mainSel.value = { type: 'existing', id: existingLocal.value[0].id }
+    mainSel.value = {type: 'existing', id: existingLocal.value[0].id}
   } else {
-    mainSel.value = { type: null }
+    mainSel.value = {type: null}
   }
 }
 
-watch(() => props.modelValue, v => { if (v) resetState() })
-watch(() => props.existing, () => { if (open.value) resetState() }, { deep: true })
+watch(() => props.modelValue, v => {
+  if (v) resetState()
+})
+watch(() => props.existing, () => {
+  if (open.value) resetState()
+}, {deep: true})
 
 onBeforeUnmount(() => newBlobUrls.value.forEach(u => URL.revokeObjectURL(u)))
 
@@ -266,7 +300,7 @@ const validateAndCollect = (list: FileList | File[], pickAsMain = false) => {
     newBlobUrls.value.push(...urls)
 
     if (pickAsMain || mainSel.value.type === null) {
-      mainSel.value = { type: 'new', newIndex: newFiles.value.length - add.length }
+      mainSel.value = {type: 'new', newIndex: newFiles.value.length - add.length}
     }
   }
 }
@@ -292,7 +326,7 @@ const handleDrop = (e: DragEvent, pickAsMain = false) => {
 
 // existing
 const setAsMainExisting = (id: number | string) => {
-  mainSel.value = { type: 'existing', id }
+  mainSel.value = {type: 'existing', id}
 }
 const isMainExisting = (id: number | string) =>
     mainSel.value.type === 'existing' && mainSel.value.id === id
@@ -305,19 +339,23 @@ const removeExisting = (id: number | string) => {
 
   if (isMainExisting(id)) {
     if (existingLocal.value.length) {
-      mainSel.value = { type: 'existing', id: existingLocal.value[0].id }
+      mainSel.value = {type: 'existing', id: existingLocal.value[0].id}
     } else if (newFiles.value.length) {
-      mainSel.value = { type: 'new', newIndex: 0 }
+      mainSel.value = {type: 'new', newIndex: 0}
     } else {
-      mainSel.value = { type: null }
+      mainSel.value = {type: null}
     }
   }
 }
 
+const editImage = (index) => {
+  console.log('Edit new image:', index)
+  // Implement your edit logic for new images
+}
 // new
 const setAsMainNew = (i: number) => {
   if (i < 0 || i >= newFiles.value.length) return
-  mainSel.value = { type: 'new', newIndex: i }
+  mainSel.value = {type: 'new', newIndex: i}
 }
 const isMainNew = (i: number) =>
     mainSel.value.type === 'new' && mainSel.value.newIndex === i
@@ -332,14 +370,14 @@ const removeNew = (i: number) => {
 
   if (isMainNew(i)) {
     if (existingLocal.value.length) {
-      mainSel.value = { type: 'existing', id: existingLocal.value[0].id }
+      mainSel.value = {type: 'existing', id: existingLocal.value[0].id}
     } else if (newFiles.value.length) {
-      mainSel.value = { type: 'new', newIndex: 0 }
+      mainSel.value = {type: 'new', newIndex: 0}
     } else {
-      mainSel.value = { type: null }
+      mainSel.value = {type: null}
     }
   } else if (mainSel.value.type === 'new' && (mainSel.value.newIndex as number) > i) {
-    mainSel.value = { type: 'new', newIndex: (mainSel.value.newIndex as number) - 1 }
+    mainSel.value = {type: 'new', newIndex: (mainSel.value.newIndex as number) - 1}
   }
 }
 
@@ -351,8 +389,8 @@ const onSave = () => {
   emit('save', {
     files: newFiles.value,
     main: mainSel.value.type
-        ? { ...mainSel.value }
-        : { type: 'existing', id: existingLocal.value[0]?.id }, // safety fallback
+        ? {...mainSel.value}
+        : {type: 'existing', id: existingLocal.value[0]?.id}, // safety fallback
     removedExistingIds: removedExistingIds.value,
   })
   open.value = false
@@ -363,24 +401,95 @@ const onSave = () => {
 .drop-zone {
   border: 2px dashed rgba(var(--v-theme-primary), 0.3);
   border-radius: 16px;
-  min-height: 220px;
+  max-height: 120px;
+  width: 120px;
+  height: 120px;
   cursor: pointer;
   padding: 12px;
   transition: border-color .15s ease;
+  position: relative;
 }
-.drop-zone:hover { border-color: rgb(var(--v-theme-primary)); }
+
+.drop-zone:hover {
+  border-color: rgb(var(--v-theme-primary));
+}
 
 .tile-placeholder,
 .tile-upload {
-  border-radius: 16px;
-  background: rgb(var(--v-theme-primary));
+  border-radius: 10px;
+  background:  #0047A3;
   color: white;
   text-align: center;
-  padding: 28px 18px;
-  width: 100%;
-  min-height: 160px;
+  width: 120px;
+  height: 120px;
   user-select: none;
+  padding: 5px;
 }
-.tile-upload { cursor: pointer; }
-.thumb-card :deep(.v-img__img) { border-radius: 12px 12px 0 0; }
+
+.tile-upload {
+  cursor: pointer;
+}
+
+.thumb-card :deep(.v-img__img) {
+  border-radius: 12px 12px 0 0;
+
+}
+.thumb-card{
+  width: 120px !important;
+  position: relative;
+  height: 160px !important;
+  overflow: visible !important
+}
+
+.upload-image{
+  width: 120px;
+  height: 120px;
+}
+
+.image-wrapper {
+  position: relative;
+  overflow: visible !important
+}
+.upload-image {
+  width: 100%;
+  height: auto;
+}
+.remove-btn {
+  position: absolute;
+  top: -16px;
+  right: -8px;
+  z-index: 2;
+}
+
+.remove-btn:hover {
+  background-color: rgba(255, 255, 255, 1) !important;
+}
+
+/* Position edit button in top-right corner (hidden by default) */
+.edit-btn {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  transform: scale(0.8);
+}
+
+/* Show edit button on hover */
+.image-wrapper:hover .edit-btn {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+}
+
+.edit-btn:hover {
+  background-color: rgba(255, 255, 255, 1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+}
 </style>

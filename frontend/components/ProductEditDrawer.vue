@@ -26,24 +26,37 @@
     <v-container fluid class="pa-6">
       <!-- Product Image and Name -->
       <v-row>
-        <v-col cols="auto">
-          <v-card elevation="0" width="100" height="100" class="d-flex align-center justify-center"
-                  style="border: 1px solid #e0e0e0; border-radius: 12px; position: relative;">
-            <div class="text-center">
-              <div class="text-red text-caption font-weight-bold">SKIP</div>
-              <div class="text-h6">📍</div>
-            </div>
-            <v-btn
-                icon
-                size="small"
-                color="primary"
-                style="position: absolute; bottom: -8px; right: -8px;"
-                @click="openUploader()"
+<!--          <v-card elevation="0" width="100" height="100" class="d-flex align-center justify-center"-->
+<!--                  style="border: 1px solid #e0e0e0; border-radius: 12px; position: relative;">-->
+<!--            <div class="text-center">-->
+<!--              <div class="text-red text-caption font-weight-bold">SKIP</div>-->
+<!--              <div class="text-h6">📍</div>-->
+<!--            </div>-->
+<!--            <v-btn-->
+<!--                icon-->
+<!--                size="small"-->
+<!--                color="primary"-->
+<!--                style="position: absolute; bottom: -8px; right: -8px;"-->
+<!--                @click="openUploader()"-->
+<!--            >-->
+<!--              <i class='bx bx-camera' style="font-size: 16px;"></i>-->
+<!--            </v-btn>-->
+<!--          </v-card>-->
+          <v-col cols="12" md="4">
+            <v-card @click="openUploader()"
+                flat
+                class="upload-card d-flex flex-column align-center justify-center"
+                height="100"
+                width="100"
             >
-              <i class='bx bx-camera' style="font-size: 16px;"></i>
-            </v-btn>
-          </v-card>
-        </v-col>
+              <div class="text-white text-center mb-2">
+                <div class="font-weight-bold">Upload</div>
+                <div class="font-weight-bold">pictures</div>
+              </div>
+              <v-icon class="v-icon--size-default text-white" size="20" color="white">mdi-tray-arrow-up</v-icon>
+
+            </v-card>
+          </v-col>
         <v-col>
           <v-text-field
               v-model="product.name"
@@ -78,9 +91,10 @@
               variant="outlined"
               divided
               density="compact"
+              class="custom-toggle"
           >
-            <v-btn @click="productType('simple')" value="simple" class="text-none">Simple</v-btn>
-            <v-btn @click="productType('variable')" value="variants" class="text-none">Variants</v-btn>
+            <v-btn  @click="productType('simple')" value="simple" class="text-none price-type-btn">Simple</v-btn>
+            <v-btn @click="productType('variable')" value="variants" class="text-none price-type-btn">Variants</v-btn>
           </v-btn-toggle>
         </div>
         <div v-if="priceType === 'simple'">
@@ -409,5 +423,19 @@ i.bx {
   padding-top: 8px;
   padding-bottom: 8px;
 }
+.upload-card{
+  background-color: #0047A3;
+}
+.price-type-btn{
+  min-width: 100px;
+}
+.v-btn-group--density-compact.v-btn-group{
+  height: 32px !important;
+}
+
+:deep(.custom-toggle .v-btn.v-btn--active) {
+  color: rgb(0,111,255) !important; /* Active text color */
+}
+
 
 </style>

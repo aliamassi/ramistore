@@ -76,7 +76,7 @@ export const iconify = {
 }
 
 export const icons = {
-  defaultSet: 'iconify',
+  defaultSet: 'mdi',
   aliases,
   sets: {
     iconify,
