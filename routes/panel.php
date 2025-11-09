@@ -25,6 +25,8 @@ Route::middleware('auth')->group(function () {
     Route::put('product/{product}/visibility', [ProductController::class,'changeVisibility']);
     Route::get('product/{product}/images', [ProductController::class,'getImages']);
     Route::apiResource('category', CategoryController::class);
+    Route::put('category/{category}/visibility', [CategoryController::class,'changeVisibility']);
+
     Route::post('admin/upload', [AdminController::class,'uploadImage']);
     Route::get('settings', [SettingsController::class,'index']);
     Route::post('settings', [SettingsController::class,'store']);

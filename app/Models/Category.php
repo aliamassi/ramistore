@@ -13,7 +13,7 @@ class Category extends Model
 
 //    public array $translatable = ['name'];
 
-    protected $fillable = ['admin_id','name'];
+    protected $fillable = ['admin_id','name','is_visible'];
 
     public function products(){
         return $this->hasMany(Product::class,'category_id');

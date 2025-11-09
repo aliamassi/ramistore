@@ -31,13 +31,35 @@ class CategoryController extends Controller
             'name' => 'required'
         ]);
         $request['admin_id'] = auth()->user()->id;
-        Category::create($request->all());
+        $category = Category::create($request->all());
         return response()->json([
             'status' => true,
-            'message' => __('messages.created')
+            'message' => __('messages.created'),
+            'category' => $category,
         ]);
     }
 
+    public function changeVisibility($category, Request $request)
+    {
+        $request->validate([
+            'action' => 'required',
+            'id' => 'required'
+        ]);
+        $id = $request->id;
+        switch ($request->action) {
+            case "specific":
+                $category = Category::find($id);
+                $is_visible = $category->is_visible == 1 ? 0 : 1;
+                $category->update(['is_visible' => $is_visible]);
+                $category = Category::with('products')->find($id);
+                break;
+        }
+        return response()->json([
+            'status' => true,
+            'category' => $category,
+            'message' => __('messages.updated')
+        ]);
+    }
 
     /**
      * Update the specified resource in storage.
@@ -48,7 +70,7 @@ class CategoryController extends Controller
             'name' => 'required'
         ]);
         $category = Category::find($category);
-       $category->update($request->all());
+        $category->update($request->all());
         return response()->json([
             'status' => true,
             'message' => __('messages.updated')

@@ -21,42 +21,27 @@
     </v-toolbar>
 
     <v-divider></v-divider>
-
     <!-- Content -->
-    <v-container fluid class="pa-6">
+    <v-container fluid>
       <!-- Product Image and Name -->
       <v-row>
-<!--          <v-card elevation="0" width="100" height="100" class="d-flex align-center justify-center"-->
-<!--                  style="border: 1px solid #e0e0e0; border-radius: 12px; position: relative;">-->
-<!--            <div class="text-center">-->
-<!--              <div class="text-red text-caption font-weight-bold">SKIP</div>-->
-<!--              <div class="text-h6">📍</div>-->
-<!--            </div>-->
-<!--            <v-btn-->
-<!--                icon-->
-<!--                size="small"-->
-<!--                color="primary"-->
-<!--                style="position: absolute; bottom: -8px; right: -8px;"-->
-<!--                @click="openUploader()"-->
-<!--            >-->
-<!--              <i class='bx bx-camera' style="font-size: 16px;"></i>-->
-<!--            </v-btn>-->
-<!--          </v-card>-->
-          <v-col cols="12" md="4">
-            <v-card @click="openUploader()"
-                flat
-                class="upload-card d-flex flex-column align-center justify-center"
-                height="100"
-                width="100"
-            >
+        <v-col cols="12" md="4">
+          <v-card @click="openUploader()"
+                  flat
+                  class="upload-card d-flex flex-column align-center justify-center"
+                  height="100"
+                  width="100"
+          >
+            <img v-if="product.image" :src="product.image" width="120" height="120" alt="">
+            <div v-else>
               <div class="text-white text-center mb-2">
                 <div class="font-weight-bold">Upload</div>
                 <div class="font-weight-bold">pictures</div>
               </div>
               <v-icon class="v-icon--size-default text-white" size="20" color="white">mdi-tray-arrow-up</v-icon>
-
-            </v-card>
-          </v-col>
+            </div>
+          </v-card>
+        </v-col>
         <v-col>
           <v-text-field
               v-model="product.name"
@@ -77,8 +62,7 @@
         </v-col>
       </v-row>
 
-      <v-divider class="my-6"></v-divider>
-
+      <div class="product-detail-divider my-6 v-row"></div>
       <!-- Price Section -->
       <div class="mb-4">
         <div class="d-flex align-center mb-3">
@@ -93,7 +77,7 @@
               density="compact"
               class="custom-toggle"
           >
-            <v-btn  @click="productType('simple')" value="simple" class="text-none price-type-btn">Simple</v-btn>
+            <v-btn @click="productType('simple')" value="simple" class="text-none price-type-btn">Simple</v-btn>
             <v-btn @click="productType('variable')" value="variants" class="text-none price-type-btn">Variants</v-btn>
           </v-btn-toggle>
         </div>
@@ -102,7 +86,72 @@
               label="Price"
               placeholder="0.00"
               variant="outlined"
+              style="width:50%"
           ></v-text-field>
+
+          <v-row class="align-center mt-1">
+            <!-- Available Dropdown -->
+            <v-col cols="auto">
+              <v-menu>
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                      v-bind="props"
+                      rounded="pill"
+                      variant="flat"
+                      append-icon="mdi-chevron-down"
+                      class="product-availability product-options"
+                      color=""
+                  >
+                    Available
+                  </v-btn>
+                </template>
+                <v-list>
+                  <v-list-item>Available</v-list-item>
+                  <v-list-item>Out of Stock</v-list-item>
+                  <v-list-item>All</v-list-item>
+                </v-list>
+              </v-menu>
+            </v-col>
+
+            <!-- Discount Button -->
+            <v-col cols="auto">
+              <v-btn
+                  variant="outlined"
+                  rounded="lg"
+                  color="default"
+                  prepend-icon="mdi-plus"
+                  class="product-options"
+              >
+                Discount
+              </v-btn>
+            </v-col>
+
+            <!-- Cost Button -->
+            <v-col cols="auto">
+              <v-btn
+                  variant="outlined"
+                  rounded="lg"
+                  color="default"
+                  prepend-icon="mdi-plus"
+                  class="product-options"
+              >
+                Cost
+              </v-btn>
+            </v-col>
+
+            <!-- Packaging Button -->
+            <v-col cols="auto">
+              <v-btn
+                  variant="outlined"
+                  rounded="lg"
+                  color="default"
+                  prepend-icon="mdi-plus"
+                  class="product-options"
+              >
+                Packaging
+              </v-btn>
+            </v-col>
+          </v-row>
         </div>
         <div v-if="priceType === 'variants'">
           <v-text-field
@@ -182,8 +231,7 @@
         </div>
       </div>
 
-      <v-divider class="my-6"></v-divider>
-
+      <div class="product-detail-divider my-6 v-row"></div>
       <!-- Stock Control -->
       <div class="d-flex align-center mb-4">
         <div class="d-flex align-center">
@@ -201,8 +249,7 @@
         ></v-switch>
       </div>
 
-      <v-divider class="my-6"></v-divider>
-
+      <div class="product-detail-divider my-6 v-row"></div>
       <!-- Add Modifier -->
       <v-card
           elevation="0"
@@ -232,8 +279,7 @@
         </v-card-text>
       </v-card>
 
-      <v-divider class="my-6"></v-divider>
-
+      <div class="product-detail-divider my-6 v-row"></div>
       <!-- Kitchen -->
       <div class="mb-4">
         <div class="d-flex align-center mb-3">
@@ -293,13 +339,13 @@
 <script setup lang="ts">
 import {ref, watch} from 'vue'
 import ProductImageUploader from '@/components/ProductImageUploader.vue'
-import { useProduct } from '@/composables/useProduct'
+import {useProduct} from '@/composables/useProduct'
 
 
 const showUploader = ref(false)
 let currentProductId = 1 // pass your product id
-const { uploadProductImages, updateProductWithImages, fetchProductImages, productImages } = useProduct()
-const onSaveImages = async ({ files, mainIndex }: { files: File[], mainIndex: number }) => {
+const {uploadProductImages, updateProductWithImages, fetchProductImages, productImages} = useProduct()
+const onSaveImages = async ({files, mainIndex}: { files: File[], mainIndex: number }) => {
   // 1) Editing an existing product: upload to server
   await uploadProductImages(currentProductId, files)
 
@@ -394,7 +440,11 @@ const productType = (type) => {
 
 const openUploader = async () => {
   if (!currentProductId) return
-  try { await fetchProductImages(currentProductId) } catch (e) { console.error(e) }
+  try {
+    await fetchProductImages(currentProductId)
+  } catch (e) {
+    console.error(e)
+  }
   showUploader.value = true
 }
 
@@ -423,18 +473,44 @@ i.bx {
   padding-top: 8px;
   padding-bottom: 8px;
 }
-.upload-card{
+
+.upload-card {
   background-color: #0047A3;
 }
-.price-type-btn{
+
+.price-type-btn {
   min-width: 100px;
 }
-.v-btn-group--density-compact.v-btn-group{
+
+.v-btn-group--density-compact.v-btn-group {
   height: 32px !important;
 }
 
 :deep(.custom-toggle .v-btn.v-btn--active) {
-  color: rgb(0,111,255) !important; /* Active text color */
+  color: rgb(0, 111, 255) !important; /* Active text color */
+}
+
+.product-detail-divider {
+  height: 8px;
+  background-color: #d6d6d6;
+  width: 100% !important;
+}
+
+.product-availability:hover {
+  background: #bcf1ca !important;
+}
+
+.product-availability {
+  border-radius: 24px;
+  background: #bcf1ca !important;
+}
+
+.product-options {
+  font-size: 12px;
+  font-weight: 500;
+  width: auto;
+  height: 24px;
+  padding: 0px 5px;
 }
 
 

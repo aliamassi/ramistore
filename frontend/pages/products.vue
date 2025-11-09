@@ -54,8 +54,13 @@ function openImagePicker() {
 }
 
 function onImageSelected(p: {
-  file: File, url: string, width: number, height: number,
-  type: string, fileName: string, size: number
+  file: File,
+  url: string,
+  width: number,
+  height: number,
+  type: string,
+  fileName: string,
+  size: number
 }) {
   logoPreview.value = p.url
   logoFile.value = p.file
@@ -114,6 +119,7 @@ const {
   updateCategory,
   fetchProductImages,
   changeProductVisibility,
+  changeCategoryVisibility,
   duplicateProduct
 } = useProduct()
 const {user} = useSanctum()
@@ -230,12 +236,20 @@ const handleSaveProduct = async (productData) => {
     console.error('Failed to update product:', err)
   }
 }
-const handleChangeProductVisibility = async (id,action) => {
+const handleChangeProductVisibility = async (id, action) => {
   try {
     await changeProductVisibility(id, action)
     console.log('Product updated successfully')
   } catch (err) {
     console.error('Failed to update product:', err)
+  }
+}
+const handleChangeCategoryVisibility = async (id, action) => {
+  try {
+    await changeCategoryVisibility(id, action)
+    console.log('Category updated successfully')
+  } catch (err) {
+    console.error('Failed to update category:', err)
   }
 }
 const handleUpdateCategory = async (categoryId, categoryName) => {
@@ -265,11 +279,12 @@ const deleteDialog = ref({
 })
 
 // Modified delete handlers
-const handleDeleteProduct = (id) => {
+const handleDeleteProduct = (id, categoryId: any) => {
   deleteDialog.value = {
     title: 'Delete Product',
     message: 'Are you sure you want to delete this product? This action cannot be undone.',
     itemId: id,
+    categoryId: categoryId,
     itemType: 'product'
   }
   showDeleteDialog.value = true
@@ -294,7 +309,7 @@ const confirmDelete = async () => {
   try {
     if (deleteDialog.value.itemType === 'product') {
       console.log(deleteDialog.value.itemType, deleteDialog.value.itemId);
-      await deleteProduct(deleteDialog.value.itemId)
+      await deleteProduct(deleteDialog.value.itemId, deleteDialog.value.categoryId)
       console.log('Product deleted successfully')
     } else if (deleteDialog.value.itemType === 'category') {
       await deleteCategory(deleteDialog.value.itemId)
@@ -535,9 +550,9 @@ const duplicateCategory = () => {
             <v-tabs
                 v-model="tab"
                 align-tabs="center"
-                color="deep-purple-accent-4"
+                class="bg-white"
             >
-              <v-tab v-for="category in categories" :value="category.id">{{ category.name }}</v-tab>
+              <v-tab class="category-tab" v-for="category in categories" :value="category.id">{{ category.name }}</v-tab>
             </v-tabs>
           </v-col>
         </v-row>
@@ -547,10 +562,11 @@ const duplicateCategory = () => {
           v-for="category in categories"
           :key="category.id"
           elevation="1"
-          class="bg-grey-lighten-4 rounded-lg mb-3"
+          class="category-card"
+
       >
         <!-- Category Header -->
-        <v-card-text class="pa-4">
+        <v-card-text class="pa-2 category-card-header" @click="toggleCategory(category.id)">
           <v-row align="center" no-gutters>
             <!-- Drag Handle -->
             <v-col cols="auto" class="mr-3">
@@ -611,12 +627,6 @@ const duplicateCategory = () => {
                   </v-btn>
                 </template>
                 <v-list>
-                  <v-list-item @click="editCategory(category.id)">
-                    <template v-slot:prepend>
-                      <i class='bx bx-edit' style="font-size: 20px; margin-right: 12px;"></i>
-                    </template>
-                    <v-list-item-title>Edit Category</v-list-item-title>
-                  </v-list-item>
                   <v-list-item @click="handleDeleteCategory(category.id)">
                     <template v-slot:prepend>
                       <i class='bx bx-trash' style="font-size: 20px; margin-right: 12px;"></i>
@@ -639,12 +649,19 @@ const duplicateCategory = () => {
               </v-menu>
             </v-col>
 
+            <v-col cols="auto" class="mr-2">
+              <button @click="handleChangeCategoryVisibility(category.id,'specific')" type="button" class="v-btn v-btn--icon v-theme--light text-primary v-btn--density-compact elevation-0 v-btn--size-default v-btn--variant-text mr-3">
+                <span class="v-btn__content">
+                  <i  :class="[{'mdi-eye mdi':category.is_visible,'mdi mdi-eye-off-outline':!category.is_visible},'v-icon notranslate v-theme--light v-icon--size-default']" aria-hidden="true"></i>
+                </span>
+              </button>
+
+            </v-col>
             <!-- Collapse Toggle -->
             <v-col cols="auto">
               <v-btn
                   icon
                   variant="text"
-                  @click="toggleCategory(category.id)"
               >
                 <i
                     :class="isCategoryExpanded(category.id) ? 'bx bx-chevron-up' : 'bx bx-chevron-down'"
@@ -664,7 +681,7 @@ const duplicateCategory = () => {
                 elevation="0"
                 class="product-card"
             >
-              <v-card-text class="pa-4">
+              <v-card-text class="pa-2 product-card-item">
                 <v-row align="center" no-gutters>
                   <!-- Drag Handle -->
                   <v-col cols="auto" class="mr-3">
@@ -682,7 +699,7 @@ const duplicateCategory = () => {
                       <div v-if="!product.image" class="text-center">
                         <i class='bx bx-package text-grey' style="font-size: 32px;"></i>
                       </div>
-                      <img v-else :src="product.image" :alt="product.name"/>
+                      <img v-else width="30" height="30" :src="product.image" :alt="product.name"/>
                     </v-avatar>
                   </v-col>
 
@@ -705,10 +722,11 @@ const duplicateCategory = () => {
 
                   <!-- View Button -->
                   <v-col cols="auto" class="mr-2">
-                    <v-btn icon color="primary" @click="handleChangeProductVisibility(product.id,'specific')">
-                      <i :class="[{'bx bx-show':product.is_visible,'bx bx-hide':!product.is_visible}]" style="font-size: 20px;"></i>
-
-                    </v-btn>
+                    <button @click="handleChangeProductVisibility(product.id,'specific')" type="button" class="v-btn v-btn--icon v-theme--light text-primary v-btn--density-compact elevation-0 v-btn--size-default v-btn--variant-text mr-3">
+                      <span class="v-btn__content">
+                        <i  :class="[{'mdi-eye mdi':product.is_visible,'mdi mdi-eye-off-outline':!product.is_visible},'v-icon notranslate v-theme--light v-icon--size-default']" aria-hidden="true"></i>
+                      </span>
+                    </button>
                   </v-col>
 
                   <!-- Product Menu -->
@@ -720,11 +738,11 @@ const duplicateCategory = () => {
                         </v-btn>
                       </template>
                       <v-list>
-                        <v-list-item @click="handleEditProduct(product.id)">
+                        <v-list-item  @click="openProductDrawer(category.id,product.id)">
                           <template v-slot:prepend>
                             <i class='bx bx-edit' style="font-size: 20px; margin-right: 12px;"></i>
                           </template>
-                          <v-list-item-title>Edit</v-list-item-title>
+                          <v-list-item-title >Edit</v-list-item-title>
                         </v-list-item>
                         <v-list-item @click="handleDuplicateProduct(product.id)">
                           <template v-slot:prepend>
@@ -732,7 +750,7 @@ const duplicateCategory = () => {
                           </template>
                           <v-list-item-title>Duplicate</v-list-item-title>
                         </v-list-item>
-                        <v-list-item @click="handleDeleteProduct(product.id)">
+                        <v-list-item @click="handleDeleteProduct(product.id,product.category_id)">
                           <template v-slot:prepend>
                             <i class='bx bx-trash' style="font-size: 20px; margin-right: 12px;"></i>
                           </template>
@@ -776,23 +794,23 @@ const duplicateCategory = () => {
           @confirm="confirmDelete"
           @cancel="cancelDelete"
       />
-      <ClientOnly>
-        <ImageUploadDialog
-            ref="uploaderRef"
-            title="Upload product image"
-            accept="image/*"
-            :maxSizeMB="10"
-            @selected="onImageSelected"
-        >
-          <!-- 👇 Your UPLOAD BUTTON now lives INSIDE the dialog -->
-          <template #actions="{ file, close, useImage }">
-            <v-btn variant="text" @click="close()">Cancel</v-btn>
-            <v-btn color="primary" :disabled="!file" @click="uploadLogo(file)">
-              Upload
-            </v-btn>
-          </template>
-        </ImageUploadDialog>
-      </ClientOnly>
+<!--      <ClientOnly>-->
+<!--        <ImageUploadDialog-->
+<!--            ref="uploaderRef"-->
+<!--            title="Upload product image"-->
+<!--            accept="image/*"-->
+<!--            :maxSizeMB="10"-->
+<!--            @selected="onImageSelected"-->
+<!--        >-->
+<!--          &lt;!&ndash; 👇 Your UPLOAD BUTTON now lives INSIDE the dialog &ndash;&gt;-->
+<!--          <template #actions="{ file, close, useImage }">-->
+<!--            <v-btn variant="text" @click="close()">Cancel</v-btn>-->
+<!--            <v-btn color="primary" :disabled="!file" @click="uploadLogo(file)">-->
+<!--              Upload-->
+<!--            </v-btn>-->
+<!--          </template>-->
+<!--        </ImageUploadDialog>-->
+<!--      </ClientOnly>-->
 
     </div>
     <div v-if="categoryCount == 0" class="d-flex justify-center">
@@ -816,12 +834,12 @@ const duplicateCategory = () => {
 }
 
 .products-container {
-  margin: 0 16px 16px 16px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
   overflow: hidden;
 }
-
+.product-card-item:hover{
+  background-color: #F1F7FF !important;
+  color: #000000 !important;
+}
 .product-card {
   cursor: pointer;
   transition: all 0.2s ease;
@@ -842,9 +860,7 @@ const duplicateCategory = () => {
   transition: color 0.2s ease;
 }
 
-.product-name-link:hover {
-  color: #1976d2;
-}
+
 
 /* Ensure Boxicons are properly aligned */
 i.bx {
@@ -980,14 +996,15 @@ i.bx {
 .tf-hover :deep(.v-field__append-inner) {
   align-items: flex-start;
 }
+
 .infield :deep(.v-field__input) {
   padding-right: 64px;
 }
 
 /* place the append content inside, aligned to the top (like your screenshot) */
 .infield :deep(.v-field__append-inner) {
-  align-items: flex-start;     /* push counter up */
-  padding-top: 4px;            /* fine-tune vertical */
+  align-items: flex-start; /* push counter up */
+  padding-top: 4px; /* fine-tune vertical */
 }
 
 /* counter look */
@@ -999,7 +1016,9 @@ i.bx {
   user-select: none;
   pointer-events: none;
 }
-
-
+.category-tab:hover{
+  background-color: #F5F5F5 !important;
+  color:#000000 !important;
+}
 
 </style>

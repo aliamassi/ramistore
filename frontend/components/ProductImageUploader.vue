@@ -1,8 +1,8 @@
 <!-- components/ProductImageUploader.vue -->
 <template>
-  <v-dialog v-model="open" max-width="860" persistent>
+  <v-dialog v-model="open" max-width="550" persistent>
     <v-card rounded="xl">
-      <v-card-title class="py-3  d-flex align-center justify-space-between">
+      <v-card-title class=" d-flex align-center justify-space-between">
         <div class="text-h6">Product images</div>
         <button  @click="onCancel"  type="button" class="float-right  v-btn v-btn--icon v-theme--light v-btn--density-comfortable v-btn--size-default v-btn--variant-text">
           <i  class="mdi-close mdi v-icon  v-theme--light v-icon--size-default" aria-hidden="true"></i>
@@ -20,7 +20,7 @@
         <!-- MAIN IMAGE TILE -->
         <div class="text-subtitle-2 mb-2">Main image</div>
         <div
-            class="drop-zone d-flex align-center justify-center mb-6"
+            class="drop-zone d-flex align-center justify-center mb-6 mx-auto"
             @dragover.prevent
             @drop.prevent="handleDrop($event, true)"
             @click="pickFiles(true)"
@@ -405,7 +405,6 @@ const onSave = () => {
   width: 120px;
   height: 120px;
   cursor: pointer;
-  padding: 12px;
   transition: border-color .15s ease;
   position: relative;
 }
@@ -437,7 +436,7 @@ const onSave = () => {
 .thumb-card{
   width: 120px !important;
   position: relative;
-  height: 160px !important;
+  height: 120px !important;
   overflow: visible !important
 }
 
@@ -450,10 +449,7 @@ const onSave = () => {
   position: relative;
   overflow: visible !important
 }
-.upload-image {
-  width: 100%;
-  height: auto;
-}
+
 .remove-btn {
   position: absolute;
   top: -16px;

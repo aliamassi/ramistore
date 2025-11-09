@@ -31,10 +31,11 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required'
         ]);
-        Product::create($request->all());
+        $product = Product::create($request->all());
         return response()->json([
             'status' => true,
-            'message' => __('messages.created')
+            'message' => __('messages.created'),
+            'product' => $product
         ]);
     }
 
@@ -84,7 +85,7 @@ class ProductController extends Controller
                 break;
             case"specific":
                 $product = Product::find($id);
-                $is_visible = $product->is_visible == 1?0:1;
+                $is_visible = $product->is_visible == 1 ? 0 : 1;
                 $product->update(['is_visible' => $is_visible]);
                 $category = Category::with('products')->find($product->category_id);
                 break;
@@ -122,7 +123,7 @@ class ProductController extends Controller
         }
         return response()->json([
             'status' => true,
-            'message' => __('messages.deleted')
+            'message' => __('messages.deleted'),
         ]);
     }
 }

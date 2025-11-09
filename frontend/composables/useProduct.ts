@@ -113,7 +113,7 @@ export const useProduct = () => {
             if (catIdx !== -1) {
                 const cat = categories.value[catIdx]
                 cat.products = Array.isArray(cat.products) ? cat.products : []
-                cat.products.push(productData)
+                cat.products.push(res.product)
             }
 
             setAlert?.('Product added successfully!', 'success')
@@ -130,7 +130,7 @@ export const useProduct = () => {
                 body: categoryData as any,
             })
             // const newCategory = normItem(res)
-            categories.value.push(categoryData)
+            categories.value.push(res.category)
             setAlert?.('Category added successfully!', 'success')
             return categoryData
         } catch (e) { onErr(e, 'Failed to add category') }
@@ -250,19 +250,36 @@ export const useProduct = () => {
         } catch (e) { onErr(e, 'Failed to update category') }
         finally { loading.value = false }
     }
+ const changeCategoryVisibility = async (id: Id, action: string) => {
+        loading.value = true; error.value = null
+        try {
+           const res = await $sf(`/panel/category/${id}/visibility`, {
+                method: 'PUT',
+                body: { id: id, action:action },
+            })
+            const idx = categories.value.findIndex(c => c?.id === res.category.id)
+            if (idx !== -1) categories.value[idx] = res.category
+            setAlert?.('Category updated successfully!', 'success')
+        } catch (e) { onErr(e, 'Failed to update category') }
+        finally { loading.value = false }
+    }
 
-    const deleteProduct = async (id: Id) => {
+    const deleteProduct = async (id: Id, categoryId: Id) => {
         loading.value = true; error.value = null
         try {
             await $sf(`/panel/product/${id}`, { method: 'DELETE' })
-            const idx = products.value.findIndex(p => p?.id === id)
-            if (idx !== -1) {
-                const deleted = products.value.splice(idx, 1)[0]
-                setAlert?.('Product deleted successfully!', 'success')
-                return deleted
-            } else {
-                throw new Error('Product not found')
+            const catIdx = categories.value.findIndex(c => c?.id === categoryId)
+            console.log('catIdx',catIdx);
+
+            if (catIdx !== -1) {
+                const cat = categories.value[catIdx]
+                const prodIdx = cat.products.findIndex(p => p?.id === id);
+                console.log('prodIdx',prodIdx);
+                if (prodIdx !== -1) {
+                    cat.products.splice(prodIdx, 1)
+                }
             }
+            setAlert?.('Product deleted successfully!', 'success')
         } catch (e) { onErr(e, 'Failed to delete product') }
         finally { loading.value = false }
     }
@@ -320,7 +337,7 @@ export const useProduct = () => {
         updateProduct, updateCategory,
         deleteProduct, deleteCategory,
         duplicateProduct, reorderProducts,
-        uploadProductImages,updateProductWithImages,fetchProductImages,changeProductVisibility
+        uploadProductImages,updateProductWithImages,fetchProductImages,changeProductVisibility,changeCategoryVisibility
 
     }
 }

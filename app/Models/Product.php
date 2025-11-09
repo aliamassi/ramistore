@@ -17,14 +17,18 @@ class Product extends Model implements HasMedia
 //    public array $translatable = ['name', 'description'];
     protected $fillable = ['category_id', 'name', 'description', 'price', 'type','is_visible'];
 
+
     // Optional: Append translated attribute to JSON
-//    protected $appends = ['translated_name','translated_description'];
+    protected $appends = ['image'];
 
     // Method 1: Using accessor to always return current locale
-//    public function getTranslatedNameAttribute()
-//    {
-//        return $this->getTranslation('name', app()->getLocale());
-//    }
+    public function getImageAttribute()
+    {
+         if($this->getMedia('products')->first()){
+             return $this->getMedia('products')->first()->getFullUrl();
+         }
+         return null;
+    }
 //    public function getTranslatedDescriptionAttribute()
 //    {
 //        return $this->getTranslation('description', app()->getLocale());
