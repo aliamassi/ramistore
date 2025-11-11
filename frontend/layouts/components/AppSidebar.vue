@@ -31,7 +31,7 @@
                   <v-icon size="14">mdi-silverware-fork-knife</v-icon>
                 </div>
               </template>
-              <v-list-item-title class="text-white font-weight-bold">
+              <v-list-item-title class="text-white ">
                 Menu
               </v-list-item-title>
             </v-list-item>
@@ -66,6 +66,38 @@
           >
             <v-list-item-title>Ordering settings</v-list-item-title>
           </v-list-item>
+        </v-list-group>
+        <v-list-group
+            v-model="menuOpen"
+            class="group is-open mt-1"
+            :expand-icon="'mdi-chevron-down'"
+            :collapse-icon="'mdi-chevron-up'"
+        >
+          <template #activator="{ props }">
+            <v-list-item v-bind="props" class="group-activator">
+              <template #prepend>
+                  <v-icon size="20">mdi-cog</v-icon>
+              </template>
+              <v-list-item-title class="text-white font-weight-bold">
+                Settings
+              </v-list-item-title>
+            </v-list-item>
+          </template>
+
+          <!-- Children -->
+          <v-list-item
+              class="child-item"
+              :class="activeKey === 'business-settings' ? 'active-child' : ''"
+              @click="activeKey = 'business-settings'"
+          >
+            <v-list-item-title>
+              <nuxt-link to="/business-settings">
+                Business Information
+              </nuxt-link>
+
+            </v-list-item-title>
+          </v-list-item>
+
         </v-list-group>
       </v-list>
 
@@ -186,5 +218,11 @@ const activeKey = ref<'product' | 'welcome' | 'ordering'>('product')
 .child-item:hover {
   background: rgba(255,255,255,.06);
 }
-
+.v-list-item--link:hover {
+  background: linear-gradient(90deg, #0047a3, #006eff);
+}
+.v-list-item-title {
+   font-size: 14px !important;
+   font-weight: 400  !important;
+}
 </style>
