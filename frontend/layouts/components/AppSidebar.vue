@@ -116,12 +116,12 @@ const menuOpen = ref(true)
 
 // Watch route and open menu group if on a menu-related page
 watch(() => route.path, (newPath) => {
-  if (newPath.includes('/products') || newPath.includes('/welcome') || newPath.includes('/ordering')) {
+  if (newPath.includes('/products') || newPath.includes('/welcome') || newPath.includes('/ordering')|| newPath.includes('/business-settings')) {
     menuOpen.value = true
   }
 }, { immediate: true })
 
-const activeKey = ref<'product' | 'welcome' | 'ordering'>('product')
+const activeKey = ref<'product' | 'welcome' | 'ordering'| 'business-settings'>('product')
 </script>
 
 <style scoped>
@@ -131,6 +131,9 @@ const activeKey = ref<'product' | 'welcome' | 'ordering'>('product')
   color: #fff;
 }
 
+.v-list-group__items{
+  display: block !important;
+}
 /* dashed "progress" placeholder to match top of your crop */
 .progress-box {
   border: 2px dashed rgba(255,255,255,.6);

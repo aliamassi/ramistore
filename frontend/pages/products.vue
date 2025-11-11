@@ -632,6 +632,7 @@ const duplicateCategory = () => {
 
             <!-- Product Count Badge -->
             <v-col cols="auto" class="mr-3">
+
               <div  class="d-flex align-center  ga-1">
                 <div  class="v-badge v-badge--inline total-counter" style="--472c9a3e: #5A6472;">
                   <div class="v-badge__wrapper">
