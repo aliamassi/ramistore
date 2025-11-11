@@ -4,6 +4,16 @@
 @use "@layouts/styles/mixins";
 @use "@configured-variables" as variables;
 
+html {
+  font-family: Roboto, sans-serif;
+  line-height: 1.5;
+  font-size: 1rem;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
 html,
 body {
   min-block-size: 100%;

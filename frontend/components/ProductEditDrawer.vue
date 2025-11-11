@@ -3,7 +3,7 @@
                        v-model="drawer"
                        location="right"
                        temporary
-                       width="500"
+                       width="440"
                        class="product-drawer"
   >
     <!-- Header -->
@@ -33,8 +33,8 @@
                   width="100"
           >
             <img v-if="product.image" :src="product.image" width="120" height="120" alt="">
-            <div v-else>
-              <div class="text-white text-center mb-2">
+            <div v-else class="text-center">
+              <div class="text-white mb-2">
                 <div class="font-weight-bold">Upload</div>
                 <div class="font-weight-bold">pictures</div>
               </div>

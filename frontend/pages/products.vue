@@ -552,7 +552,10 @@ const duplicateCategory = () => {
                 align-tabs="center"
                 class="bg-white"
             >
-              <v-tab class="category-tab" v-for="category in categories" :value="category.id">{{ category.name }}</v-tab>
+              <v-tab class="category-tab" v-for="category in categories" :value="category.id">{{
+                  category.name
+                }}
+              </v-tab>
             </v-tabs>
           </v-col>
         </v-row>
@@ -570,37 +573,76 @@ const duplicateCategory = () => {
           <v-row align="center" no-gutters>
             <!-- Drag Handle -->
             <v-col cols="auto" class="mr-3">
-              <i class='bx bx-menu text-grey' style="font-size: 20px;"></i>
+              <i class='mdi-drag mdi v-icon notranslate v-theme--light v-icon--size-default'></i>
             </v-col>
 
             <!-- Category Info -->
             <v-col>
-              <v-text-field
-                  v-model="category.name"
-                  @blur="handleUpdateCategory(category.id, category.name)"
-                  label="Category name"
-                  variant="plain"
-                  density="compact"
-                  hide-details
-                  class="infield tf-hover pr-10"
-                  :counter="30"
-                  maxlength="30"
-                  height="30px"
-                  width="40%"
-              >
-                <template #append-inner>
-                  <span class="infield-counter">{{ (category?.name?.length || 0) }}/30</span>
-                </template>
-              </v-text-field>
+<!--              <v-text-field-->
+<!--                  v-model="category.name"-->
+<!--                  @blur="handleUpdateCategory(category.id, category.name)"-->
+<!--                  label="Category name"-->
+<!--                  variant="plain"-->
+<!--                  density="compact"-->
+<!--                  hide-details-->
+<!--                  class="infield tf-hover pr-10"-->
+<!--                  :counter="30"-->
+<!--                  maxlength="30"-->
+<!--                  height="30px"-->
+<!--                  width="40%"-->
+<!--              >-->
+<!--                <template #append-inner>-->
+<!--                  <span class="infield-counter">{{ (category?.name?.length || 0) }}/30</span>-->
+<!--                </template>-->
+<!--              </v-text-field>-->
+              <div  class="v-input v-input--horizontal v-input--center-affix v-input--density-compact v-theme--light v-locale--is-ltr v-input--dirty v-text-field product-category__name" style="max-width: 268px;">
+                <div class="v-input__control">
+                  <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--has-background v-field--variant-filled v-theme--light v-locale--is-ltr" style="background-color: rgb(240, 240, 240); color: rgb(0, 0, 0); caret-color: rgb(0, 0, 0);">
+                    <div class="v-field__overlay">
+                    </div>
+                    <div class="v-field__loader">
+                      <div class="v-progress-linear v-theme--light v-locale--is-ltr" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;">
+                        <div class="v-progress-linear__background"></div><div class="v-progress-linear__buffer" style="width: 0%;">
+                      </div>
+                        <div class="v-progress-linear__indeterminate">
+                          <div class="v-progress-linear__indeterminate long">
+                          </div><div class="v-progress-linear__indeterminate short">
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="v-field__field" data-no-activator="">
+                      <label class="v-label v-field-label v-field-label--floating" aria-hidden="true" for="input-49" style="">
+                        Category name
+                      </label>
+                      <label class="v-label v-field-label" for="input-49" style="">Category name</label>
+                      <input v-model="category.name" @blur="handleUpdateCategory(category.id, category.name)" size="1" type="text" id="input-49" aria-describedby="input-49-messages" maxlength="30" class="v-field__input" >
+                    </div><div class="v-field__append-inner"><div><span data-v-e58f4069="" class="text-caption" style="display: none;">7/30</span>
+                    <div  class="v-field__append-inner">
+                      <span class="infield-counter">{{ (category?.name?.length || 0) }}/30</span></div>
+                  </div>
+                  </div>
+                    <div class="v-field__outline">
+                  </div>
+                  </div>
 
+                </div>
+              </div>
             </v-col>
 
             <!-- Product Count Badge -->
             <v-col cols="auto" class="mr-3">
-              <v-chip variant="outlined" size="small">
-                {{ category.products ? category.products.length : 0 }}
-              </v-chip>
+              <div  class="d-flex align-center  ga-1">
+                <div  class="v-badge v-badge--inline total-counter" style="--472c9a3e: #5A6472;">
+                  <div class="v-badge__wrapper">
+                  <span class="v-badge__badge v-theme--light" aria-atomic="true" aria-label="Badge" aria-live="polite" role="status" style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); caret-color: rgb(0, 0, 0);">
+                     {{ category.products ? category.products.length : 0 }}
+                  </span>
+                  </div>
+                </div>
+              </div>
             </v-col>
+
 
             <!-- Add Product Button -->
             <v-col cols="auto" class="mr-2">
@@ -650,25 +692,27 @@ const duplicateCategory = () => {
             </v-col>
 
             <v-col cols="auto" class="mr-2">
-              <button @click="handleChangeCategoryVisibility(category.id,'specific')" type="button" class="v-btn v-btn--icon v-theme--light text-primary v-btn--density-compact elevation-0 v-btn--size-default v-btn--variant-text mr-3">
+              <button @click="handleChangeCategoryVisibility(category.id,'specific')" type="button"
+                      class="v-btn v-btn--icon v-theme--light text-primary v-btn--density-compact elevation-0 v-btn--size-default v-btn--variant-text mr-3">
                 <span class="v-btn__content">
-                  <i  :class="[{'mdi-eye mdi':category.is_visible,'mdi mdi-eye-off-outline':!category.is_visible},'v-icon notranslate v-theme--light v-icon--size-default']" aria-hidden="true"></i>
+                  <i :class="[{'mdi-eye mdi':category.is_visible,'mdi mdi-eye-off-outline':!category.is_visible},'v-icon notranslate v-theme--light v-icon--size-default']"
+                     aria-hidden="true"></i>
                 </span>
               </button>
 
             </v-col>
             <!-- Collapse Toggle -->
             <v-col cols="auto">
-              <v-btn
-                  icon
-                  variant="text"
-              >
-                <i
-                    :class="isCategoryExpanded(category.id) ? 'bx bx-chevron-up' : 'bx bx-chevron-down'"
-                    style="font-size: 24px;"
-                ></i>
-              </v-btn>
+              <button type="button"
+                      class="v-btn v-btn--elevated v-btn--icon v-theme--light v-btn--density-comfortable v-btn--size-default v-btn--variant-elevated ml-2 bg-white">
+                <span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
+                <span class="v-btn__content">
+                <i :class="[{'mdi-chevron-down mdi':isCategoryExpanded(category.id)},{'mdi-chevron-up mdi':!isCategoryExpanded(category.id)},' v-icon notranslate v-theme--light v-icon--size-default']"
+                   aria-hidden="true" style="color: rgb(152, 161, 174); caret-color: rgb(152, 161, 174);"></i>
+              </span>
+              </button>
             </v-col>
+
           </v-row>
         </v-card-text>
 
@@ -685,7 +729,7 @@ const duplicateCategory = () => {
                 <v-row align="center" no-gutters>
                   <!-- Drag Handle -->
                   <v-col cols="auto" class="mr-3">
-                    <i class='bx bx-menu text-grey' style="font-size: 20px;"></i>
+                    <i class='mdi-drag mdi v-icon notranslate v-theme--light v-icon--size-default'></i>
                   </v-col>
 
                   <!-- Product Image -->
@@ -722,9 +766,11 @@ const duplicateCategory = () => {
 
                   <!-- View Button -->
                   <v-col cols="auto" class="mr-2">
-                    <button @click="handleChangeProductVisibility(product.id,'specific')" type="button" class="v-btn v-btn--icon v-theme--light text-primary v-btn--density-compact elevation-0 v-btn--size-default v-btn--variant-text mr-3">
+                    <button @click="handleChangeProductVisibility(product.id,'specific')" type="button"
+                            class="v-btn v-btn--icon v-theme--light text-primary v-btn--density-compact elevation-0 v-btn--size-default v-btn--variant-text mr-3">
                       <span class="v-btn__content">
-                        <i  :class="[{'mdi-eye mdi':product.is_visible,'mdi mdi-eye-off-outline':!product.is_visible},'v-icon notranslate v-theme--light v-icon--size-default']" aria-hidden="true"></i>
+                        <i :class="[{'mdi-eye mdi':product.is_visible,'mdi mdi-eye-off-outline':!product.is_visible},'v-icon notranslate v-theme--light v-icon--size-default']"
+                           aria-hidden="true"></i>
                       </span>
                     </button>
                   </v-col>
@@ -738,11 +784,11 @@ const duplicateCategory = () => {
                         </v-btn>
                       </template>
                       <v-list>
-                        <v-list-item  @click="openProductDrawer(category.id,product.id)">
+                        <v-list-item @click="openProductDrawer(category.id,product.id)">
                           <template v-slot:prepend>
                             <i class='bx bx-edit' style="font-size: 20px; margin-right: 12px;"></i>
                           </template>
-                          <v-list-item-title >Edit</v-list-item-title>
+                          <v-list-item-title>Edit</v-list-item-title>
                         </v-list-item>
                         <v-list-item @click="handleDuplicateProduct(product.id)">
                           <template v-slot:prepend>
@@ -794,23 +840,23 @@ const duplicateCategory = () => {
           @confirm="confirmDelete"
           @cancel="cancelDelete"
       />
-<!--      <ClientOnly>-->
-<!--        <ImageUploadDialog-->
-<!--            ref="uploaderRef"-->
-<!--            title="Upload product image"-->
-<!--            accept="image/*"-->
-<!--            :maxSizeMB="10"-->
-<!--            @selected="onImageSelected"-->
-<!--        >-->
-<!--          &lt;!&ndash; 👇 Your UPLOAD BUTTON now lives INSIDE the dialog &ndash;&gt;-->
-<!--          <template #actions="{ file, close, useImage }">-->
-<!--            <v-btn variant="text" @click="close()">Cancel</v-btn>-->
-<!--            <v-btn color="primary" :disabled="!file" @click="uploadLogo(file)">-->
-<!--              Upload-->
-<!--            </v-btn>-->
-<!--          </template>-->
-<!--        </ImageUploadDialog>-->
-<!--      </ClientOnly>-->
+      <!--      <ClientOnly>-->
+      <!--        <ImageUploadDialog-->
+      <!--            ref="uploaderRef"-->
+      <!--            title="Upload product image"-->
+      <!--            accept="image/*"-->
+      <!--            :maxSizeMB="10"-->
+      <!--            @selected="onImageSelected"-->
+      <!--        >-->
+      <!--          &lt;!&ndash; 👇 Your UPLOAD BUTTON now lives INSIDE the dialog &ndash;&gt;-->
+      <!--          <template #actions="{ file, close, useImage }">-->
+      <!--            <v-btn variant="text" @click="close()">Cancel</v-btn>-->
+      <!--            <v-btn color="primary" :disabled="!file" @click="uploadLogo(file)">-->
+      <!--              Upload-->
+      <!--            </v-btn>-->
+      <!--          </template>-->
+      <!--        </ImageUploadDialog>-->
+      <!--      </ClientOnly>-->
 
     </div>
     <div v-if="categoryCount == 0" class="d-flex justify-center">
@@ -836,10 +882,12 @@ const duplicateCategory = () => {
 .products-container {
   overflow: hidden;
 }
-.product-card-item:hover{
+
+.product-card-item:hover {
   background-color: #F1F7FF !important;
   color: #000000 !important;
 }
+
 .product-card {
   cursor: pointer;
   transition: all 0.2s ease;
@@ -858,9 +906,11 @@ const duplicateCategory = () => {
 .product-name-link {
   cursor: pointer;
   transition: color 0.2s ease;
+  font-size: 14px !important;
 }
-
-
+.body .v-btn .v-btn__content{
+  font-size: 14px !important;
+}
 
 /* Ensure Boxicons are properly aligned */
 i.bx {
@@ -1016,9 +1066,17 @@ i.bx {
   user-select: none;
   pointer-events: none;
 }
-.category-tab:hover{
+
+.category-tab {
+  color: #000000 !important;
+}
+
+.category-tab:hover {
   background-color: #F5F5F5 !important;
-  color:#000000 !important;
+  color: #000000 !important;
+}
+.infield-counter{
+  font-size: 12px !important;
 }
 
 </style>

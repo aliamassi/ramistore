@@ -1,8 +1,8 @@
 <!-- components/ProductImageUploader.vue -->
 <template>
   <v-dialog v-model="open" max-width="550" persistent>
-    <v-card rounded="xl">
-      <v-card-title class=" d-flex align-center justify-space-between">
+    <v-card rounded="l">
+      <v-card-title  class=" d-flex align-center justify-space-between product-header">
         <div class="text-h6">Product images</div>
         <button  @click="onCancel"  type="button" class="float-right  v-btn v-btn--icon v-theme--light v-btn--density-comfortable v-btn--size-default v-btn--variant-text">
           <i  class="mdi-close mdi v-icon  v-theme--light v-icon--size-default" aria-hidden="true"></i>
@@ -487,5 +487,12 @@ const onSave = () => {
   background-color: rgba(255, 255, 255, 1) !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transform: scale(1.1);
+}
+.product-header{
+  background-color: #016FFF;
+
+}
+.product-header .text-h6{
+  color: #ffffff !important;
 }
 </style>
