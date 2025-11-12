@@ -21,10 +21,10 @@ class MenuController extends Controller
         $user = null;
         $waLink = $this->buildWhatsappLink($cart, $total);
         if($request->id){
-            $categories = Category::where('admin_id',$request->id)->with('products')->get();
+            $categories = Category::where('admin_id',$request->id)->where('is_visible',1)->with('products')->latest()->get();
             $user = Admin::find($request->id);
         }else{
-            $categories = Category::with('products')->get();
+            $categories = Category::with('products')->where('is_visible',1)->latest()->get();
         }
         $setting = Setting::all()->keyBy('key');
         return view('menu', [

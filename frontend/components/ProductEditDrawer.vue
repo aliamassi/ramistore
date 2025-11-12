@@ -49,6 +49,7 @@
               variant="outlined"
               density="comfortable"
               hide-details
+              @blur="saveProduct"
           ></v-text-field>
           <v-textarea
               v-model="product.description"
@@ -58,6 +59,7 @@
               rows="3"
               class="mt-3"
               hide-details
+              @blur="saveProduct"
           ></v-textarea>
         </v-col>
       </v-row>
@@ -76,6 +78,7 @@
               divided
               density="compact"
               class="custom-toggle"
+
           >
             <v-btn @click="productType('simple')" value="simple" class="text-none price-type-btn">Simple</v-btn>
             <v-btn @click="productType('variable')" value="variants" class="text-none price-type-btn">Variants</v-btn>
@@ -83,6 +86,7 @@
         </div>
         <div v-if="priceType === 'simple'">
           <v-text-field
+              v-model="product.price"
               label="Price"
               placeholder="0.00"
               variant="outlined"
@@ -161,6 +165,7 @@
               density="comfortable"
               hide-details
               class="mb-4"
+              @blur="saveProduct"
           ></v-text-field>
 
 
@@ -201,6 +206,7 @@
                         density="compact"
                         hide-details
                         class="mb-2"
+                        @blur="saveProduct"
                     ></v-text-field>
                     <v-text-field
                         v-model.number="variant.price"
@@ -210,6 +216,7 @@
                         type="number"
                         prefix="JD"
                         hide-details
+                        @blur="saveProduct"
                     ></v-text-field>
                   </div>
                 </v-expand-transition>
@@ -313,17 +320,17 @@
             Cancel
           </v-btn>
         </v-col>
-        <v-col>
-          <v-btn
-              block
-              size="large"
-              color="primary"
-              class="text-none"
-              @click="saveProduct"
-          >
-            Save
-          </v-btn>
-        </v-col>
+<!--        <v-col>-->
+<!--          <v-btn-->
+<!--              block-->
+<!--              size="large"-->
+<!--              color="primary"-->
+<!--              class="text-none"-->
+<!--              @click="saveProduct"-->
+<!--          >-->
+<!--            Save-->
+<!--          </v-btn>-->
+<!--        </v-col>-->
       </v-row>
     </v-container>
   </v-navigation-drawer>
@@ -454,7 +461,7 @@ const addModifier = () => {
 
 const saveProduct = () => {
   emit('save', product.value)
-  drawer.value = false
+  // drawer.value = false
 }
 </script>
 

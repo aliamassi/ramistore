@@ -7,6 +7,7 @@ import ProductEditDrawer from '~/components/ProductEditDrawer.vue'
 import DeleteConfirmDialog from '~/components/DeleteConfirmDialog.vue'
 import {useSanctumFetch} from "#imports";
 
+const selected = ref('favorites')
 const $sf = useSanctumFetch<AnyObj>
 import ImageUploadDialog from '@/components/ImageUploadDialog.vue'
 
@@ -230,7 +231,7 @@ const handleEditProduct = async (id) => {
 
 const handleSaveProduct = async (productData) => {
   try {
-    await updateProduct(productData.id, productData, type)
+    await updateProduct(productData.id, productData)
     console.log('Product updated successfully')
   } catch (err) {
     console.error('Failed to update product:', err)
@@ -356,30 +357,30 @@ const duplicateCategory = () => {
     <!-- Banner Image Section -->
     <v-card class="banner-card" elevation="0">
       <v-img
-          :src="bannerImage"
-          height="200"
-          cover
-          class="banner-image"
+        :src="bannerImage"
+        height="200"
+        cover
+        class="banner-image"
       >
         <!-- Get Domain Button -->
         <v-btn
-            prepend-icon="bx bx-link"
-            color="white"
-            class="ma-4 text-none"
-            elevation="2"
-            :href="user?.domain"
-            target="_blank"
+          prepend-icon="bx bx-link"
+          color="white"
+          class="ma-4 text-none"
+          elevation="2"
+          :href="user?.domain"
+          target="_blank"
         >
           Get your .com domain
         </v-btn>
 
         <!-- Camera Button for Banner -->
         <v-btn
-            icon
-            color="primary"
-            class="banner-camera-btn"
-            size="large"
-            elevation="3"
+          icon
+          color="primary"
+          class="banner-camera-btn"
+          size="large"
+          elevation="3"
         >
           <i class='bx bx-camera' style="font-size: 24px;"></i>
         </v-btn>
@@ -388,11 +389,11 @@ const duplicateCategory = () => {
         <v-menu location="bottom end">
           <template v-slot:activator="{ props }">
             <v-btn
-                icon
-                color="white"
-                class="settings-btn"
-                v-bind="props"
-                elevation="2"
+              icon
+              color="white"
+              class="settings-btn"
+              v-bind="props"
+              elevation="2"
             >
               <i class='bx bx-cog' style="font-size: 24px;"></i>
             </v-btn>
@@ -414,22 +415,22 @@ const duplicateCategory = () => {
           <!-- Logo -->
           <v-col cols="auto" class="logo-wrapper">
             <v-card
-                class="logo-card"
-                elevation="4"
-                width="140"
-                height="140"
+              class="logo-card"
+              elevation="4"
+              width="140"
+              height="140"
             >
               <v-img
-                  v-if="logoImage"
-                  :src="logoImage"
-                  cover
-                  height="100%"
+                v-if="logoImage"
+                :src="logoImage"
+                cover
+                height="100%"
               ></v-img>
               <v-img
-                  v-else-if="user?.logo"
-                  :src="user?.logo"
-                  cover
-                  height="100%"
+                v-else-if="user?.logo"
+                :src="user?.logo"
+                cover
+                height="100%"
               ></v-img>
 
               <div v-else class="d-flex align-center justify-center fill-height">
@@ -438,12 +439,12 @@ const duplicateCategory = () => {
 
               <!-- Camera Button for Logo -->
               <v-btn
-                  icon
-                  color="primary"
-                  size="small"
-                  class="logo-camera-btn"
-                  elevation="3"
-                  @click="openImagePicker"
+                icon
+                color="primary"
+                size="small"
+                class="logo-camera-btn"
+                elevation="3"
+                @click="openImagePicker"
               >
                 <i class='bx bx-camera' style="font-size: 18px;"></i>
               </v-btn>
@@ -453,55 +454,53 @@ const duplicateCategory = () => {
           <!-- Business Name Input -->
           <v-col class="ml-4">
             <div class="text-caption text-grey-darken-1 mb-1">Business</div>
-            <v-text-field
+            <div style="position: relative;">
+              <v-text-field
                 v-model="user.name"
                 variant="underlined"
                 density="compact"
-                hide-details
                 class="business-name-field"
                 :counter="45"
                 maxlength="45"
-            >
-              <template v-slot:append>
-                <div class="text-caption text-grey">{{ user?.name?.length }}/45</div>
-              </template>
-            </v-text-field>
+              >
+              </v-text-field>
+            </div>
           </v-col>
 
           <!-- Action Buttons -->
           <v-col cols="auto" class="ml-4 d-flex align-center">
             <!-- Search Button -->
             <v-btn
-                icon
-                variant="text"
-                size="large"
-                class="mr-2"
+              icon
+              variant="text"
+              size="large"
+              class="mr-2"
             >
               <i class='bx bx-search' style="font-size: 24px;"></i>
             </v-btn>
 
             <!-- Favorite Button -->
             <v-btn
-                icon
-                variant="text"
-                size="large"
-                class="mr-2"
-                @click="toggleFavorite"
+              icon
+              variant="text"
+              size="large"
+              class="mr-2"
+              @click="toggleFavorite"
             >
               <i
-                  :class="isFavorite ? 'bx bxs-star' : 'bx bx-star'"
-                  style="font-size: 24px;"
-                  :style="{ color: isFavorite ? '#FFC107' : 'inherit' }"
+                :class="isFavorite ? 'bx bxs-star' : 'bx bx-star'"
+                style="font-size: 24px;"
+                :style="{ color: isFavorite ? '#FFC107' : 'inherit' }"
               ></i>
             </v-btn>
 
             <!-- Toggle Switch -->
             <v-switch
-                v-model="isActive"
-                hide-details
-                density="compact"
-                color="primary"
-                class="ml-2"
+              v-model="isActive"
+              hide-details
+              density="compact"
+              color="primary"
+              class="ml-2"
             ></v-switch>
           </v-col>
         </v-row>
@@ -547,25 +546,36 @@ const duplicateCategory = () => {
             </v-menu>
           </v-col>
           <v-col cols="auto" style="max-width: 86%">
-            <v-tabs
-                v-model="tab"
-                align-tabs="center"
-                class="bg-white"
+            <v-slide-group
+              v-model="selected"
+              class="custom-slide-group"
+              show-arrows
             >
-              <v-tab class="category-tab" v-for="category in categories" :value="category.id">{{
-                  category.name
-                }}
-              </v-tab>
-            </v-tabs>
+              <v-slide-group-item
+                v-for="category in categories"
+                :key="category.id"
+                v-slot="{ isSelected, toggle }"
+                :value="category.id"
+              >
+                <v-btn
+                  :class="['slide-tab', { 'active': isSelected }]"
+                  variant="text"
+                  @click="toggle"
+                >
+                  {{ category.name }}
+                </v-btn>
+              </v-slide-group-item>
+            </v-slide-group>
+
           </v-col>
         </v-row>
 
       </div>
       <v-card
-          v-for="category in categories"
-          :key="category.id"
-          elevation="1"
-          class="category-card"
+        v-for="category in categories"
+        :key="category.id"
+        elevation="1"
+        class="category-card"
 
       >
         <!-- Category Header -->
@@ -578,52 +588,66 @@ const duplicateCategory = () => {
 
             <!-- Category Info -->
             <v-col>
-<!--              <v-text-field-->
-<!--                  v-model="category.name"-->
-<!--                  @blur="handleUpdateCategory(category.id, category.name)"-->
-<!--                  label="Category name"-->
-<!--                  variant="plain"-->
-<!--                  density="compact"-->
-<!--                  hide-details-->
-<!--                  class="infield tf-hover pr-10"-->
-<!--                  :counter="30"-->
-<!--                  maxlength="30"-->
-<!--                  height="30px"-->
-<!--                  width="40%"-->
-<!--              >-->
-<!--                <template #append-inner>-->
-<!--                  <span class="infield-counter">{{ (category?.name?.length || 0) }}/30</span>-->
-<!--                </template>-->
-<!--              </v-text-field>-->
-              <div  class="v-input v-input--horizontal v-input--center-affix v-input--density-compact v-theme--light v-locale--is-ltr v-input--dirty v-text-field product-category__name" style="max-width: 268px;">
+              <!--              <v-text-field-->
+              <!--                  v-model="category.name"-->
+              <!--                  @blur="handleUpdateCategory(category.id, category.name)"-->
+              <!--                  label="Category name"-->
+              <!--                  variant="plain"-->
+              <!--                  density="compact"-->
+              <!--                  hide-details-->
+              <!--                  class="infield tf-hover pr-10"-->
+              <!--                  :counter="30"-->
+              <!--                  maxlength="30"-->
+              <!--                  height="30px"-->
+              <!--                  width="40%"-->
+              <!--              >-->
+              <!--                <template #append-inner>-->
+              <!--                  <span class="infield-counter">{{ (category?.name?.length || 0) }}/30</span>-->
+              <!--                </template>-->
+              <!--              </v-text-field>-->
+
+              <div
+                class="v-input v-input--horizontal v-input--center-affix v-input--density-compact v-theme--light v-locale--is-ltr v-input--dirty v-text-field product-category__name"
+                style="max-width: 268px;">
                 <div class="v-input__control">
-                  <div class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--has-background v-field--variant-filled v-theme--light v-locale--is-ltr" style="background-color: rgb(240, 240, 240); color: rgb(0, 0, 0); caret-color: rgb(0, 0, 0);">
+                  <div
+                    class="v-field v-field--active v-field--appended v-field--center-affix v-field--dirty v-field--has-background v-field--variant-filled v-theme--light v-locale--is-ltr"
+                    style="background-color: rgb(240, 240, 240); color: rgb(0, 0, 0); caret-color: rgb(0, 0, 0);">
                     <div class="v-field__overlay">
                     </div>
                     <div class="v-field__loader">
-                      <div class="v-progress-linear v-theme--light v-locale--is-ltr" role="progressbar" aria-hidden="true" aria-valuemin="0" aria-valuemax="100" style="top: 0px; height: 0px; --v-progress-linear-height: 2px;">
-                        <div class="v-progress-linear__background"></div><div class="v-progress-linear__buffer" style="width: 0%;">
-                      </div>
+                      <div class="v-progress-linear v-theme--light v-locale--is-ltr" role="progressbar"
+                           aria-hidden="true" aria-valuemin="0" aria-valuemax="100"
+                           style="top: 0px; height: 0px; --v-progress-linear-height: 2px;">
+                        <div class="v-progress-linear__background"></div>
+                        <div class="v-progress-linear__buffer" style="width: 0%;">
+                        </div>
                         <div class="v-progress-linear__indeterminate">
                           <div class="v-progress-linear__indeterminate long">
-                          </div><div class="v-progress-linear__indeterminate short">
-                        </div>
+                          </div>
+                          <div class="v-progress-linear__indeterminate short">
+                          </div>
                         </div>
                       </div>
                     </div>
                     <div class="v-field__field" data-no-activator="">
-                      <label class="v-label v-field-label v-field-label--floating" aria-hidden="true" for="input-49" style="">
+                      <label class="v-label v-field-label v-field-label--floating" aria-hidden="true" for="input-49"
+                             style="">
                         Category name
                       </label>
                       <label class="v-label v-field-label" for="input-49" style="">Category name</label>
-                      <input v-model="category.name" @blur="handleUpdateCategory(category.id, category.name)" size="1" type="text" id="input-49" aria-describedby="input-49-messages" maxlength="30" class="v-field__input" >
-                    </div><div class="v-field__append-inner"><div><span data-v-e58f4069="" class="text-caption" style="display: none;">7/30</span>
-                    <div  class="v-field__append-inner">
-                      <span class="infield-counter">{{ (category?.name?.length || 0) }}/30</span></div>
-                  </div>
-                  </div>
+                      <input v-model="category.name" @blur="handleUpdateCategory(category.id, category.name)" size="1"
+                             type="text" id="input-49" aria-describedby="input-49-messages" maxlength="30"
+                             class="v-field__input">
+                    </div>
+                    <div class="v-field__append-inner">
+                      <div><span data-v-e58f4069="" class="text-caption" style="display: none;">7/30</span>
+                        <div class="v-field__append-inner">
+                          <span class="infield-counter">{{ (category?.name?.length || 0) }}/30</span></div>
+                      </div>
+                    </div>
                     <div class="v-field__outline">
-                  </div>
+                    </div>
                   </div>
 
                 </div>
@@ -633,14 +657,12 @@ const duplicateCategory = () => {
             <!-- Product Count Badge -->
             <v-col cols="auto" class="mr-3">
 
-              <div  class="d-flex align-center  ga-1">
-                <div  class="v-badge v-badge--inline total-counter" style="--472c9a3e: #5A6472;">
-                  <div class="v-badge__wrapper">
-                  <span class="v-badge__badge v-theme--light" aria-atomic="true" aria-label="Badge" aria-live="polite" role="status" style="background-color: rgb(255, 255, 255); color: rgb(0, 0, 0); caret-color: rgb(0, 0, 0);">
-                     {{ category.products ? category.products.length : 0 }}
-                  </span>
-                  </div>
-                </div>
+
+              <div class="d-flex align-center  ga-1 mr-2">
+                <v-badge location="top right" class="black-text-badge" color="white"
+                         :content=" category.products ? category.products.length : 0 ">
+                </v-badge>
+
               </div>
             </v-col>
 
@@ -648,13 +670,13 @@ const duplicateCategory = () => {
             <!-- Add Product Button -->
             <v-col cols="auto" class="mr-2">
               <v-btn
-                  color="primary"
-                  variant="outlined"
-                  size="small"
-                  rounded="lg"
-                  class="text-none"
-                  @click="handleAddProduct(category.id)"
-                  :loading="loading"
+                color="primary"
+                variant="outlined"
+                size="small"
+                rounded="lg"
+                class="text-none"
+                @click="handleAddProduct(category.id)"
+                :loading="loading"
               >
                 <i class='bx bx-plus' style="font-size: 20px; margin-right: 8px;"></i>
                 Product
@@ -696,8 +718,9 @@ const duplicateCategory = () => {
               <button @click="handleChangeCategoryVisibility(category.id,'specific')" type="button"
                       class="v-btn v-btn--icon v-theme--light text-primary v-btn--density-compact elevation-0 v-btn--size-default v-btn--variant-text mr-3">
                 <span class="v-btn__content">
-                  <i :class="[{'mdi-eye mdi':category.is_visible,'mdi mdi-eye-off-outline':!category.is_visible},'v-icon notranslate v-theme--light v-icon--size-default']"
-                     aria-hidden="true"></i>
+                  <i
+                    :class="[{'mdi-eye mdi':category.is_visible,'mdi mdi-eye-off-outline':!category.is_visible},'v-icon notranslate v-theme--light v-icon--size-default']"
+                    aria-hidden="true"></i>
                 </span>
               </button>
 
@@ -708,8 +731,9 @@ const duplicateCategory = () => {
                       class="v-btn v-btn--elevated v-btn--icon v-theme--light v-btn--density-comfortable v-btn--size-default v-btn--variant-elevated ml-2 bg-white">
                 <span class="v-btn__overlay"></span><span class="v-btn__underlay"></span>
                 <span class="v-btn__content">
-                <i :class="[{'mdi-chevron-down mdi':isCategoryExpanded(category.id)},{'mdi-chevron-up mdi':!isCategoryExpanded(category.id)},' v-icon notranslate v-theme--light v-icon--size-default']"
-                   aria-hidden="true" style="color: rgb(152, 161, 174); caret-color: rgb(152, 161, 174);"></i>
+                <i
+                  :class="[{'mdi-chevron-down mdi':isCategoryExpanded(category.id)},{'mdi-chevron-up mdi':!isCategoryExpanded(category.id)},' v-icon notranslate v-theme--light v-icon--size-default']"
+                  aria-hidden="true" style="color: rgb(152, 161, 174); caret-color: rgb(152, 161, 174);"></i>
               </span>
               </button>
             </v-col>
@@ -721,10 +745,10 @@ const duplicateCategory = () => {
         <v-expand-transition>
           <div v-show="isCategoryExpanded(category.id)" class="products-container">
             <v-card
-                v-for="product in category.products"
-                :key="product.id"
-                elevation="0"
-                class="product-card"
+              v-for="product in category.products"
+              :key="product.id"
+              elevation="0"
+              class="product-card"
             >
               <v-card-text class="pa-2 product-card-item">
                 <v-row align="center" no-gutters>
@@ -736,10 +760,10 @@ const duplicateCategory = () => {
                   <!-- Product Image -->
                   <v-col cols="auto" class="mr-4">
                     <v-avatar
-                        size="30"
-                        rounded="lg"
-                        :class="product.image ? 'bg-white' : 'bg-grey-lighten-3'"
-                        style="border: 1px solid #e0e0e0;"
+                      size="30"
+                      rounded="lg"
+                      :class="product.image ? 'bg-white' : 'bg-grey-lighten-3'"
+                      style="border: 1px solid #e0e0e0;"
                     >
                       <div v-if="!product.image" class="text-center">
                         <i class='bx bx-package text-grey' style="font-size: 32px;"></i>
@@ -751,8 +775,8 @@ const duplicateCategory = () => {
                   <!-- Product Name -->
                   <v-col>
                     <div
-                        class="text-h6 font-weight-medium product-name-link"
-                        @click="openProductDrawer(category.id,product.id)"
+                      class="text-h6 font-weight-medium product-name-link"
+                      @click="openProductDrawer(category.id,product.id)"
                     >
                       {{ product.name }}
                     </div>
@@ -770,8 +794,9 @@ const duplicateCategory = () => {
                     <button @click="handleChangeProductVisibility(product.id,'specific')" type="button"
                             class="v-btn v-btn--icon v-theme--light text-primary v-btn--density-compact elevation-0 v-btn--size-default v-btn--variant-text mr-3">
                       <span class="v-btn__content">
-                        <i :class="[{'mdi-eye mdi':product.is_visible,'mdi mdi-eye-off-outline':!product.is_visible},'v-icon notranslate v-theme--light v-icon--size-default']"
-                           aria-hidden="true"></i>
+                        <i
+                          :class="[{'mdi-eye mdi':product.is_visible,'mdi mdi-eye-off-outline':!product.is_visible},'v-icon notranslate v-theme--light v-icon--size-default']"
+                          aria-hidden="true"></i>
                       </span>
                     </button>
                   </v-col>
@@ -829,17 +854,17 @@ const duplicateCategory = () => {
 
       <!-- Product Edit Drawer -->
       <ProductEditDrawer
-          v-model="showDrawer"
-          :product-data="selectedProduct"
-          @save="handleSaveProduct"
+        v-model="showDrawer"
+        :product-data="selectedProduct"
+        @save="handleSaveProduct"
       />
       <!-- Delete Confirmation Dialog -->
       <DeleteConfirmDialog
-          v-model="showDeleteDialog"
-          :title="deleteDialog.title"
-          :message="deleteDialog.message"
-          @confirm="confirmDelete"
-          @cancel="cancelDelete"
+        v-model="showDeleteDialog"
+        :title="deleteDialog.title"
+        :message="deleteDialog.message"
+        @confirm="confirmDelete"
+        @cancel="cancelDelete"
       />
       <!--      <ClientOnly>-->
       <!--        <ImageUploadDialog-->
@@ -909,7 +934,8 @@ const duplicateCategory = () => {
   transition: color 0.2s ease;
   font-size: 14px !important;
 }
-.body .v-btn .v-btn__content{
+
+.body .v-btn .v-btn__content {
   font-size: 14px !important;
 }
 
@@ -969,25 +995,6 @@ i.bx {
   right: 8px;
 }
 
-.business-name-field {
-  font-size: 24px;
-  font-weight: 500;
-}
-
-.business-name-field :deep(.v-field__input) {
-  font-size: 24px;
-  font-weight: 500;
-  padding: 0;
-  min-height: auto;
-}
-
-.business-name-field :deep(.v-field__underlay) {
-  display: none;
-}
-
-.business-name-field :deep(.v-field__outline) {
-  display: none;
-}
 
 /* base shape + default (non-hover) background */
 .tf-hover :deep(.v-field) {
@@ -1076,8 +1083,63 @@ i.bx {
   background-color: #F5F5F5 !important;
   color: #000000 !important;
 }
-.infield-counter{
+
+.infield-counter {
   font-size: 12px !important;
 }
 
+.black-text-badge :deep(.v-badge__badge) {
+  color: black !important;
+}
+
+.custom-slide-group {
+  border-bottom: 1px solid #e0e0e0 !important;
+}
+
+.slide-tab {
+  text-transform: none;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0;
+  color: #000 !important;
+  border-radius: 0;
+  position: relative;
+  padding: 12px 20px;
+}
+
+.slide-tab.active {
+  color: #016FFF !important;
+  font-weight: 500 !important;
+  border-bottom: 2px solid #016FFF !important;
+}
+
+.slide-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #1976d2 !important;
+}
+
+.business-name-field :deep(.v-field--focused) {
+  border-color: #000000 !important;
+}
+
+.business-name-field :deep(.v-field--focused .v-field__outline) {
+  --v-field-border-opacity: 1;
+  color: #000000 !important;
+}
+
+.business-name-field :deep(.v-counter) {
+  position: absolute;
+  top: 0px;
+  right: 0;
+}
+
+.business-name-field :deep(.v-input__details) {
+  min-height: 0;
+  padding-top: 0;
+}
 </style>
