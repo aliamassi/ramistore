@@ -10,6 +10,7 @@ import {useSanctumFetch} from "#imports";
 const selected = ref('favorites')
 const $sf = useSanctumFetch<AnyObj>
 import ImageUploadDialog from '@/components/ImageUploadDialog.vue'
+import ProductImageUploader from "@/components/ProductImageUploader.vue";
 
 const setAlert = inject<(msg: string, type?: 'success' | 'error' | 'info') => void>('setAlert')
 const setting = reactive({
@@ -115,12 +116,16 @@ const {
   addProduct,
   addCategory,
   updateProduct,
+  addProductVariant,
   deleteProduct,
   deleteCategory,
   updateCategory,
   fetchProductImages,
   changeProductVisibility,
   changeCategoryVisibility,
+  fetchSettings,
+  updateProductVariant,
+  settings,
   duplicateProduct
 } = useProduct()
 const {user} = useSanctum()
@@ -147,22 +152,13 @@ watch(error, (newError) => {
 
 onMounted(async () => {
   await fetchCategories()
-  await fetchSettings()
+    await fetchSettings()
+  setting.currency = settings.value.currency.value
   console.log(categoryCount.value)
 })
 // Methods
-const fetchSettings = async () => {
-  loading.value = true;
-  error.value = null
-  try {
-    const res = await $sf('/panel/settings?key=business_settings')
-    setting.currency = res.settings.currency.value
-  } catch (e) {
 
-  } finally {
-    loading.value = false
-  }
-}
+
 const toggleFavorite = () => {
   isFavorite.value = !isFavorite.value
 }
@@ -199,6 +195,14 @@ const openProductDrawer = (categoryId, productId) => {
   }
 }
 
+
+// const handleImagesUpdated = (product) => {
+//   // Update selectedProduct with new images
+//   if (selectedProduct.value) {
+//     selectedProduct.value = product
+//
+//   }
+// }
 const formatPrice = (price) => {
   return price.toFixed(2).replace('.', ',')
 }
@@ -231,11 +235,33 @@ const handleEditProduct = async (id) => {
 
 const handleSaveProduct = async (productData) => {
   try {
-    await updateProduct(productData.id, productData)
+   const updateProductResponse =  await updateProduct(productData.id, productData)
+    selectedProduct.value = updateProductResponse
     console.log('Product updated successfully')
   } catch (err) {
     console.error('Failed to update product:', err)
   }
+}
+const handleSaveProductVariant = async (productData) => {
+  try {
+    await updateProductVariant(productData.id, productData)
+    console.log('Product variant updated successfully')
+  } catch (err) {
+    console.error('Failed to update product:', err)
+  }
+}
+const handleAddProductVariant = async (variantData) => {
+  try {
+    const addProductVariantResponse = await addProductVariant(variantData)
+    selectedProduct.value = addProductVariantResponse
+    console.log('Product variants updated successfully')
+  } catch (err) {
+    console.error('Failed to update product:', err)
+  }
+}
+const handleProductUpdated = async (productData) => {
+  selectedProduct.value =  productData
+
 }
 const handleChangeProductVisibility = async (id, action) => {
   try {
@@ -366,8 +392,7 @@ const duplicateCategory = () => {
         <v-btn
           prepend-icon="bx bx-link"
           color="white"
-          class="ma-4 text-none"
-          elevation="2"
+          class="text-none copy-domain"
           :href="user?.domain"
           target="_blank"
         >
@@ -857,6 +882,9 @@ const duplicateCategory = () => {
         v-model="showDrawer"
         :product-data="selectedProduct"
         @save="handleSaveProduct"
+        @productUpdated="handleProductUpdated"
+        @addVariant="handleAddProductVariant"
+        @saveVariant="handleSaveProductVariant"
       />
       <!-- Delete Confirmation Dialog -->
       <DeleteConfirmDialog
@@ -1138,8 +1166,19 @@ i.bx {
   right: 0;
 }
 
+
 .business-name-field :deep(.v-input__details) {
   min-height: 0;
   padding-top: 0;
+}
+.copy-domain{
+  height:24px !important;
+  border-radius: 24px;
+  font-size: 12px;
+  background-color: #DEEBFC !important;
+  color:#006EFF !important;
+  margin-top:  10px !important;
+  margin-left: 10px !important;
+  padding: 0 10px !important;
 }
 </style>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -14,7 +15,7 @@ class CategoryController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $categories = $user->categories()->with('products')->latest()->paginate(20);
+        $categories = $user->categories()->with('products.variants')->latest()->paginate(20);
         return response()->json([
             'status' => true,
             'categories' => $categories
@@ -32,10 +33,12 @@ class CategoryController extends Controller
         ]);
         $request['admin_id'] = auth()->user()->id;
         $category = Category::create($request->all());
+        $setting = Setting::all()->keyBy('key');
         return response()->json([
             'status' => true,
             'message' => __('messages.created'),
             'category' => $category,
+            'setting' => $setting,
         ]);
     }
 

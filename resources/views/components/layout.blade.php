@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" x-data="{ tab: 'hot-drinks' }">
+<html lang="en" x-data="{ tab: '{{$categories[0]['name']??''}}' }">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -157,7 +157,7 @@
                                     <div class="flex justify-between">
                                         <p class="font-medium">{{ $line['name'] }}</p>
                                         <p class="font-semibold">
-                                            ${{ number_format($line['price'] * $line['qty'], 2) }}</p>
+                                            {{$setting['currency']->value??"$"}}{{ number_format($line['price'] * $line['qty'], 2) }}</p>
                                     </div>
                                     <div class="flex items-center gap-2 text-sm text-gray-600 mt-1">
                                         <span class="qty">Qty: {{ $line['qty'] }}</span>
@@ -185,7 +185,7 @@
                                             </button>
                                         </form>
                                     </div>
-                                    <p class="text-xs text-gray-400 mt-0.5">${{ number_format($line['price'],2) }}
+                                    <p class="text-xs text-gray-400 mt-0.5">{{$setting['currency']->value??"$"}}{{ number_format($line['price'],2) }}
                                         each</p>
                                 </div>
                             </div>
@@ -327,22 +327,39 @@
 <script>
     $(document).on('click', '.cart-add', function () {
         var id = $(this).data('id');
-        $.ajax({
-            type: 'POST',
-            url: "{{route('cart.add')}}",
-            data: {
-                id: id,
-                _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-            },
-            success: function (data) {
-                if (data.status) {
-                    $('#cart').html(data.cart_view);
-                    $('#mobile-cart-bar').html(data.mobile_cart_view);
+        var type = $(this).data('type');
+        if(type === 'simple') {
+            $.ajax({
+                type: 'POST',
+                url: "{{route('cart.add')}}",
+                data: {
+                    id: id,
+                    _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                success: function (data) {
+                    if (data.status) {
+                        $('#cart').html(data.cart_view);
+                        $('#mobile-cart-bar').html(data.mobile_cart_view);
+                    }
                 }
-            }
-        }).fail(function (jqXhr) {
-        }).always(function () {
-        });
+            }).fail(function (jqXhr) {
+            }).always(function () {
+            });
+        }else{
+            $.ajax({
+                type: 'POST',
+                url: "{{route('cart.add')}}",
+                data: $('#variantModalForm').serialize(),
+                success: function (data) {
+                    if (data.status) {
+                        $('#cart').html(data.cart_view);
+                        $('#mobile-cart-bar').html(data.mobile_cart_view);
+                    }
+                }
+            }).fail(function (jqXhr) {
+            }).always(function () {
+            });
+        }
     });
 </script>
 </body>

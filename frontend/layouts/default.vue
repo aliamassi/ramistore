@@ -132,7 +132,7 @@ background-color: unset;
             {{ alertMessage }}
           </v-alert>
 
-      <div class="pa-6 text-medium-emphasis bg-white">
+      <div class=" text-medium-emphasis bg-white">
         <slot/>
       </div>
 

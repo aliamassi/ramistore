@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Variant;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -15,7 +16,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::latest()->paginate(20);
+        $products = Product::with('variants')->latest()->paginate(20);
         return response()->json([
             'status' => true,
             'products' => $products
@@ -38,6 +39,21 @@ class ProductController extends Controller
             'product' => $product
         ]);
     }
+  public function storeVariant(Request $request)
+    {
+        $request->validate([
+            'name' => 'required',
+            'product_id' => 'required|exists:products,id'
+        ]);
+        $product = Product::find($request->product_id);
+        $product->variants()->create($request->all());
+        $product->load('variants');
+        return response()->json([
+            'status' => true,
+            'message' => __('messages.created'),
+            'product' => $product
+        ]);
+    }
 
     public function uploadImage(Request $request)
     {
@@ -51,9 +67,10 @@ class ProductController extends Controller
             }
 
         }
-
+        $product = Product::find($request->product);
         return response()->json([
             'status' => true,
+            'product' => $product,
             'message' => __('messages.created')
         ]);
     }
@@ -97,12 +114,34 @@ class ProductController extends Controller
         ]);
     }
 
+    public function updateVariant($product, Request $request)
+    {
+        $request->validate([
+            'name' => 'required'
+        ]);
+        $variants = $request->variants;
+        $product = Product::with('variants')->find($product);
+        foreach ($variants as $variant){
+            Variant::find($variant['id'])->update([
+                'name'=> $variant['name'],
+                'price'=> $variant['price'],
+            ]);
+        }
+        return response()->json([
+            'status' => true,
+            'product' => $product,
+            'message' => __('messages.updated')
+        ]);
+    }
     public function update($product, Request $request)
     {
         $request->validate([
             'name' => 'required'
         ]);
-        $product = Product::find($product);
+        $product = Product::with('variants')->find($product);
+        if($request->type == 'simple'){
+            $product->variants()->delete();
+        }
         $product->update($request->all());
         return response()->json([
             'status' => true,

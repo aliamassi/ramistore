@@ -6,3 +6,14 @@
   font-weight: 500;
   color: #006eff !important;
 }
+.text-black{
+  color: #000000 !important;
+}
+.font-weight-medium {
+  font-weight: 500 !important;
+}
+
+body .v-btn--variant-elevated:not(.v-btn--loading, .v-btn--disabled).bg-primary:hover, body .v-btn--variant-elevated:not(.v-btn--loading, .v-btn--disabled).bg-primary:active, body .v-btn--variant-elevated:not(.v-btn--loading, .v-btn--disabled).bg-primary:focus, body .v-btn--variant-flat:not(.v-btn--loading, .v-btn--disabled).bg-primary:hover, body .v-btn--variant-flat:not(.v-btn--loading, .v-btn--disabled).bg-primary:active, body .v-btn--variant-flat:not(.v-btn--loading, .v-btn--disabled).bg-primary:focus{
+  background-color: #F3F3F4 !important;
+
+}

@@ -200,51 +200,107 @@ class MenuController extends Controller
             'id' => 'required|string',
         ]);
 
-
         $product =  Product::find($data['id']);
+
         if (!$product) {
             return back()->with('error', 'Product not found.');
         }
-
         $cart = $this->getCart();
+        if($product->type == 'simple'){
+            if (!isset($cart[$product['id']])) {
+                $cart[$product['id']] = [
+                    'id' => $product['id'],
+                    'name' => $product['name'],
+                    'price' => $product['price'],
+                    'image' =>  isset($product->getMedia('products')[0])?$product->getMedia('products')[0]->getFullUrl():'',
+                    'qty' => 0,
+                ];
+            }
+            $cart[$product['id']]['qty']++;
+            session(['cart' => $cart]);
 
-        if (!isset($cart[$product['id']])) {
-            $cart[$product['id']] = [
-                'id' => $product['id'],
-                'name' => $product['name'],
-                'price' => $product['price'],
-                'image' =>  isset($product->getMedia('products')[0])?$product->getMedia('products')[0]->getFullUrl():'',
-                'qty' => 0,
-            ];
+            $cart = $this->getCart();
+            $total = $this->cartTotal($cart);
+
+            $waLink = $this->buildWhatsappLink($cart, $total);
+
+            $categories = Category::with('products')->get();
+            session()->put('showCartBar', true);
+            session()->put('total', "$$total");
+            session()->put('count', array_sum(array_map(fn($i) => $i['qty'], $cart)));
+            $cart_view = view('partial.cart', [
+                'success' => $product['name'] . ' added to cart.',
+                'showCartBar' => true,
+                'total' => "$$total",
+                'cartTotal' => "$total",
+                'waLink' => "$waLink",
+                'cart' => $cart,
+                'categories' => $categories,
+                'count' => array_sum(array_map(fn($i) => $i['qty'], $cart)),
+            ])->render();
+            $mobile_cart_view = view('partial.mobile_cart', [
+                'success' => $product['name'] . ' added to cart.',
+                'showCartBar' => true,
+                'total' => "$$total",
+                'count' => array_sum(array_map(fn($i) => $i['qty'], $cart)),
+            ])->render();
+        }else{
+            if (!isset($cart[$product['id']])) {
+                $cart[$product->id] = [
+                    'id' => $product->id,
+                    'name' => $product->name,
+                    'price' => $request['price'],
+                    'image' => isset($product->getMedia('products')[0])
+                        ? $product->getMedia('products')[0]->getFullUrl()
+                        : '',
+                    'qty' => $request['quantity'],
+                    'sizes' => [
+                        $request['size'] => $request['quantity']
+                    ]
+                ];
+
+            }else{
+                if (isset($cart[$product->id]['sizes'][$request['size']])) {
+                    // Size exists - add to quantity
+                    $cart[$product->id]['sizes'][$request['size']] += $request['quantity'];
+                } else {
+                    // New size - add it to sizes array
+                    $cart[$product->id]['sizes'][$request['size']] = $request['quantity'];
+                }
+
+                // Update total quantity
+                $cart[$product->id]['qty'] = array_sum($cart[$product->id]['sizes']);
+
+            }
+            session(['cart' => $cart]);
+            $cart = $this->getCart();
+            $total = $this->cartTotal($cart);
+
+            $waLink = $this->buildWhatsappLink($cart, $total);
+
+            $categories = Category::with('products')->get();
+            session()->put('showCartBar', true);
+            session()->put('total', "$$total");
+            session()->put('count', array_sum(array_map(fn($i) => $i['qty'], $cart)));
+            $cart_view = view('partial.cart', [
+                'success' => $product['name'] . ' added to cart.',
+                'showCartBar' => true,
+                'total' => "$$total",
+                'cartTotal' => "$total",
+                'waLink' => "$waLink",
+                'cart' => $cart,
+                'type' => $product->type,
+                'categories' => $categories,
+                'count' => array_sum(array_map(fn($i) => $i['qty'], $cart)),
+            ])->render();
+            $mobile_cart_view = view('partial.mobile_cart', [
+                'success' => $product['name'] . ' added to cart.',
+                'showCartBar' => true,
+                'total' => "$$total",
+                'count' => array_sum(array_map(fn($i) => $i['qty'], $cart)),
+            ])->render();
         }
-        $cart[$product['id']]['qty']++;
-        session(['cart' => $cart]);
 
-        $cart = $this->getCart();
-        $total = $this->cartTotal($cart);
-
-        $waLink = $this->buildWhatsappLink($cart, $total);
-
-        $categories = Category::with('products')->get();
-        session()->put('showCartBar', true);
-        session()->put('total', "$$total");
-        session()->put('count', array_sum(array_map(fn($i) => $i['qty'], $cart)));
-        $cart_view = view('partial.cart', [
-            'success' => $product['name'] . ' added to cart.',
-            'showCartBar' => true,
-            'total' => "$$total",
-            'cartTotal' => "$total",
-            'waLink' => "$waLink",
-            'cart' => $cart,
-            'categories' => $categories,
-            'count' => array_sum(array_map(fn($i) => $i['qty'], $cart)),
-        ])->render();
-        $mobile_cart_view = view('partial.mobile_cart', [
-            'success' => $product['name'] . ' added to cart.',
-            'showCartBar' => true,
-            'total' => "$$total",
-            'count' => array_sum(array_map(fn($i) => $i['qty'], $cart)),
-        ])->render();
         return response()->json([
             'status' => true,
             'cart_view' => $cart_view,

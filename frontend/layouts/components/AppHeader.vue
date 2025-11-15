@@ -28,7 +28,7 @@
 
     <v-divider inset vertical class="mx-2 opacity-50" />
 
-    <v-menu>
+    <v-menu >
       <template v-slot:activator="{ props }">
         <v-btn variant="text" class="text-white" v-bind="props">
           <v-avatar size="28" class="mr-2" color="white">

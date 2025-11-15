@@ -7,8 +7,8 @@
                        class="product-drawer"
   >
     <!-- Header -->
-    <v-toolbar color="white" elevation="0">
-      <v-toolbar-title class="text-h6 font-weight-medium">
+    <v-toolbar color="white" elevation="0" height="50">
+      <v-toolbar-title class="text-h6 font-weight-medium text-black">
         Edit product
       </v-toolbar-title>
       <v-spacer></v-spacer>
@@ -32,7 +32,11 @@
                   height="100"
                   width="100"
           >
-            <img v-if="product.image" :src="product.image" width="120" height="120" alt="">
+            <div v-if="product.image" class="relative">
+              <img :src="product.image" width="120" height="120" alt="">
+              <v-btn size="small" color="primary" class="upload-btn" density="compact" icon="mdi-camera"></v-btn>
+            </div>
+
             <div v-else class="text-center">
               <div class="text-white mb-2">
                 <div class="font-weight-bold">Upload</div>
@@ -72,24 +76,26 @@
           <v-spacer></v-spacer>
           <v-btn-toggle
               rounded="l"
-              v-model="priceType"
+              v-model="priceTypeModel"
               mandatory
               variant="outlined"
               divided
               density="compact"
               class="custom-toggle"
 
+
           >
             <v-btn @click="productType('simple')" value="simple" class="text-none price-type-btn">Simple</v-btn>
-            <v-btn @click="productType('variable')" value="variants" class="text-none price-type-btn">Variants</v-btn>
+            <v-btn @click="productType('variants')" value="variants" class="text-none price-type-btn">Variants</v-btn>
           </v-btn-toggle>
         </div>
-        <div v-if="priceType === 'simple'">
+        <div v-if="product.type === 'simple'">
           <v-text-field
               v-model="product.price"
               label="Price"
               placeholder="0.00"
               variant="outlined"
+              @blur="saveProduct"
               style="width:50%"
           ></v-text-field>
 
@@ -157,7 +163,7 @@
             </v-col>
           </v-row>
         </div>
-        <div v-if="priceType === 'variants'">
+        <div v-if="product.type === 'variants'">
           <v-text-field
               v-model="product.priceNote"
               placeholder="Tell my clients"
@@ -181,7 +187,9 @@
                     <div class="font-weight-medium">{{ variant.name }}</div>
                   </v-col>
                   <v-col cols="auto" class="mr-2">
-                    <span class="font-weight-semibold">JD {{ variant.price.toFixed(2).replace('.', ',') }}</span>
+                    <span class="font-weight-semibold">{{
+                        settings.currency.value
+                      }} {{ variant.price }}</span>
                   </v-col>
                   <v-col cols="auto" class="mr-2">
                     <v-btn icon size="small" variant="text">
@@ -206,7 +214,7 @@
                         density="compact"
                         hide-details
                         class="mb-2"
-                        @blur="saveProduct"
+                        @blur="saveProductVariant"
                     ></v-text-field>
                     <v-text-field
                         v-model.number="variant.price"
@@ -214,9 +222,9 @@
                         variant="outlined"
                         density="compact"
                         type="number"
-                        prefix="JD"
+                        :prefix="settings.currency.value "
                         hide-details
-                        @blur="saveProduct"
+                        @blur="saveProductVariant"
                     ></v-text-field>
                   </div>
                 </v-expand-transition>
@@ -230,7 +238,7 @@
               color="primary"
               block
               class="text-none"
-              @click="addVariant"
+              @click="addProductVariant"
           >
             <i class='bx bx-plus' style="font-size: 20px; margin-right: 8px;"></i>
             Add Variant
@@ -320,17 +328,17 @@
             Cancel
           </v-btn>
         </v-col>
-<!--        <v-col>-->
-<!--          <v-btn-->
-<!--              block-->
-<!--              size="large"-->
-<!--              color="primary"-->
-<!--              class="text-none"-->
-<!--              @click="saveProduct"-->
-<!--          >-->
-<!--            Save-->
-<!--          </v-btn>-->
-<!--        </v-col>-->
+        <!--        <v-col>-->
+        <!--          <v-btn-->
+        <!--              block-->
+        <!--              size="large"-->
+        <!--              color="primary"-->
+        <!--              class="text-none"-->
+        <!--              @click="saveProduct"-->
+        <!--          >-->
+        <!--            Save-->
+        <!--          </v-btn>-->
+        <!--        </v-col>-->
       </v-row>
     </v-container>
   </v-navigation-drawer>
@@ -341,27 +349,49 @@
       :max-size-m-b="10"
       @save="onSaveImages"
   />
+
+  <ChangePriceConfirmDialog
+      v-model="showConfirmPriceDialog"
+      :title="changePriceDialog.title"
+      :message="changePriceDialog.message"
+      @confirm="confirmChangePrice"
+      @cancel="cancelChangePrice"
+  />
 </template>
 
 <script setup lang="ts">
 import {ref, watch} from 'vue'
 import ProductImageUploader from '@/components/ProductImageUploader.vue'
 import {useProduct} from '@/composables/useProduct'
+import ChangePriceConfirmDialog from "@/components/ChangePriceConfirmDialog.vue";
+import DeleteConfirmDialog from "@/components/DeleteConfirmDialog.vue";
 
+const showConfirmPriceDialog = ref(false)
+const changePriceDialog = ref({
+  title: 'Change Price',
+  message: ' The data will be lost when changing.',
+  itemId: null,
+  itemType: 'simple' // or 'category'
+})
 
 const showUploader = ref(false)
+const confirmChangePriceStatus = ref(false)
 let currentProductId = 1 // pass your product id
-const {uploadProductImages, updateProductWithImages, fetchProductImages, productImages} = useProduct()
-const onSaveImages = async ({files, mainIndex}: { files: File[], mainIndex: number }) => {
+const {uploadProductImages, updateProductWithImages, fetchProductImages, productImages, categories, settings} = useProduct()
+const onSaveImages = async ({files, mainIndex}: {
+  files: File[],
+  mainIndex: number
+}) => {
   // 1) Editing an existing product: upload to server
-  await uploadProductImages(currentProductId, files)
-
+  const product = await uploadProductImages(currentProductId, files)
+  emit("productUpdated", product)
   // If your API doesn’t have /product/:id/images, you can do:
   // await updateProductWithImages(currentProductId, { main_index: mainIndex }, files)
 
   // 2) If you’re creating a new product instead:
   // await addProductWithImages({ name: form.name, ... }, files)
 }
+
 const props = defineProps({
   modelValue: {
     type: Boolean,
@@ -373,10 +403,35 @@ const props = defineProps({
   }
 })
 console.log('productData', props.productData);
-const emit = defineEmits(['update:modelValue', 'save'])
+const emit = defineEmits(['update:modelValue', 'save', 'productUpdated'])
 
 const drawer = ref(props.modelValue)
-let priceType = ref('simple')
+const priceType = ref<'simple' | 'variants'>('simple')
+
+
+// computed v-model used by v-btn-toggle
+const priceTypeModel = computed({
+  get() {
+    return priceType.value
+  },
+  set(val: 'simple' | 'variants') {
+    confirmChangePriceStatus.value = false;
+    console.log('priceTypeModel', val);
+    console.log('canChangeType::: not yet', canChangeType());
+    if (canChangeType()) {
+      console.log('canChangeType::: yes');
+
+      priceType.value = val
+    } else {
+      // do nothing -> toggle stays on same button
+    }
+  },
+})
+
+// your custom condition
+function canChangeType() {
+  return confirmChangePriceStatus.value
+}
 
 const existingImages = ref(productImages);
 const product = ref({
@@ -412,35 +467,39 @@ watch(() => props.modelValue, (val) => {
 
 // Watch for productData changes and update product
 watch(() => props.productData, (newData) => {
+  console.log('newData',newData);
   if (newData && Object.keys(newData).length > 0) {
     console.log('productData received:', newData);
     product.value = {
       ...product.value,
       ...newData,
-      variants: newData.variants || product.value.variants,
-      modifiers: newData.modifiers || []
     }
-    currentProductId = newData.id;
+    currentProductId = newData.id
+    priceType.value = newData.type
   }
 }, {immediate: true, deep: true})
+
+
 const toggleVariant = (index) => {
   product.value.variants[index].expanded = !product.value.variants[index].expanded
 }
 
-const addVariant = () => {
-  product.value.variants.push({
-    id: product.value.variants.length + 1,
-    name: `Variant ${product.value.variants.length + 1}`,
-    price: 0.00,
-    expanded: false
-  })
+const addProductVariant = () => {
+
+  handleAddProductVariant()
+}
+const saveProductVariant = () => {
+
+  handleSaveProductVariant()
 }
 const productType = (type) => {
-  if (type === 'simple') {
-    priceType.value = 'simple';
-  } else {
-    priceType.value = 'variants';
+  changePriceDialog.value = {
+    title: 'Change Price',
+    message: ' The data will be lost when changing.',
+    itemId: null,
+    itemType: type
   }
+  showConfirmPriceDialog.value = true
   console.log('type--' + type + ' priceType__' + priceType.value);
 
 }
@@ -459,9 +518,32 @@ const addModifier = () => {
   console.log('Add modifier')
 }
 
+const confirmChangePrice = async () => {
+  console.log('changePriceDialog', changePriceDialog.value.itemType);
+  confirmChangePriceStatus.value = true
+  priceType.value = changePriceDialog.value.itemType
+  product.value.type = priceType.value;
+  saveProduct()
+}
+
+const cancelChangePrice = async () => {
+  confirmChangePriceStatus.value = false
+}
+
 const saveProduct = () => {
   emit('save', product.value)
   // drawer.value = false
+}
+const handleAddProductVariant = () => {
+  emit('addVariant', {
+    product_id: product.value.id,
+    name: `Variant ${product.value.variants.length + 1}`,
+    price: 0.00,
+    expanded: false
+  })
+}
+const handleSaveProductVariant = () => {
+  emit('saveVariant', product.value)
 }
 </script>
 
@@ -520,5 +602,16 @@ i.bx {
   padding: 0px 5px;
 }
 
+.upload-btn {
+  position: absolute;
+  right: 0;
+  bottom: 1px;
+  background-color: #fff !important;
+  color: #006EFF !important;
+}
+
+.upload-btn:hover {
+  background-color: #F3F3F4 !important;
+}
 
 </style>
