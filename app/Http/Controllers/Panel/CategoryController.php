@@ -15,7 +15,9 @@ class CategoryController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $categories = $user->categories()->with('products.variants')->latest()->paginate(20);
+        $categories = $user->categories()->with(['products' => function($query) {
+        $query->with('variants')->withCount('variants');
+    }])->latest()->paginate(20);
         return response()->json([
             'status' => true,
             'categories' => $categories

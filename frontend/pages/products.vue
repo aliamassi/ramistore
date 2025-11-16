@@ -118,6 +118,7 @@ const {
   updateProduct,
   addProductVariant,
   deleteProduct,
+  deleteVariant,
   deleteCategory,
   updateCategory,
   fetchProductImages,
@@ -125,6 +126,7 @@ const {
   changeCategoryVisibility,
   fetchSettings,
   updateProductVariant,
+  updateProductType,
   settings,
   duplicateProduct
 } = useProduct()
@@ -250,10 +252,28 @@ const handleSaveProductVariant = async (productData) => {
     console.error('Failed to update product:', err)
   }
 }
+const handleSaveProductType = async (productData) => {
+  try {
+    const updateProductTypeResponse = await updateProductType(productData.id, productData)
+    selectedProduct.value = updateProductTypeResponse
+    console.log('Product variant updated successfully')
+  } catch (err) {
+    console.error('Failed to update product:', err)
+  }
+}
 const handleAddProductVariant = async (variantData) => {
   try {
     const addProductVariantResponse = await addProductVariant(variantData)
     selectedProduct.value = addProductVariantResponse
+    console.log('Product variants updated successfully')
+  } catch (err) {
+    console.error('Failed to update product:', err)
+  }
+}
+const handleDeleteVariant = async (variantData) => {
+  try {
+    const deleteVariantResponse = await deleteVariant(variantData.id)
+    selectedProduct.value = deleteVariantResponse
     console.log('Product variants updated successfully')
   } catch (err) {
     console.error('Failed to update product:', err)
@@ -384,7 +404,7 @@ const duplicateCategory = () => {
     <v-card class="banner-card" elevation="0">
       <v-img
         :src="bannerImage"
-        height="200"
+        height="108"
         cover
         class="banner-image"
       >
@@ -442,8 +462,8 @@ const duplicateCategory = () => {
             <v-card
               class="logo-card"
               elevation="4"
-              width="140"
-              height="140"
+              width="100"
+              height="100"
             >
               <v-img
                 v-if="logoImage"
@@ -458,21 +478,24 @@ const duplicateCategory = () => {
                 height="100%"
               ></v-img>
 
-              <div v-else class="d-flex align-center justify-center fill-height">
+              <div v-else class="d-flex align-center justify-center fill-height ">
                 <i class='bx bx-store' style="font-size: 64px; color: #9e9e9e;"></i>
               </div>
 
               <!-- Camera Button for Logo -->
-              <v-btn
-                icon
-                color="primary"
-                size="small"
-                class="logo-camera-btn"
-                elevation="3"
-                @click="openImagePicker"
-              >
-                <i class='bx bx-camera' style="font-size: 18px;"></i>
-              </v-btn>
+              <div class="relative">
+                  <v-btn
+                          @click="openImagePicker"
+                          size="small"
+                          color="primary"
+                          class="logo-camera-btn"
+                          density="compact"
+                          icon="mdi-camera"
+                          elevation="3"
+                          height="32"
+                          width="32"
+                  ></v-btn>
+              </div>
             </v-card>
           </v-col>
 
@@ -885,6 +908,8 @@ const duplicateCategory = () => {
         @productUpdated="handleProductUpdated"
         @addVariant="handleAddProductVariant"
         @saveVariant="handleSaveProductVariant"
+        @deleteVariant="handleDeleteVariant"
+        @updateProductType="handleSaveProductType"
       />
       <!-- Delete Confirmation Dialog -->
       <DeleteConfirmDialog
@@ -1019,8 +1044,10 @@ i.bx {
 
 .logo-camera-btn {
   position: absolute;
-  bottom: 8px;
-  right: 8px;
+  right: 0;
+  bottom: 1px;
+  background-color: #fff !important;
+  color: #006EFF !important;
 }
 
 

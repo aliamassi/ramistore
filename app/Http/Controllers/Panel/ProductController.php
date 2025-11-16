@@ -39,7 +39,8 @@ class ProductController extends Controller
             'product' => $product
         ]);
     }
-  public function storeVariant(Request $request)
+
+    public function storeVariant(Request $request)
     {
         $request->validate([
             'name' => 'required',
@@ -47,7 +48,8 @@ class ProductController extends Controller
         ]);
         $product = Product::find($request->product_id);
         $product->variants()->create($request->all());
-        $product->load('variants');
+        $product->load('variants')->loadCount('variants');
+
         return response()->json([
             'status' => true,
             'message' => __('messages.created'),
@@ -121,10 +123,10 @@ class ProductController extends Controller
         ]);
         $variants = $request->variants;
         $product = Product::with('variants')->find($product);
-        foreach ($variants as $variant){
+        foreach ($variants as $variant) {
             Variant::find($variant['id'])->update([
-                'name'=> $variant['name'],
-                'price'=> $variant['price'],
+                'name' => $variant['name'],
+                'price' => $variant['price'],
             ]);
         }
         return response()->json([
@@ -133,15 +135,40 @@ class ProductController extends Controller
             'message' => __('messages.updated')
         ]);
     }
+
+    public function updateType($product, Request $request)
+    {
+        $request->validate([
+            'name' => 'required'
+        ]);
+        $product = Product::with('variants')->find($product);
+        $product->update(['type' => $request->type]);
+        if ($request->type == 'simple') {
+            $product->variants()->delete();
+
+        } else {
+            foreach ($request->variants as $variant){
+                $product->variants()->create([
+                    'name' => $variant['name'],
+                    'price' => $variant['price'],
+                ]);
+            }
+        }
+        $product->load('variants');
+        $product->loadCount('variants');
+        return response()->json([
+            'status' => true,
+            'product' => $product,
+            'message' => __('messages.updated')
+        ]);
+    }
+
     public function update($product, Request $request)
     {
         $request->validate([
             'name' => 'required'
         ]);
         $product = Product::with('variants')->find($product);
-        if($request->type == 'simple'){
-            $product->variants()->delete();
-        }
         $product->update($request->all());
         return response()->json([
             'status' => true,
@@ -163,6 +190,23 @@ class ProductController extends Controller
         return response()->json([
             'status' => true,
             'message' => __('messages.deleted'),
+        ]);
+    }
+    public function deleteVariant(Variant $variant)
+    {
+        $product = [];
+        try {
+            $product = $variant->product;
+            $variant->delete();
+            $product->load('variants')->loadCount('variants');
+        } catch (\Exception $exc) {
+
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => __('messages.deleted'),
+            'product' => $product,
         ]);
     }
 }

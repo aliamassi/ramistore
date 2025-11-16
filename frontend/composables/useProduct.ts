@@ -225,6 +225,33 @@ export const useProduct = () => {
             loading.value = false
         }
     }
+    const updateProductType = async (id: Id, updatedData: AnyObj | FormData) => {
+        loading.value = true;
+        error.value = null
+        try {
+            const res = await $sf(`/panel/product/type/${id}`, {
+                method: 'PUT',
+                body: updatedData as any,
+            })
+            const product = res.product
+
+            // update in categories if we track nested products
+            const catId = product.category_id
+            const catIdx = categories.value.findIndex(c => c?.id === catId)
+            if (catIdx !== -1) {
+                const products = categories.value[catIdx].products
+                const pIdx = products.findIndex((p: any) => p?.id === product.id)
+                if (pIdx !== -1) products.splice(pIdx, 1, product)
+            }
+
+            setAlert?.('Product updated successfully!', 'success')
+            return product
+        } catch (e) {
+            onErr(e, 'Failed to update product')
+        } finally {
+            loading.value = false
+        }
+    }
     const addProductVariant = async ( variantData: AnyObj | FormData) => {
         loading.value = true;
         error.value = null
@@ -407,6 +434,30 @@ export const useProduct = () => {
             loading.value = false
         }
     }
+    const deleteVariant = async (id: Id) => {
+        loading.value = true;
+        error.value = null
+        try {
+            const deleteVariantResponse = await $sf(`/panel/product/variant/${id}`, {method: 'DELETE'})
+            const catIdx = categories.value.findIndex(c => c?.id === deleteVariantResponse.product.category_id)
+            console.log('catIdx', catIdx);
+
+            if (catIdx !== -1) {
+                const cat = categories.value[catIdx]
+                const prodIdx = cat.products.findIndex(p => p?.id === deleteVariantResponse.product.id);
+                console.log('prodIdx', prodIdx);
+                if (prodIdx !== -1) {
+                    cat.products.splice(prodIdx, 1,deleteVariantResponse.product)
+                }
+            }
+            setAlert?.('Product variant deleted successfully!', 'success')
+            return deleteVariantResponse.product
+        } catch (e) {
+            onErr(e, 'Failed to delete product varaint')
+        } finally {
+            loading.value = false
+        }
+    }
 
     const deleteCategory = async (id: Id) => {
         loading.value = true;
@@ -461,8 +512,8 @@ export const useProduct = () => {
         productImages, categoryCount, productCount, getProductById, getProductsByCategory, getProductByCategoryAndId, setAlert,
         // Methods
         fetchProducts, fetchCategories,fetchSettings,
-        addCategory, addProduct,
-        updateProduct, updateCategory,updateProductVariant,
+        addCategory, addProduct,deleteVariant,
+        updateProduct, updateCategory,updateProductVariant,updateProductType,
         deleteProduct, deleteCategory,
         duplicateProduct, reorderProducts,addProductVariant,
         uploadProductImages, updateProductWithImages, fetchProductImages, changeProductVisibility, changeCategoryVisibility

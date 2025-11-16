@@ -74,20 +74,35 @@
         <div class="d-flex align-center mb-3">
           <h3 class="text-h6">Price(s)</h3>
           <v-spacer></v-spacer>
+          <div class="ios-segmented-wrapper">
+
           <v-btn-toggle
-              rounded="l"
               v-model="priceTypeModel"
               mandatory
-              variant="outlined"
               divided
-              density="compact"
-              class="custom-toggle"
+              class="ios-segmented">
+            <v-btn
+                value="simple"
+                variant="flat"
+                :ripple="false"
+                class="price-type-btn"
+                @click="productType('simple')"
+            >
+              Simple
+            </v-btn>
 
-
-          >
-            <v-btn @click="productType('simple')" value="simple" class="text-none price-type-btn">Simple</v-btn>
-            <v-btn @click="productType('variants')" value="variants" class="text-none price-type-btn">Variants</v-btn>
+            <v-btn
+                value="variants"
+                variant="flat"
+                :ripple="false"
+                class="price-type-btn"
+                @click="productType('variants')"
+            >
+              <span>Variants</span>
+              <span v-if="product.variants_count" class="count-badge">{{ product.variants_count }}</span>
+            </v-btn>
           </v-btn-toggle>
+          </div>
         </div>
         <div v-if="product.type === 'simple'">
           <v-text-field
@@ -192,9 +207,26 @@
                       }} {{ variant.price }}</span>
                   </v-col>
                   <v-col cols="auto" class="mr-2">
-                    <v-btn icon size="small" variant="text">
-                      <i class='bx bx-dots-vertical-rounded' style="font-size: 18px;"></i>
-                    </v-btn>
+                    <v-menu>
+                      <template v-slot:activator="{ props }">
+
+                        <v-btn  v-bind="props" icon variant="text">
+                          <i class='bx bx-dots-vertical-rounded' style="font-size: 20px;"></i>
+                        </v-btn>
+
+                      </template>
+                      <v-list>
+                        <v-list-item  @click="delVariant(variant.id)" title="Delete" class="variant-list-item">
+                            <template v-slot:prepend>
+                              <v-btn
+                                  class="text-red"
+                                  icon="mdi-trash-can-outline"
+                                  variant="text"
+                              ></v-btn>
+                            </template>
+                        </v-list-item>
+                      </v-list>
+                    </v-menu>
                   </v-col>
                   <v-col cols="auto">
                     <v-btn icon size="small" variant="text" @click="toggleVariant(index)">
@@ -236,8 +268,7 @@
           <v-btn
               variant="outlined"
               color="primary"
-              block
-              class="text-none"
+              class="text-none add-variant-btn"
               @click="addProductVariant"
           >
             <i class='bx bx-plus' style="font-size: 20px; margin-right: 8px;"></i>
@@ -467,7 +498,7 @@ watch(() => props.modelValue, (val) => {
 
 // Watch for productData changes and update product
 watch(() => props.productData, (newData) => {
-  console.log('newData',newData);
+  console.log('newData', newData);
   if (newData && Object.keys(newData).length > 0) {
     console.log('productData received:', newData);
     product.value = {
@@ -482,6 +513,10 @@ watch(() => props.productData, (newData) => {
 
 const toggleVariant = (index) => {
   product.value.variants[index].expanded = !product.value.variants[index].expanded
+}
+const delVariant = (id) => {
+  console.log('idididididididididid',id);
+  handleDeleteVariant(id)
 }
 
 const addProductVariant = () => {
@@ -500,8 +535,6 @@ const productType = (type) => {
     itemType: type
   }
   showConfirmPriceDialog.value = true
-  console.log('type--' + type + ' priceType__' + priceType.value);
-
 }
 
 const openUploader = async () => {
@@ -523,7 +556,14 @@ const confirmChangePrice = async () => {
   confirmChangePriceStatus.value = true
   priceType.value = changePriceDialog.value.itemType
   product.value.type = priceType.value;
-  saveProduct()
+  if(changePriceDialog.value.itemType == 'variants'){
+    product.value.variants = [
+      {id: 1, name: 'Small', price: 0.00, expanded: false},
+      {id: 2, name: 'Medium', price: 0.00, expanded: false}
+    ];
+    console.log(' product.value', product.value);
+  }
+  saveProductType()
 }
 
 const cancelChangePrice = async () => {
@@ -534,6 +574,10 @@ const saveProduct = () => {
   emit('save', product.value)
   // drawer.value = false
 }
+const saveProductType = () => {
+  emit('updateProductType', product.value)
+  // drawer.value = false
+}
 const handleAddProductVariant = () => {
   emit('addVariant', {
     product_id: product.value.id,
@@ -541,6 +585,9 @@ const handleAddProductVariant = () => {
     price: 0.00,
     expanded: false
   })
+}
+const handleDeleteVariant = (id) => {
+  emit('deleteVariant', {id:id})
 }
 const handleSaveProductVariant = () => {
   emit('saveVariant', product.value)
@@ -565,10 +612,6 @@ i.bx {
 
 .upload-card {
   background-color: #0047A3;
-}
-
-.price-type-btn {
-  min-width: 100px;
 }
 
 .v-btn-group--density-compact.v-btn-group {
@@ -614,4 +657,117 @@ i.bx {
   background-color: #F3F3F4 !important;
 }
 
+body .v-btn-group.v-btn-toggle.v-btn-group {
+  align-items: center;
+  border: 1px solid rgba(var(--v-border-color), var(--v-border-opacity));
+  border-radius: 0.5rem;
+  block-size: 32px !important;
+}
+
+.ios-segmented-wrapper {
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  background: white;
+}
+
+.ios-segmented {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+.ios-segmented :deep(.v-btn-group) {
+  box-shadow: none !important;
+}
+
+.ios-segmented :deep(.v-btn) {
+  text-transform: none !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  color: #000 !important;
+  height: 32px !important;
+  min-width: 114px !important;
+  padding: 0 40px !important;
+  background: #f9fafb !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  position: relative !important;
+  border: none !important;
+  border-right: 1px solid #d1d5db !important;
+}
+
+.ios-segmented :deep(.v-btn:last-child) {
+  border-right: none !important;
+}
+
+.ios-segmented :deep(.v-btn__overlay) {
+  display: none !important;
+}
+
+.ios-segmented :deep(.v-btn__content) {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.ios-segmented :deep(.v-btn--active) {
+  background: white !important;
+  color: #2563eb !important;
+  font-weight: 500 !important;
+  box-shadow: inset 0 -2px 0 0 #2563eb !important;
+
+}
+
+/* Blue bottom border for active button */
+.ios-segmented :deep(.v-btn--active::after) {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #2563eb !important;
+  z-index: 1;
+}
+
+.count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  background: #e5e7eb;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 11px;
+  margin-left: 8px;
+}
+
+.ios-segmented :deep(.v-btn--active) .count-badge {
+  background: #dbeafe;
+  color: #2563eb;
+}
+.add-variant-btn:hover{
+  background-color: #F6F9FF !important;
+}
+.add-variant-btn:hover,.add-variant-btn:focus {
+  background-color: #F6F9FF !important;
+}
+
+.add-variant-btn:hover :deep(.v-btn__content),.add-variant-btn:focus :deep(.v-btn__content) {
+  color: #0370FF !important;
+}
+.text-red{
+  color: #FE5F56 !important;
+}
+
+.variant-list-item >>> .v-list-item-title {
+  color: #FE5F56 !important;
+}
 </style>

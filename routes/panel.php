@@ -25,7 +25,9 @@ Route::middleware('auth')->group(function () {
     Route::post('product/variant', [ProductController::class,'storeVariant']);
     Route::put('product/{product}/visibility', [ProductController::class,'changeVisibility']);
     Route::put('product/variant/{product}/', [ProductController::class,'updateVariant']);
+    Route::put('product/type/{product}/', [ProductController::class,'updateType']);
     Route::get('product/{product}/images', [ProductController::class,'getImages']);
+    Route::delete('product/variant/{variant}', [ProductController::class,'deleteVariant']);
     Route::apiResource('category', CategoryController::class);
     Route::put('category/{category}/visibility', [CategoryController::class,'changeVisibility']);
 
