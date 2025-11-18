@@ -51,15 +51,16 @@
               v-model="product.name"
               label="Name"
               variant="outlined"
-              density="comfortable"
+              density="compact"
               hide-details
               @blur="saveProduct"
+              size="small"
           ></v-text-field>
           <v-textarea
               v-model="product.description"
               label="Description"
               variant="outlined"
-              density="comfortable"
+              density="compact"
               rows="3"
               class="mt-3"
               hide-details
@@ -183,7 +184,7 @@
               v-model="product.priceNote"
               placeholder="Tell my clients"
               variant="outlined"
-              density="comfortable"
+              density="compact"
               hide-details
               class="mb-4"
               @blur="saveProduct"
@@ -193,7 +194,7 @@
           <!-- Variants List -->
           <div v-for="(variant, index) in product.variants" :key="index" class="mb-3">
             <v-card elevation="0" style="border: 1px solid #e0e0e0; border-radius: 8px;">
-              <v-card-text class="pa-3">
+              <v-card-text class="pa-1 variant-card" @click="toggleVariant(index)">
                 <v-row align="center" no-gutters>
                   <v-col cols="auto" class="mr-2">
                     <i class='bx bx-menu text-grey' style="font-size: 18px;"></i>
@@ -229,7 +230,7 @@
                     </v-menu>
                   </v-col>
                   <v-col cols="auto">
-                    <v-btn icon size="small" variant="text" @click="toggleVariant(index)">
+                    <v-btn icon size="small" variant="text">
                       <i :class="variant.expanded ? 'bx bx-chevron-up' : 'bx bx-chevron-down'"
                          style="font-size: 20px;"></i>
                     </v-btn>
@@ -267,6 +268,7 @@
           <!-- Add Variant Button -->
           <v-btn
               variant="outlined"
+              density="default"
               color="primary"
               class="text-none add-variant-btn"
               @click="addProductVariant"
@@ -769,5 +771,8 @@ body .v-btn-group.v-btn-toggle.v-btn-group {
 
 .variant-list-item >>> .v-list-item-title {
   color: #FE5F56 !important;
+}
+.variant-card:hover{
+  cursor: pointer !important;
 }
 </style>

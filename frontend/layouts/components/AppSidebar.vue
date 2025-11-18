@@ -76,7 +76,7 @@
           <template #activator="{ props }">
             <v-list-item v-bind="props" class="group-activator">
               <template #prepend>
-                  <v-icon size="20">mdi-cog</v-icon>
+                <v-icon size="20">mdi-cog</v-icon>
               </template>
               <v-list-item-title class="text-white font-weight-bold">
                 Settings
@@ -127,7 +127,6 @@ const activeKey = ref<'product' | 'welcome' | 'ordering'| 'business-settings'>('
 <style scoped>
 /* --- Drawer background & general look --- */
 .sidebar :deep(.v-navigation-drawer__content) {
-  //background: linear-gradient(180deg, #0A5BD4 0%, #195fda 100%);
   color: #fff;
 }
 
@@ -225,7 +224,7 @@ const activeKey = ref<'product' | 'welcome' | 'ordering'| 'business-settings'>('
   background: linear-gradient(90deg, #0047a3, #006eff);
 }
 .v-list-item-title {
-   font-size: 14px !important;
-   font-weight: 400  !important;
+  font-size: 14px !important;
+  font-weight: 400  !important;
 }
 </style>

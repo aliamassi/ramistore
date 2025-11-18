@@ -16,7 +16,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('admin_id');
             $table->text('name');
-            $table->unsignedTinyInteger('is_visible')->default(1);
+            $table->integer('order')->default(0);
+            $table->boolean('is_visible')->default(true);
             $table->timestamps();
         });
     }

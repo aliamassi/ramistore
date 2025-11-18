@@ -18,9 +18,10 @@ return new class extends Migration {
                 ->cascadeOnDelete();
             $table->text('name');
             $table->text('description')->nullable();
-            $table->unsignedTinyInteger('is_visible')->default(1);
             $table->enum('type', ['simple', 'variants'])->default('simple');
             $table->decimal('price', 10, 2);
+            $table->integer('order')->default(0);
+            $table->boolean('is_visible')->default(true);
             $table->timestamps();
         });
     }

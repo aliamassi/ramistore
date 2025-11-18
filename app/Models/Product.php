@@ -16,12 +16,25 @@ class Product extends Model implements HasMedia
     use InteractsWithMedia;
 
 //    public array $translatable = ['name', 'description'];
-    protected $fillable = ['category_id', 'name', 'description', 'price', 'type', 'is_visible'];
+    protected $fillable = [
+        'category_id',
+        'name',
+        'description',
+        'price',
+        'type',
+        'is_visible',
+        'customizable',
+        'order'
+    ];
 
 
     // Optional: Append translated attribute to JSON
     protected $appends = ['image'];
-
+    protected $casts = [
+        'customizable' => 'boolean',
+        'is_visible' => 'boolean',
+        'price' => 'decimal:2'
+    ];
     // Method 1: Using accessor to always return current locale
     public function getImageAttribute()
     {
@@ -34,6 +47,16 @@ class Product extends Model implements HasMedia
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    public function customizationOptions()
+    {
+        return $this->hasMany(CustomizationOption::class)->orderBy('order');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_visible', 1);
     }
 
     public function variants(): HasMany

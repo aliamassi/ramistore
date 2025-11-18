@@ -13,9 +13,22 @@ class Category extends Model
 
 //    public array $translatable = ['name'];
 
-    protected $fillable = ['admin_id','name','is_visible'];
+    protected $fillable = [
+        'admin_id',
+        'name',
+        'is_visible',
+        'order',
+    ];
 
+    protected $casts = [
+        'is_visible' => 'boolean'
+    ];
     public function products(){
         return $this->hasMany(Product::class,'category_id');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_visible', true);
     }
 }

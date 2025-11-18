@@ -62,7 +62,7 @@ export const useProduct = () => {
     // ---------------- Methods (all via $sf)
 
     const fetchProducts = async () => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             const res = await $sf('/panel/product')
@@ -74,7 +74,7 @@ export const useProduct = () => {
         }
     }
     const fetchProductImages = async (id: Id) => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             const res = await $sf(`/panel/product/${id}/images`)
@@ -86,7 +86,7 @@ export const useProduct = () => {
         }
     }
     const fetchSettings = async () => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             const res = await $sf('/panel/settings?key=business_settings')
@@ -98,7 +98,7 @@ export const useProduct = () => {
         }
     }
     const fetchCategories = async () => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             const res = await $sf('/panel/category')
@@ -121,7 +121,7 @@ export const useProduct = () => {
     }
 
     const addProduct = async (productData: AnyObj | FormData) => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             const res = await $sf('/panel/product', {
@@ -149,7 +149,7 @@ export const useProduct = () => {
     }
 
     const addCategory = async (categoryData: AnyObj | FormData) => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             const res = await $sf('/panel/category', {
@@ -168,7 +168,7 @@ export const useProduct = () => {
     }
 
     const updateProduct = async (id: Id, updatedData: AnyObj | FormData) => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             const res = await $sf(`/panel/product/${id}`, {
@@ -195,11 +195,11 @@ export const useProduct = () => {
         } catch (e) {
             onErr(e, 'Failed to update product')
         } finally {
-            loading.value = false
+            // loading.value = false
         }
     }
     const updateProductVariant = async (id: Id, updatedData: AnyObj | FormData) => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             const res = await $sf(`/panel/product/variant/${id}`, {
@@ -226,7 +226,7 @@ export const useProduct = () => {
         }
     }
     const updateProductType = async (id: Id, updatedData: AnyObj | FormData) => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             const res = await $sf(`/panel/product/type/${id}`, {
@@ -253,7 +253,7 @@ export const useProduct = () => {
         }
     }
     const addProductVariant = async ( variantData: AnyObj | FormData) => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             const res = await $sf(`/panel/product/variant`, {
@@ -299,7 +299,7 @@ export const useProduct = () => {
     }
     const uploadProductImages = async (id: Id, files: File[] | FileList) => {
         console.log(categories.value);
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             // Try a dedicated images endpoint first:
@@ -360,7 +360,7 @@ export const useProduct = () => {
     }
 
     const updateCategory = async (id: Id, name: string) => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             await $sf(`/panel/category/${id}`, {
@@ -377,7 +377,7 @@ export const useProduct = () => {
         }
     }
     const changeProductVisibility = async (id: Id, action: string) => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             const res = await $sf(`/panel/product/${id}/visibility`, {
@@ -394,7 +394,7 @@ export const useProduct = () => {
         }
     }
     const changeCategoryVisibility = async (id: Id, action: string) => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             const res = await $sf(`/panel/category/${id}/visibility`, {
@@ -412,7 +412,7 @@ export const useProduct = () => {
     }
 
     const deleteProduct = async (id: Id, categoryId: Id) => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             await $sf(`/panel/product/${id}`, {method: 'DELETE'})
@@ -435,7 +435,7 @@ export const useProduct = () => {
         }
     }
     const deleteVariant = async (id: Id) => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             const deleteVariantResponse = await $sf(`/panel/product/variant/${id}`, {method: 'DELETE'})
@@ -460,7 +460,7 @@ export const useProduct = () => {
     }
 
     const deleteCategory = async (id: Id) => {
-        loading.value = true;
+        // loading.value = true;
         error.value = null
         try {
             await $sf(`/panel/category/${id}`, {method: 'DELETE'})

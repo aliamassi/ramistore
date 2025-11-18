@@ -73,15 +73,14 @@
 <!--}-->
 <!--</style>-->
 <style>
-.v-list{
-background-color: unset;
+.v-list {
+  background-color: unset;
 }
 
 .top-alert {
   position: fixed !important;
   top: 16px;
   left: 80%;
-  transform: translateX(-50%);
   width: min(520px, calc(100vw - 32px));
   z-index: 2147483647; /* higher than any Vuetify overlay */
   pointer-events: none; /* clicks pass through except the alert */
@@ -108,29 +107,33 @@ background-color: unset;
 .category-card-header:hover {
   cursor: pointer !important;
 }
-.v-navigation-drawer__content .v-list-item-title, .v-navigation-drawer__content .v-list-item-title a{
-  color : #ffffff !important;
- }
-.bg-white{
+
+.v-navigation-drawer__content .v-list-item-title, .v-navigation-drawer__content .v-list-item-title a {
+  color: #ffffff !important;
+}
+
+.bg-white {
   background-color: #ffffff !important;
 }
 </style>
 <template>
   <v-app>
-    <AppHeader @toggle-drawer="drawer = !drawer" />
-    <AppSidebar v-model="drawer" />
+    <AppHeader @toggle-drawer="drawer = !drawer"  :drawer-open="drawer"/>
+
+
+    <AppSidebar v-model="drawer"/>
 
     <!-- You can ignore <v-main>; it's just a placeholder -->
     <v-main class="bg-background">
-          <v-alert
-              v-if="alertMessage"
-              :type="alertType"
-              class="mb-4 top-alert"
-              dense
-              border="start"
-          >
-            {{ alertMessage }}
-          </v-alert>
+      <v-alert
+          v-if="alertMessage"
+          :type="alertType"
+          class="mb-4 top-alert"
+          dense
+          border="start"
+      >
+        {{ alertMessage }}
+      </v-alert>
 
       <div class=" text-medium-emphasis bg-white">
         <slot/>
@@ -148,6 +151,7 @@ import {ref, provide} from 'vue'
 const drawer = ref(true)
 const alertMessage = ref('')
 const alertType = ref('success')
+
 function setAlert(message, type = 'success') {
   alertMessage.value = message
   alertType.value = type
