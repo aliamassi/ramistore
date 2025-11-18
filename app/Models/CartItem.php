@@ -12,6 +12,7 @@ class CartItem extends Model
     protected $fillable = [
         'cart_id',
         'product_id',
+        'variant_id',
         'customization_option_id',
         'quantity',
         'price',
@@ -29,6 +30,10 @@ class CartItem extends Model
         return $this->belongsTo(Cart::class);
     }
 
+    public function variant()
+    {
+        return $this->belongsTo(Variant::class);
+    }
     public function product()
     {
         return $this->belongsTo(Product::class);

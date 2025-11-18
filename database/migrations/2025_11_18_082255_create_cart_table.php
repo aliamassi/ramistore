@@ -19,6 +19,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('cart_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('variant_id')->nullable();
             $table->foreignId('customization_option_id')->nullable()->constrained()->onDelete('set null');
             $table->integer('quantity')->default(1);
             $table->decimal('price', 8, 2);

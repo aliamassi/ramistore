@@ -248,7 +248,7 @@
             right: 0;
             background-color: #fff;
             padding: 20px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             z-index: 100;
         }
 
@@ -351,11 +351,18 @@
 
                             <div class="item-details">
                                 <div class="item-name">{{ $item->product->name }}</div>
-                                @if($item->customization_name)
-                                    <div class="item-customization">
-                                        {{ $item->customization_name }} - {{ $item->customization_detail }}
+
+                                {{-- If this cart row is a variant --}}
+                                @if($item->variant)
+                                    <div class="item-variant">
+                                        {{ $item->variant->name }}
+                                        <span class="item-variant-unit">
+            • {{ $setting['currency']->value ?? '$' }}
+                                            {{ number_format($item->variant->price, 2) }} each
+        </span>
                                     </div>
                                 @endif
+
 
                                 <div class="item-actions">
                                     <div class="quantity-control">
@@ -382,19 +389,19 @@
                         <span>Subtotal</span>
                         <span id="subtotal">{{ $setting['currency']->value??"$"}} {{ number_format($cart->total, 2) }}</span>
                     </div>
-{{--                    <div class="summary-row">--}}
-{{--                        <span>Delivery Fee</span>--}}
-{{--                        <span>{{ $setting['currency']->value??"$"}} 0.50</span>--}}
-{{--                    </div>--}}
+                    {{--                    <div class="summary-row">--}}
+                    {{--                        <span>Delivery Fee</span>--}}
+                    {{--                        <span>{{ $setting['currency']->value??"$"}} 0.50</span>--}}
+                    {{--                    </div>--}}
                     <div class="summary-row total">
                         <span>Total</span>
                         <span id="total">{{ $setting['currency']->value??"$"}} {{ number_format($cart->total + 0.50, 2) }}</span>
                     </div>
                 </div>
 
-{{--                <div class="checkout-section">--}}
-{{--                    <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>--}}
-{{--                </div>--}}
+                {{--                <div class="checkout-section">--}}
+                {{--                    <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>--}}
+                {{--                </div>--}}
                 <div class="checkout-section">
                     <button class="checkout-btn" onclick="shareCartOnWhatsApp()">Share Cart on WhatsApp</button>
                 </div>
@@ -433,7 +440,7 @@
                     'Accept': 'application/json',
                     'X-Requested-With': 'XMLHttpRequest'
                 },
-                body: JSON.stringify({ quantity: newQty })
+                body: JSON.stringify({quantity: newQty})
             });
 
             const data = await response.json();
@@ -526,25 +533,51 @@
 
         items.forEach((item, index) => {
             const name = item.querySelector('.item-name')?.textContent.trim() || '';
-            const customization = item.querySelector('.item-customization')?.textContent.trim() || '';
+
+            // Variant name (for variant items)
+            let variantName = '';
+            const variantEl = item.querySelector('.item-variant');
+            if (variantEl) {
+                // first text node inside .item-variant is the variant name
+                const firstNode = variantEl.childNodes[0];
+                variantName = (firstNode && firstNode.textContent ? firstNode.textContent : '').trim();
+            }
+
+            // Customization (for old/simple items)
+            const customizationEl = item.querySelector('.item-customization');
+            const customization = customizationEl ? customizationEl.textContent.trim() : '';
+
             const qty = item.querySelector('.quantity')?.textContent.trim() || '';
             const price = item.querySelector('.item-price')?.textContent.trim() || '';
             const imgEl = item.querySelector('.item-image');
             const imgSrc = imgEl ? imgEl.src : '';
-            console.log(imgEl,imgSrc);
+
+            // Product line
             message += `${index + 1}. *${name}*  x${qty}\n`;
-            if (customization) {
+
+            // Variant line (if exists)
+            if (variantName) {
+                message += `   Variant: ${variantName}\n`;
+            }
+
+            // Customization line (for non-variant items)
+            if (customization && !variantName) {
                 message += `   ${customization}\n`;
             }
+
+            // Total line for this item
             message += `   ${price}\n`;
+
+            // Image link
             if (imgSrc) {
                 message += `   Image: ${imgSrc}\n`;
             }
+
             message += `\n`;
         });
 
         const subtotal = document.getElementById('subtotal')?.textContent.trim() || '';
-        const total    = document.getElementById('total')?.textContent.trim() || '';
+        const total = document.getElementById('total')?.textContent.trim() || '';
 
         message += `Subtotal: ${subtotal}\n`;
         message += `Total: *${total}*\n`;
@@ -553,7 +586,7 @@
         const encoded = encodeURIComponent(message);
 
         // Your specific WhatsApp number in international format (no +, no spaces)
-        const phone = "{{env('WHATSAPP_PHONE')}}";
+        const phone = "{{ env('WHATSAPP_PHONE') }}";
 
         const whatsappURL = `https://wa.me/${phone}?text=${encoded}`;
         window.open(whatsappURL, '_blank');
