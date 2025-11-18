@@ -35,7 +35,7 @@ class MenuController extends Controller
         $setting = Setting::all()->keyBy('key');
         $sessionId = Session::getId();
         $cart = Cart::where('session_id', $sessionId)->first();
-        $cartCount = $cart->items()->count();
+        $cartCount = !empty($cart)?$cart->items()->count():0;
 
         return view('menu.index', [
             'categories' => $categories,
