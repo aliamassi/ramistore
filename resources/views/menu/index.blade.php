@@ -29,7 +29,7 @@
 
         /* Header Navigation */
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #D4A574 0%, #764ba2 100%);
             border-bottom: 1px solid rgba(255,255,255,0.1);
             position: sticky;
             top: 0;
@@ -189,9 +189,9 @@
         }
 
         .nav-item.active {
-            color: #667eea;
+            color: #D4A574;
             font-weight: 500;
-            border-bottom-color: #667eea;
+            border-bottom-color: #D4A574;
         }
 
         .nav-item:hover {
@@ -204,7 +204,7 @@
             height: 40px;
             margin-left: 10px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #D4A574 0%, #764ba2 100%);
             color: #fff;
             display: flex;
             align-items: center;
@@ -229,7 +229,7 @@
             bottom: 12px;
             width: calc(100% - 40px);
             max-width: 480px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #D4A574 0%, #764ba2 100%);
             color: #fff;
             padding: 14px 20px;
             border-radius: 999px;
@@ -258,7 +258,7 @@
             margin-left: 12px;
             border-radius: 50%;
             background-color: #fff;
-            color: #667eea;
+            color: #D4A574;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -375,14 +375,14 @@
         .arrow-btn::after {
             content: '›';
             font-size: 28px;
-            color: #667eea;
+            color: #D4A574;
             font-weight: 300;
         }
 
         .plus-btn::after {
             content: '+';
             font-size: 28px;
-            color: #667eea;
+            color: #D4A574;
             font-weight: 400;
         }
 
@@ -493,7 +493,7 @@
                     @if(!empty($setting['restaurant_logo']?->value))
                         <img src="{{ asset($setting['restaurant_logo']->value) }}" alt="Logo">
                     @else
-                        <span style="font-weight:700;font-size:28px;color:#667eea;">
+                        <span style="font-weight:700;font-size:28px;color:#D4A574;">
                             {{ strtoupper(substr($restaurant['business_name']->value??'restaurant' ?? 'R',0,1)) }}
                         </span>
                     @endif
