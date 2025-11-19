@@ -29,17 +29,121 @@
 
         /* Header Navigation */
         .header {
-            background-color: #fff;
-            border-bottom: 1px solid #e0e0e0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
             position: sticky;
             top: 0;
             z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        /* ===== AWESOME Restaurant Name Header ===== */
+        .restaurant-header {
+            padding: 25px 15px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated background pattern */
+        .restaurant-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: backgroundMove 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes backgroundMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(30px, 30px); }
+        }
+
+        .restaurant-header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .restaurant-logo-large {
+            width: 70px;
+            height: 70px;
+            border-radius: 18px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid rgba(255,255,255,0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .restaurant-logo-large:hover {
+            transform: scale(1.05) rotate(5deg);
+        }
+
+        .restaurant-logo-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .restaurant-name-section {
+            flex: 1;
+        }
+
+        .restaurant-name-main {
+            font-size: 28px;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .restaurant-subtitle {
+            font-size: 14px;
+            color: rgba(255,255,255,0.9);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(10px);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .rating-badge i {
+            color: #ffd700;
+            font-size: 12px;
         }
 
         .nav-wrapper {
             display: flex;
             align-items: center;
             padding: 0 15px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
         }
 
         .menu-icon {
@@ -85,9 +189,9 @@
         }
 
         .nav-item.active {
-            color: #333;
+            color: #667eea;
             font-weight: 500;
-            border-bottom-color: #333;
+            border-bottom-color: #667eea;
         }
 
         .nav-item:hover {
@@ -100,41 +204,47 @@
             height: 40px;
             margin-left: 10px;
             border-radius: 50%;
-            background-color: #d4a574;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             flex-shrink: 0;
-            box-shadow: 0 2px 8px #d4a574;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .cart-icon:hover {
             transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
         }
 
         /* Base: HIDE on non-mobile */
         .cart-bar-mobile {
-            display: none; /* hidden by default */
+            display: none;
             position: fixed;
             left: 50%;
             transform: translateX(-50%);
             bottom: 12px;
             width: calc(100% - 40px);
             max-width: 480px;
-            background-color: #d4a574;
-            color: #111;
-            padding: 12px 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 14px 20px;
             border-radius: 999px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
             align-items: center;
             justify-content: space-between;
             font-weight: 600;
             font-size: 15px;
             z-index: 250;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .cart-bar-mobile:hover {
+            transform: translateX(-50%) scale(1.02);
         }
 
         .cart-bar-text {
@@ -143,25 +253,19 @@
         }
 
         .cart-bar-pill {
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             margin-left: 12px;
             border-radius: 50%;
             background-color: #fff;
-            color: #333;
+            color: #667eea;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 14px;
             font-weight: 700;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
-
-        /* Make header layout nice on small screen */
-        /*.nav-wrapper {*/
-        /*    display: flex;*/
-        /*    align-items: center;*/
-        /*}*/
-
 
         /* Content */
         .content {
@@ -263,14 +367,6 @@
             transition: transform 0.2s;
         }
 
-        .arrow-btn {
-            right: 10px; /* arrow on the far right */
-        }
-
-        .plus-btn {
-            right: 60px; /* plus button a bit to the left of the arrow */
-        }
-
         .arrow-btn:hover,
         .plus-btn:hover {
             transform: scale(1.05);
@@ -279,14 +375,14 @@
         .arrow-btn::after {
             content: '›';
             font-size: 28px;
-            color: #d4a574;
+            color: #667eea;
             font-weight: 300;
         }
 
         .plus-btn::after {
             content: '+';
             font-size: 28px;
-            color: #d4a574;
+            color: #667eea;
             font-weight: 400;
         }
 
@@ -305,144 +401,26 @@
             font-size: 16px;
         }
 
-        /* ===== Restaurant header card (like Talabat) ===== */
-
-        .restaurant-card {
-            background-color: #fff;
-            border-radius: 22px;
-            padding: 14px 16px;
-            margin: 10px 15px 8px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        }
-
-        .restaurant-main-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 10px;
-        }
-
-        .restaurant-logo {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
-            overflow: hidden;
-            flex-shrink: 0;
-            background-color: #f3f3f3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .restaurant-logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .restaurant-info {
-            flex: 1;
-        }
-
-        .restaurant-name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #222;
-            margin-bottom: 2px;
-        }
-
-        .restaurant-tags {
-            font-size: 13px;
-            color: #777;
-            margin-bottom: 6px;
-        }
-
-        .restaurant-rating-row {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 3px 8px;
-            border-radius: 999px;
-            background-color: #f7f7f7;
-            font-size: 12px;
-            color: #444;
-        }
-
-        .restaurant-rating-row i {
-            color: #f6b01e;
-        }
-
-        /* Meta row: time, fee, provider */
-        .restaurant-meta-row {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 8px;
-            font-size: 13px;
-            color: #555;
-            flex-wrap: wrap;
-        }
-
-        .restaurant-meta-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .restaurant-meta-dot {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background-color: #bbb;
-        }
-
-        /* Purple promo bar */
-        .restaurant-promo {
-            margin-top: 10px;
-            padding: 10px 12px;
-            border-radius: 14px;
-            background-color: #f2e7ff;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 13px;
-        }
-
-        .restaurant-promo-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .promo-badge {
-            background-color: #5c2dff;
-            color: #fff;
-            font-size: 11px;
-            font-weight: 700;
-            border-radius: 6px;
-            padding: 3px 6px;
-            text-transform: uppercase;
-        }
-
-        .promo-text {
-            color: #4b3a8e;
-            font-weight: 500;
-        }
-
-        .promo-action {
-            color: #4b3a8e;
-            font-weight: 600;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-
-
         /* Desktop Styles */
         @media (min-width: 768px) {
-            .restaurant-card {
-                margin: 10px 40px 8px;
+            .restaurant-header {
+                padding: 35px 40px 25px;
             }
+
+            .restaurant-logo-large {
+                width: 85px;
+                height: 85px;
+                border-radius: 22px;
+            }
+
+            .restaurant-name-main {
+                font-size: 36px;
+            }
+
+            .restaurant-subtitle {
+                font-size: 15px;
+            }
+
             .nav-wrapper {
                 padding: 0 40px;
             }
@@ -495,10 +473,9 @@
 
         @media (max-width: 767px) {
             .cart-bar-mobile {
-                display: flex; /* show ONLY on mobile */
+                display: flex;
             }
 
-            /* optional: hide header cart icon on mobile */
             .cart-icon {
                 display: none;
             }
@@ -509,71 +486,47 @@
 <div class="header">
     <div class="container">
 
-        {{-- Restaurant header card --}}
-        <div class="restaurant-card">
-            <div class="restaurant-main-row">
-                <div class="restaurant-logo">
+        {{-- NEW AWESOME Restaurant Name Header --}}
+        <div class="restaurant-header">
+            <div class="restaurant-header-content">
+                <div class="restaurant-logo-large">
                     @if(!empty($setting['restaurant_logo']?->value))
                         <img src="{{ asset($setting['restaurant_logo']->value) }}" alt="Logo">
                     @else
-                        <!-- fallback circle with first letter -->
-                        <span style="font-weight:700;font-size:20px;color:#555;">
-                            {{ strtoupper(substr($setting['restaurant_name']->value ?? 'R',0,1)) }}
+                        <span style="font-weight:700;font-size:28px;color:#667eea;">
+                            {{ strtoupper(substr($restaurant['business_name']->value??'restaurant' ?? 'R',0,1)) }}
                         </span>
                     @endif
                 </div>
 
-                <div class="restaurant-info">
-                    <div class="restaurant-name">
-                        {{ $user->name ?? 'Restaurant name' }}
+                <div class="restaurant-name-section">
+                    <div class="restaurant-name-main">
+                        {{ $restaurant['business_name']->value ?? 'Restaurant name' }}
                     </div>
-                    <div class="restaurant-tags">
-                        {{ $setting['restaurant_tags']->value ?? 'Breakfast, Falafel, Arabic' }}
-                    </div>
-
-                    <div class="restaurant-rating-row">
-                        <i class="fa-solid fa-star"></i>
-                        <span>{{ $setting['restaurant_rating']->value ?? '4.6' }}</span>
-                        <span>({{ $setting['restaurant_reviews']->value ?? '1,000+' }})</span>
+                    <div class="restaurant-subtitle">
+                        <span>{{ $setting['restaurant_tags']->value ?? 'Breakfast, Falafel, Arabic' }}</span>
+                        <span class="rating-badge">
+                            <i class="fa-solid fa-star"></i>
+                            <span>{{ $setting['restaurant_rating']->value ?? '4.6' }}</span>
+                            <span>({{ $setting['restaurant_reviews']->value ?? '1K+' }})</span>
+                        </span>
                     </div>
                 </div>
             </div>
-
-            <div class="restaurant-meta-row">
-{{--                <div class="restaurant-meta-item">--}}
-{{--                    <i class="fa-regular fa-clock"></i>--}}
-{{--                    <span>{{ $setting['delivery_time']->value ?? '10–15 mins' }}</span>--}}
-{{--                </div>--}}
-
-{{--                <div class="restaurant-meta-item">--}}
-{{--                    <i class="fa-solid fa-bicycle"></i>--}}
-{{--                    <span>{{ $setting['currency']->value ?? 'JOD' }} {{ $setting['delivery_fee']->value ?? '0.50' }}</span>--}}
-{{--                </div>--}}
-
-                <span class="restaurant-meta-dot"></span>
-
-                <div class="restaurant-meta-item">
-                    <span>Delivered by</span>
-                    <span style="color:#f16522;font-weight:700;">
-                        {{ $setting['delivery_provider']->value ?? 'Reallyvoice' }}
-                    </span>
-                </div>
-            </div>
-
         </div>
 
         {{-- Existing nav wrapper (categories + cart) --}}
         <div class="nav-wrapper">
             <nav class="nav-categories">
                 @foreach($categories as $category)
-                    <a href="{{ route('menu.index', ['category' => $category->name]) }}"
+                    <a href="{{ route('menu.index', ['name'=>$name,'category' => $category->name]) }}"
                        class="nav-item {{ $category->name === $selectedCategory ? 'active' : '' }}">
                         {{ $category->name }}
                     </a>
                 @endforeach
             </nav>
             <div class="cart-icon"
-                 onclick="window.location.href='{{ route('cart.index') }}'">
+                 onclick="window.location.href='{{ route('cart.index',$name) }}'">
                 <span class="cart-icon-symbol">
                     <i class="fa-solid fa-cart-shopping"></i>
                 </span>
@@ -593,7 +546,7 @@
         @if($products->count() > 0)
             <div class="menu-items">
                 @foreach($products as $item)
-                    <div class="menu-item" onclick="window.location.href='{{ route('menu.show', $item->id) }}'">
+                    <div class="menu-item" onclick="window.location.href='{{ route('menu.show', [$name,$item->id]) }}'">
                         <div class="item-info">
                             <h2 class="item-name">{{ $item->name }}</h2>
                             <p class="item-description">{{ $item->description }}</p>
@@ -612,10 +565,10 @@
                             @endif
                             @if($item->type == 'simple')
                                 <div class="plus-btn"
-                                     onclick="event.stopPropagation(); window.location.href='{{ route('menu.show', $item->id) }}'"></div>
+                                     onclick="event.stopPropagation(); window.location.href='{{ route('menu.show', [$name,$item->id]) }}'"></div>
                             @else
                                 <div class="arrow-btn"
-                                     onclick="event.stopPropagation(); window.location.href='{{ route('menu.show', $item->id) }}'"></div>
+                                     onclick="event.stopPropagation(); window.location.href='{{ route('menu.show', [$name,$item->id]) }}'"></div>
                             @endif
                         </div>
                     </div>
@@ -630,9 +583,8 @@
     </div>
 </div>
 
-
 <div class="cart-bar-mobile"
-     onclick="window.location.href='{{ route('cart.index') }}'">
+     onclick="window.location.href='{{ route('cart.index',$name) }}'">
     <span class="cart-bar-text">See Your Cart</span>
     <span class="cart-bar-pill">
         @if(!empty($cartCount))

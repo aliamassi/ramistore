@@ -29,7 +29,7 @@ class CartController extends Controller
         return $cart;
     }
 
-    public function index()
+    public function index($name)
     {
         $cart     = $this->getOrCreateCart();
         // eager-load product, customizationOption, and variant
@@ -43,10 +43,11 @@ class CartController extends Controller
             'cart'      => $cart,
             'cartItems' => $cartItems,
             'setting'   => $setting,
+            'name'   => $name,
         ]);
     }
 
-    public function add(Request $request)
+    public function add(Request $request,$name)
     {
         $request->validate([
             'product_id'             => 'required|exists:products,id',
@@ -131,7 +132,7 @@ class CartController extends Controller
         }
 
         return redirect()
-            ->route('cart.index')
+            ->route('cart.index',['name'=>$name])
             ->with('success', 'Item added to cart!');
     }
 

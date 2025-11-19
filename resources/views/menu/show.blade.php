@@ -763,7 +763,7 @@
                 }
             }
 
-            const response = await fetch('{{ route("cart.add") }}', {
+            const response = await fetch('{{ route("cart.add",$name) }}', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -782,7 +782,7 @@
                 updateCartCount(data.cart_count ?? 0);
 
                 setTimeout(() => {
-                    window.location.href = '{{ route("cart.index") }}';
+                    window.location.href = '{{ route("cart.index",$name) }}';
                 }, 800);
             } else {
                 throw new Error(data.message || 'Failed to add item to cart');

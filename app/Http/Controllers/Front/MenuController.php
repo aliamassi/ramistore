@@ -13,17 +13,14 @@ use Illuminate\Support\Facades\Session;
 
 class MenuController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $name)
     {
-        $user = null;
-        if ($request->id) {
-            $categories = Category::where('admin_id', $request->id)->active()->orderBy('order')->with('products.variants')->latest()->get();
-            $user = Admin::find($request->id);
-        } else {
-            $categories = Category::active()
-                ->orderBy('order')
-                ->get();
-        }
+
+        $setting = \App\Models\Setting::where('key', 'business_name')->where('value', $name)->first();
+        if (empty($setting)) abort(404);
+        $admin = Admin::find($setting->admin_id);
+        $categories = Category::where('admin_id', $admin->id)->active()->orderBy('order')->with('products.variants')->latest()->get();
+        $restaurant = $admin->settings->keyBy('key');
 
         // Get selected category from query parameter or default to 'Sandwiches'
         $firstCategory = Category::active()->first();
@@ -50,15 +47,17 @@ class MenuController extends Controller
             'selectedCategory' => $selectedCategory,
             'products' => $products,
             'cartCount' => $cartCount,
-            'user' => $user,
-            'setting' => $setting
+            'user' => $admin,
+            'name' => $name,
+            'setting' => $setting,
+            'restaurant' => $restaurant
         ]);
     }
 
-    public function show($id)
+    public function show($name,$id)
     {
         $item = Product::with('category')->findOrFail($id);
         $setting = Setting::all()->keyBy('key');
-        return view('menu.show', compact('item', 'setting'));
+        return view('menu.show', compact('name','item', 'setting'));
     }
 }

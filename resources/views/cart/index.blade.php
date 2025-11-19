@@ -322,7 +322,7 @@
 <div class="header">
     <div class="container">
         <div class="header-content">
-            <button class="back-btn" onclick="window.location.href='{{ route('menu.index') }}'">‹</button>
+            <button class="back-btn" onclick="window.location.href='{{ route('menu.index',$name) }}'">‹</button>
             <h1 class="header-title">Shopping Cart</h1>
             @if($cartItems->count() > 0)
                 <button class="clear-btn" onclick="clearCart()">Clear</button>
@@ -412,7 +412,7 @@
                 <div class="empty-cart-icon">🛒</div>
                 <h2 class="empty-cart-title">Your cart is empty</h2>
                 <p class="empty-cart-text">Add some delicious items to get started!</p>
-                <button class="browse-btn" onclick="window.location.href='{{ route('menu.index') }}'">
+                <button class="browse-btn" onclick="window.location.href='{{ route('menu.index',$name) }}'">
                     Browse Menu
                 </button>
             </div>

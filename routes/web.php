@@ -9,15 +9,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Front\OldMenuController;
 
-Route::get('/restaurant/{name}',function(Request $request){
-
-         $name = $request->name;
-         $setting = \App\Models\Setting::where('key','business_name')->where('value',$name)->first();
-         $admin = Admin::find($setting->admin_id);
-         $categories = $admin->categories()->active()->orderBy('order')->with('products.variants')->latest()->get();
-         $restaurant  = $admin->settings->keyBy('key');
-    return view('menu.index1',compact('categories','restaurant'));
-});
+//Route::get('/restaurant/{name}',function(Request $request){
+//
+//         $name = $request->name;
+//         $setting = \App\Models\Setting::where('key','business_name')->where('value',$name)->first();
+//         $admin = Admin::find($setting->admin_id);
+//         $categories = $admin->categories()->active()->orderBy('order')->with('products.variants')->latest()->get();
+//         $restaurant  = $admin->settings->keyBy('key');
+//    return view('menu.index1',compact('categories','restaurant'));
+//});
 //Route::get('/store-data',function(){
 //
 //    $categories = [
@@ -62,13 +62,13 @@ Route::get('/restaurant/{name}',function(Request $request){
 //});
 Route::get('/', [HomeController::class, 'index'])->name('home');
 // Menu Routes
-Route::get('/', [MenuController::class, 'index'])->name('menu.index');
-Route::get('/menu/{id}', [MenuController::class, 'show'])->name('menu.show');
+Route::get('/restaurant/{name}', [MenuController::class, 'index'])->name('menu.index');
+Route::get('/menu/{name}/{id}', [MenuController::class, 'show'])->name('menu.show');
 
 // Cart Routes
 Route::prefix('cart')->name('cart.')->group(function () {
-    Route::get('/', [CartController::class, 'index'])->name('index');
-    Route::post('/add', [CartController::class, 'add'])->name('add');
+    Route::get('/{name}', [CartController::class, 'index'])->name('index');
+    Route::post('/{name}/add', [CartController::class, 'add'])->name('add');
     Route::patch('/{id}', [CartController::class, 'update'])->name('update');
     Route::delete('/{id}', [CartController::class, 'remove'])->name('remove');
     Route::delete('/', [CartController::class, 'clear'])->name('clear');
