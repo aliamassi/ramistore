@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Setting extends Model
 {
     protected $fillable = [
-        'name', 'key', 'value',
+        'admin_id','name', 'key', 'value',
     ];
 
     public static function setSettings($inputs)

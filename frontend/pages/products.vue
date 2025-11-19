@@ -15,6 +15,7 @@ import ProductImageUploader from "@/components/ProductImageUploader.vue";
 const setAlert = inject<(msg: string, type?: 'success' | 'error' | 'info') => void>('setAlert')
 const setting = reactive({
   currency: 'JOD',
+  business_name: 'your business name',
 })
 const uploaderRef = ref<InstanceType<typeof ImageUploadDialog> | null>(null)
 
@@ -113,6 +114,7 @@ const {
   getProductsByCategory,
   getProductByCategoryAndId,
   fetchCategories,
+  saveSetting,
   addProduct,
   addCategory,
   updateProduct,
@@ -156,6 +158,7 @@ onMounted(async () => {
   await fetchCategories()
     await fetchSettings()
   setting.currency = settings.value.currency.value
+  setting.business_name = settings.value.business_name.value
   console.log(categoryCount.value)
 })
 // Methods
@@ -259,6 +262,12 @@ const handleSaveProductType = async (productData) => {
     console.log('Product variant updated successfully')
   } catch (err) {
     console.error('Failed to update product:', err)
+  }
+}
+const handleSaveSetting = async (name) => {
+  try {
+    await saveSetting(setting.business_name)
+  } catch (err) {
   }
 }
 const handleAddProductVariant = async (variantData) => {
@@ -504,12 +513,13 @@ const duplicateCategory = () => {
             <div class="text-caption text-grey-darken-1 mb-1">Business</div>
             <div style="position: relative;">
               <v-text-field
-                v-model="user.name"
+                v-model="setting.business_name"
                 variant="underlined"
                 density="compact"
                 class="business-name-field"
                 :counter="45"
                 maxlength="45"
+                @blur="handleSaveSetting"
               >
               </v-text-field>
             </div>

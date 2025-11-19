@@ -305,8 +305,144 @@
             font-size: 16px;
         }
 
+        /* ===== Restaurant header card (like Talabat) ===== */
+
+        .restaurant-card {
+            background-color: #fff;
+            border-radius: 22px;
+            padding: 14px 16px;
+            margin: 10px 15px 8px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+        .restaurant-main-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .restaurant-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background-color: #f3f3f3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .restaurant-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .restaurant-info {
+            flex: 1;
+        }
+
+        .restaurant-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 2px;
+        }
+
+        .restaurant-tags {
+            font-size: 13px;
+            color: #777;
+            margin-bottom: 6px;
+        }
+
+        .restaurant-rating-row {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background-color: #f7f7f7;
+            font-size: 12px;
+            color: #444;
+        }
+
+        .restaurant-rating-row i {
+            color: #f6b01e;
+        }
+
+        /* Meta row: time, fee, provider */
+        .restaurant-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: #555;
+            flex-wrap: wrap;
+        }
+
+        .restaurant-meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .restaurant-meta-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #bbb;
+        }
+
+        /* Purple promo bar */
+        .restaurant-promo {
+            margin-top: 10px;
+            padding: 10px 12px;
+            border-radius: 14px;
+            background-color: #f2e7ff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+
+        .restaurant-promo-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .promo-badge {
+            background-color: #5c2dff;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 6px;
+            padding: 3px 6px;
+            text-transform: uppercase;
+        }
+
+        .promo-text {
+            color: #4b3a8e;
+            font-weight: 500;
+        }
+
+        .promo-action {
+            color: #4b3a8e;
+            font-weight: 600;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+
+
         /* Desktop Styles */
         @media (min-width: 768px) {
+            .restaurant-card {
+                margin: 10px 40px 8px;
+            }
             .nav-wrapper {
                 padding: 0 40px;
             }
@@ -372,12 +508,62 @@
 <body>
 <div class="header">
     <div class="container">
+
+        {{-- Restaurant header card --}}
+        <div class="restaurant-card">
+            <div class="restaurant-main-row">
+                <div class="restaurant-logo">
+                    @if(!empty($setting['restaurant_logo']?->value))
+                        <img src="{{ asset($setting['restaurant_logo']->value) }}" alt="Logo">
+                    @else
+                        <!-- fallback circle with first letter -->
+                        <span style="font-weight:700;font-size:20px;color:#555;">
+                            {{ strtoupper(substr($setting['restaurant_name']->value ?? 'R',0,1)) }}
+                        </span>
+                    @endif
+                </div>
+
+                <div class="restaurant-info">
+                    <div class="restaurant-name">
+                        {{ $user->name ?? 'Restaurant name' }}
+                    </div>
+                    <div class="restaurant-tags">
+                        {{ $setting['restaurant_tags']->value ?? 'Breakfast, Falafel, Arabic' }}
+                    </div>
+
+                    <div class="restaurant-rating-row">
+                        <i class="fa-solid fa-star"></i>
+                        <span>{{ $setting['restaurant_rating']->value ?? '4.6' }}</span>
+                        <span>({{ $setting['restaurant_reviews']->value ?? '1,000+' }})</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="restaurant-meta-row">
+{{--                <div class="restaurant-meta-item">--}}
+{{--                    <i class="fa-regular fa-clock"></i>--}}
+{{--                    <span>{{ $setting['delivery_time']->value ?? '10–15 mins' }}</span>--}}
+{{--                </div>--}}
+
+{{--                <div class="restaurant-meta-item">--}}
+{{--                    <i class="fa-solid fa-bicycle"></i>--}}
+{{--                    <span>{{ $setting['currency']->value ?? 'JOD' }} {{ $setting['delivery_fee']->value ?? '0.50' }}</span>--}}
+{{--                </div>--}}
+
+                <span class="restaurant-meta-dot"></span>
+
+                <div class="restaurant-meta-item">
+                    <span>Delivered by</span>
+                    <span style="color:#f16522;font-weight:700;">
+                        {{ $setting['delivery_provider']->value ?? 'Reallyvoice' }}
+                    </span>
+                </div>
+            </div>
+
+        </div>
+
+        {{-- Existing nav wrapper (categories + cart) --}}
         <div class="nav-wrapper">
-            {{--            <div class="menu-icon">--}}
-            {{--                <span></span>--}}
-            {{--                <span></span>--}}
-            {{--                <span></span>--}}
-            {{--            </div>--}}
             <nav class="nav-categories">
                 @foreach($categories as $category)
                     <a href="{{ route('menu.index', ['category' => $category->name]) }}"
@@ -396,6 +582,7 @@
                 @endif
             </div>
         </div>
+
     </div>
 </div>
 

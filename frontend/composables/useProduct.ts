@@ -90,7 +90,7 @@ export const useProduct = () => {
         error.value = null
         try {
             const res = await $sf('/panel/settings?key=business_settings')
-            settings.value = res.settings
+            settings.value = res.setting
         } catch (e) {
 
         } finally {
@@ -115,6 +115,28 @@ export const useProduct = () => {
                 const route = useRoute()
                 navigateTo(`/login?redirect=${encodeURIComponent(route.fullPath)}`, {replace: true})
             }
+        } finally {
+            loading.value = false
+        }
+    }
+
+    const saveSetting = async (settingData) => {
+        loading.value = true;
+        // error.value = null
+        const payload = {
+            business_name: settingData,
+        }
+        try {
+            const res = await $sf('/panel/settings', {
+                method: 'POST',
+                body:  payload,
+            })
+            // const newProduct = normItem(res)
+
+            setAlert?.('Business name successfully updated!', 'success')
+        } catch (e) {
+            // error.value = e?.message || 'Failed to save'
+            // setAlert?.(error.value, 'error')
         } finally {
             loading.value = false
         }
@@ -516,7 +538,7 @@ export const useProduct = () => {
         updateProduct, updateCategory,updateProductVariant,updateProductType,
         deleteProduct, deleteCategory,
         duplicateProduct, reorderProducts,addProductVariant,
-        uploadProductImages, updateProductWithImages, fetchProductImages, changeProductVisibility, changeCategoryVisibility
+        uploadProductImages,  saveSetting, updateProductWithImages, fetchProductImages, changeProductVisibility, changeCategoryVisibility
 
     }
 }

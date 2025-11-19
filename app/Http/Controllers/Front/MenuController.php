@@ -15,9 +15,9 @@ class MenuController extends Controller
 {
     public function index(Request $request)
     {
-
+        $user = null;
         if ($request->id) {
-            $categories = Category::where('admin_id', $request->id)->active()->orderBy('order')->with('products')->latest()->get();
+            $categories = Category::where('admin_id', $request->id)->active()->orderBy('order')->with('products.variants')->latest()->get();
             $user = Admin::find($request->id);
         } else {
             $categories = Category::active()
@@ -50,6 +50,7 @@ class MenuController extends Controller
             'selectedCategory' => $selectedCategory,
             'products' => $products,
             'cartCount' => $cartCount,
+            'user' => $user,
             'setting' => $setting
         ]);
     }

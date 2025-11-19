@@ -64,7 +64,8 @@ const fetchSettings = async () => {
     const res = await $sf('/panel/settings?key=business_settings')
     settings.value = res.settings
     currencies.value = res.currency
-    form.currency = res.settings.currency.value
+    form.currency = res.setting.currency.value
+    form.businessName = res.setting.business_name.value
   } catch (e) {
     // error.value = e?.message || 'Failed to fetch settings'
     // setAlert?.(error.value, 'error')

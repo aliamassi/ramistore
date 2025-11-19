@@ -4,23 +4,24 @@ namespace App\Http\Controllers\Panel;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Product;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class CategoryController extends BaseController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $user = auth()->user();
-        $categories = $user->categories()->with(['products' => function($query) {
-        $query->with('variants')->withCount('variants');
-    }])->latest()->paginate(20);
+        $user = $this->admin();
+        $categories = $user->categories()->with(['products' => function ($query) {
+            $query->with('variants')->withCount('variants');
+        }])->latest()->paginate(20);
         return response()->json([
             'status' => true,
-            'categories' => $categories
+            'categories' => $categories,
         ]);
     }
 

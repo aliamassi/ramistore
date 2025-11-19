@@ -19,6 +19,8 @@ class Admin extends Authenticatable implements HasMedia
      */
     protected $fillable = [
         'name',
+        'business_name',
+        'currency',
         'email',
         'password',
     ];
@@ -54,7 +56,8 @@ class Admin extends Authenticatable implements HasMedia
        return $this->getFirstMediaUrl('logo');
     }
     public function getDomainAttribute(){
-       return request()->getSchemeAndHttpHost()."/menu?id=$this->id";
+        $business_name = $this->settings()->where('key','=','business_name')->first();
+       return request()->getSchemeAndHttpHost()."/restaurant/$business_name->value";
     }
 
     public function registerMediaCollections(): void
@@ -63,7 +66,22 @@ class Admin extends Authenticatable implements HasMedia
         // singleFile() ensures adding a new file deletes the previous one
     }
 
-    public function categories(){
+    public function categories(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
         return $this->hasMany(Category::class,'admin_id');
+    }
+    public function settings(): \Illuminate\Database\Eloquent\Relations\HasMany|Setting
+    {
+        return $this->hasMany(Setting::class,'admin_id');
+    }
+
+    public function setSettings($inputs)
+    {
+        foreach ($inputs as $key => $value) {
+            $this->settings()->updateOrCreate(
+                ['key' => $key],
+                ['value' => $value]
+            );
+        }
     }
 }

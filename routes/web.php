@@ -3,9 +3,21 @@
 use App\Http\Controllers\Front\CartController;
 use App\Http\Controllers\Front\HomeController;
 use App\Http\Controllers\Front\MenuController;
+use App\Models\Admin;
+use App\Models\Category;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Front\OldMenuController;
 
+Route::get('/restaurant/{name}',function(Request $request){
+
+         $name = $request->name;
+         $setting = \App\Models\Setting::where('key','business_name')->where('value',$name)->first();
+         $admin = Admin::find($setting->admin_id);
+         $categories = $admin->categories()->active()->orderBy('order')->with('products.variants')->latest()->get();
+         $restaurant  = $admin->settings->keyBy('key');
+    return view('menu.index1',compact('categories','restaurant'));
+});
 //Route::get('/store-data',function(){
 //
 //    $categories = [

@@ -9,7 +9,7 @@ use App\Models\Product;
 use App\Models\Variant;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class ProductController extends BaseController
 {
     /**
      * Display a listing of the resource.
@@ -19,7 +19,7 @@ class ProductController extends Controller
         $products = Product::with('variants')->latest()->paginate(20);
         return response()->json([
             'status' => true,
-            'products' => $products
+            'products' => $products,
         ]);
     }
 

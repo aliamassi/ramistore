@@ -19,11 +19,16 @@ class SettingsController extends BaseController
     {
         $key = $request->key;
         if($key == 'business_settings'){
-            $setting = Setting::all()->keyBy('key');
+            $setting = [];
+            $admin = $this->admin();
+            if($admin->settings()->exists()){
+                $setting = $admin->settings->keyBy('key');
+            }
+
             $currency= Constant::getConstants('currency')->children()->pluck('value');
             return response()->json([
                 'status' => true,
-                'settings' => $setting,
+                'setting' => $setting,
                 'currency' => $currency
             ]);
         }
@@ -34,9 +39,11 @@ class SettingsController extends BaseController
     public function store(Request $request)
     {
         $request->validate([
-            'currency' => 'required',
+            'business_name' => 'required',
         ]);
-        Setting::setSettings($request->except('undefined', '_token', 'website_logo'));
+        $admin = $this->admin();
+        $admin->setSettings($request->except('undefined', '_token', 'website_logo'));
+
         return response()->json(['status' => true, 'message' => trans('messages.success')]);
     }
 
