@@ -929,23 +929,23 @@ const duplicateCategory = () => {
         @confirm="confirmDelete"
         @cancel="cancelDelete"
       />
-      <!--      <ClientOnly>-->
-      <!--        <ImageUploadDialog-->
-      <!--            ref="uploaderRef"-->
-      <!--            title="Upload product image"-->
-      <!--            accept="image/*"-->
-      <!--            :maxSizeMB="10"-->
-      <!--            @selected="onImageSelected"-->
-      <!--        >-->
-      <!--          &lt;!&ndash; 👇 Your UPLOAD BUTTON now lives INSIDE the dialog &ndash;&gt;-->
-      <!--          <template #actions="{ file, close, useImage }">-->
-      <!--            <v-btn variant="text" @click="close()">Cancel</v-btn>-->
-      <!--            <v-btn color="primary" :disabled="!file" @click="uploadLogo(file)">-->
-      <!--              Upload-->
-      <!--            </v-btn>-->
-      <!--          </template>-->
-      <!--        </ImageUploadDialog>-->
-      <!--      </ClientOnly>-->
+            <ClientOnly>
+              <ImageUploadDialog
+                  ref="uploaderRef"
+                  title="Upload product image"
+                  accept="image/*"
+                  :maxSizeMB="10"
+                  @selected="onImageSelected"
+              >
+                <!-- 👇 Your UPLOAD BUTTON now lives INSIDE the dialog -->
+                <template #actions="{ file, close, useImage }">
+                  <v-btn variant="text" @click="close()">Cancel</v-btn>
+                  <v-btn color="primary" :disabled="!file" @click="uploadLogo(file)">
+                    Upload
+                  </v-btn>
+                </template>
+              </ImageUploadDialog>
+            </ClientOnly>
 
     </div>
     <div v-if="categoryCount == 0" class="d-flex justify-center">

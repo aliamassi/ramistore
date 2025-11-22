@@ -490,8 +490,8 @@
         <div class="restaurant-header">
             <div class="restaurant-header-content">
                 <div class="restaurant-logo-large">
-                    @if(!empty($setting['restaurant_logo']?->value))
-                        <img src="{{ asset($setting['restaurant_logo']->value) }}" alt="Logo">
+                    @if(!empty($user->logo))
+                        <img src="{{ $user->logo }}" alt="Logo">
                     @else
                         <span style="font-weight:700;font-size:28px;color:#D4A574;">
                             {{ strtoupper(substr($restaurant['business_name']->value??'restaurant' ?? 'R',0,1)) }}
@@ -503,14 +503,14 @@
                     <div class="restaurant-name-main">
                         {{ $restaurant['business_name']->value ?? 'Restaurant name' }}
                     </div>
-                    <div class="restaurant-subtitle">
-                        <span>{{ $setting['restaurant_tags']->value ?? 'Breakfast, Falafel, Arabic' }}</span>
-                        <span class="rating-badge">
-                            <i class="fa-solid fa-star"></i>
-                            <span>{{ $setting['restaurant_rating']->value ?? '4.6' }}</span>
-                            <span>({{ $setting['restaurant_reviews']->value ?? '1K+' }})</span>
-                        </span>
-                    </div>
+{{--                    <div class="restaurant-subtitle">--}}
+{{--                        <span>{{ $setting['restaurant_tags']->value ?? 'Breakfast, Falafel, Arabic' }}</span>--}}
+{{--                        <span class="rating-badge">--}}
+{{--                            <i class="fa-solid fa-star"></i>--}}
+{{--                            <span>{{ $setting['restaurant_rating']->value ?? '4.6' }}</span>--}}
+{{--                            <span>({{ $setting['restaurant_reviews']->value ?? '1K+' }})</span>--}}
+{{--                        </span>--}}
+{{--                    </div>--}}
                 </div>
             </div>
         </div>
