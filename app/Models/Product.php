@@ -40,6 +40,8 @@ class Product extends Model implements HasMedia
     {
         if ($this->getMedia('products')->where('is_main',1)->first()) {
             return $this->getMedia('products')->where('is_main',1)->first()->getFullUrl();
+        }else if($this->getMedia('products')->first()){
+            return $this->getMedia('products')->first()->getFullUrl();
         }
         return null;
     }
