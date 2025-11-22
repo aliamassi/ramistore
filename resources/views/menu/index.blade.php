@@ -549,7 +549,7 @@
                     <div class="menu-item" onclick="window.location.href='{{ route('menu.show', [$name,$item->id]) }}'">
                         <div class="item-info">
                             <h2 class="item-name">{{ $item->name }}</h2>
-                            <p class="item-description">{{ $item->description }}</p>
+                            <p class="item-description">{{ Str::limit($item->description, 50) }}</p>
                             <div class="item-footer">
                                 <div class="item-price">{{ $setting['currency']->value??"$"}}  {{ number_format($item->price, 2) }}</div>
                                 @if($item->customizable)
