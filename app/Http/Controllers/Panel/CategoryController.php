@@ -17,8 +17,11 @@ class CategoryController extends BaseController
     {
         $user = $this->admin();
         $categories = $user->categories()->with(['products' => function ($query) {
-            $query->with('variants')->withCount('variants');
-        }])->latest()->paginate(20);
+            $query->with('variants')->withCount('variants')
+                ->orderBy('order');
+        }])
+            ->latest()
+            ->get();
         return response()->json([
             'status' => true,
             'categories' => $categories,
@@ -44,7 +47,23 @@ class CategoryController extends BaseController
             'setting' => $setting,
         ]);
     }
+    public function reorder(Category $category,Request $request)
+    {
+        $request->validate([
+            'product_ids' => 'required'
+        ]);
+         $product_ids = $request->product_ids;
+         foreach ($product_ids as $order=> $product_id){
+             Product::find($product_id)->update(['order'=>$order]);
+         }
 
+         $products = Product::with('variants')->orderBy('order')->whereIn('id',$product_ids)->get();
+        return response()->json([
+            'status' => true,
+            'message' => __('messages.success'),
+            'products' => $products
+        ]);
+    }
     public function changeVisibility($category, Request $request)
     {
         $request->validate([

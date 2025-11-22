@@ -141,7 +141,24 @@ export const useProduct = () => {
             loading.value = false
         }
     }
-
+    const updateProductOrder = async (categoryId: number, productIds: number[]) => {
+        try {
+           const updateProductOrderResult =  await $sf(`/panel/category/${categoryId}/products/reorder`, {
+                method: 'POST',
+                body: { product_ids: productIds }
+            })
+            setAlert?.('Product ordered successfully!', 'success')
+            const catIdx = categories.value.findIndex(c => c?.id === categoryId)
+            if (catIdx !== -1) {
+                const cat = categories.value[catIdx]
+                cat.products = updateProductOrderResult.products
+            }
+            return updateProductOrderResult
+        } catch (err) {
+            console.error('Failed to update product order:', err)
+            throw err
+        }
+    }
     const addProduct = async (productData: AnyObj | FormData) => {
         // loading.value = true;
         error.value = null
@@ -538,7 +555,7 @@ export const useProduct = () => {
         updateProduct, updateCategory,updateProductVariant,updateProductType,
         deleteProduct, deleteCategory,
         duplicateProduct, reorderProducts,addProductVariant,
-        uploadProductImages,  saveSetting, updateProductWithImages, fetchProductImages, changeProductVisibility, changeCategoryVisibility
+        uploadProductImages, updateProductOrder,  saveSetting, updateProductWithImages, fetchProductImages, changeProductVisibility, changeCategoryVisibility
 
     }
 }

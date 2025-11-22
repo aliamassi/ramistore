@@ -30,11 +30,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('product/variant/{variant}', [ProductController::class,'deleteVariant']);
     Route::apiResource('category', CategoryController::class);
     Route::put('category/{category}/visibility', [CategoryController::class,'changeVisibility']);
+    Route::post('category/{category}/products/reorder', [CategoryController::class,'reorder']);
 
     Route::post('admin/upload', [AdminController::class,'uploadImage']);
     Route::get('settings', [SettingsController::class,'index']);
     Route::post('settings', [SettingsController::class,'store']);
-
 });
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //

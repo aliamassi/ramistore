@@ -6,6 +6,7 @@ import {useProduct} from '~/composables/useProduct'
 import ProductEditDrawer from '~/components/ProductEditDrawer.vue'
 import DeleteConfirmDialog from '~/components/DeleteConfirmDialog.vue'
 import {useSanctumFetch} from "#imports";
+import { VueDraggable } from 'vue-draggable-plus'
 
 const selected = ref('favorites')
 const $sf = useSanctumFetch<AnyObj>
@@ -130,7 +131,8 @@ const {
   updateProductVariant,
   updateProductType,
   settings,
-  duplicateProduct
+  duplicateProduct,
+  updateProductOrder,
 } = useProduct()
 const {user} = useSanctum()
 
@@ -162,7 +164,26 @@ onMounted(async () => {
   console.log(categoryCount.value)
 })
 // Methods
+const handleProductDragEnd = async (categoryId: number, newProducts: any[]) => {
+  try {
+    // Update local state immediately for better UX
+    const category = categories.value.find(c => c.id === categoryId)
+    if (category) {
+      category.products = newProducts
+    }
 
+    // Send order to backend
+    const productIds = newProducts.map(p => p.id)
+    await updateProductOrder(categoryId, productIds)
+
+    setAlert?.('Products reordered successfully', 'success')
+  } catch (err) {
+    console.error('Failed to reorder products:', err)
+    setAlert?.('Failed to reorder products', 'error')
+    // Optionally refresh categories to revert changes
+    await fetchCategories()
+  }
+}
 
 const toggleFavorite = () => {
   isFavorite.value = !isFavorite.value
@@ -802,96 +823,104 @@ const duplicateCategory = () => {
         <!-- Products List -->
         <v-expand-transition>
           <div v-show="isCategoryExpanded(category.id)" class="products-container">
-            <v-card
-              v-for="product in category.products"
-              :key="product.id"
-              elevation="0"
-              class="product-card"
+            <VueDraggable
+                v-model="category.products"
+                :animation="200"
+                handle=".drag-handle"
+                ghost-class="ghost-product"
+                @end="handleProductDragEnd(category.id, category.products)"
             >
-              <v-card-text class="pa-2 product-card-item">
-                <v-row align="center" no-gutters>
-                  <!-- Drag Handle -->
-                  <v-col cols="auto" class="mr-3">
-                    <i class='mdi-drag mdi v-icon notranslate v-theme--light v-icon--size-default'></i>
-                  </v-col>
+              <v-card
+                  v-for="product in category.products"
+                  :key="product.id"
+                  elevation="0"
+                  class="product-card"
+              >
+                <v-card-text class="pa-2 product-card-item">
+                  <v-row align="center" no-gutters>
+                    <!-- Drag Handle - ADD THIS CLASS -->
+                    <v-col cols="auto" class="mr-3 drag-handle" style="cursor: grab;">
+                      <i class='mdi-drag mdi v-icon notranslate v-theme--light v-icon--size-default'></i>
+                    </v-col>
 
-                  <!-- Product Image -->
-                  <v-col cols="auto" class="mr-4">
-                    <v-avatar
-                      size="30"
-                      rounded="lg"
-                      :class="product.image ? 'bg-white' : 'bg-grey-lighten-3'"
-                      style="border: 1px solid #e0e0e0;"
-                    >
-                      <div v-if="!product.image" class="text-center">
-                        <i class='bx bx-package text-grey' style="font-size: 32px;"></i>
+                    <!-- Product Image -->
+                    <v-col cols="auto" class="mr-4">
+                      <v-avatar
+                          size="30"
+                          rounded="lg"
+                          :class="product.image ? 'bg-white' : 'bg-grey-lighten-3'"
+                          style="border: 1px solid #e0e0e0;"
+                      >
+                        <div v-if="!product.image" class="text-center">
+                          <i class='bx bx-package text-grey' style="font-size: 32px;"></i>
+                        </div>
+                        <img v-else width="30" height="30" :src="product.image" :alt="product.name"/>
+                      </v-avatar>
+                    </v-col>
+
+                    <!-- Product Name -->
+                    <v-col>
+                      <div
+                          class="text-h6 font-weight-medium product-name-link"
+                          @click="openProductDrawer(category.id,product.id)"
+                      >
+                        {{ product.name }}
                       </div>
-                      <img v-else width="30" height="30" :src="product.image" :alt="product.name"/>
-                    </v-avatar>
-                  </v-col>
+                    </v-col>
 
-                  <!-- Product Name -->
-                  <v-col>
-                    <div
-                      class="text-h6 font-weight-medium product-name-link"
-                      @click="openProductDrawer(category.id,product.id)"
-                    >
-                      {{ product.name }}
-                    </div>
-                  </v-col>
+                    <!-- Price -->
+                    <v-col cols="auto" class="mr-3">
+                      <div class="text-h6 font-weight-semibold">
+                        {{ setting.currency || 'JD' }} {{ product.price }}
+                      </div>
+                    </v-col>
 
-                  <!-- Price -->
-                  <v-col cols="auto" class="mr-3">
-                    <div class="text-h6 font-weight-semibold">
-                      {{ setting.currency || 'JD' }} {{ product.price }}
-                    </div>
-                  </v-col>
+                    <!-- View Button -->
+                    <v-col cols="auto" class="mr-2">
+                      <button @click="handleChangeProductVisibility(product.id,'specific')" type="button"
+                              class="v-btn v-btn--icon v-theme--light text-primary v-btn--density-compact elevation-0 v-btn--size-default v-btn--variant-text mr-3">
+                  <span class="v-btn__content">
+                    <i
+                        :class="[{'mdi-eye mdi':product.is_visible,'mdi mdi-eye-off-outline':!product.is_visible},'v-icon notranslate v-theme--light v-icon--size-default']"
+                        aria-hidden="true"></i>
+                  </span>
+                      </button>
+                    </v-col>
 
-                  <!-- View Button -->
-                  <v-col cols="auto" class="mr-2">
-                    <button @click="handleChangeProductVisibility(product.id,'specific')" type="button"
-                            class="v-btn v-btn--icon v-theme--light text-primary v-btn--density-compact elevation-0 v-btn--size-default v-btn--variant-text mr-3">
-                      <span class="v-btn__content">
-                        <i
-                          :class="[{'mdi-eye mdi':product.is_visible,'mdi mdi-eye-off-outline':!product.is_visible},'v-icon notranslate v-theme--light v-icon--size-default']"
-                          aria-hidden="true"></i>
-                      </span>
-                    </button>
-                  </v-col>
-
-                  <!-- Product Menu -->
-                  <v-col cols="auto">
-                    <v-menu>
-                      <template v-slot:activator="{ props }">
-                        <v-btn icon variant="text" v-bind="props">
-                          <i class='bx bx-dots-vertical-rounded' style="font-size: 20px;"></i>
-                        </v-btn>
-                      </template>
-                      <v-list>
-                        <v-list-item @click="openProductDrawer(category.id,product.id)">
-                          <template v-slot:prepend>
-                            <i class='bx bx-edit' style="font-size: 20px; margin-right: 12px;"></i>
-                          </template>
-                          <v-list-item-title>Edit</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item @click="handleDuplicateProduct(product.id)">
-                          <template v-slot:prepend>
-                            <i class='bx bx-copy' style="font-size: 20px; margin-right: 12px;"></i>
-                          </template>
-                          <v-list-item-title>Duplicate</v-list-item-title>
-                        </v-list-item>
-                        <v-list-item @click="handleDeleteProduct(product.id,product.category_id)">
-                          <template v-slot:prepend>
-                            <i class='bx bx-trash' style="font-size: 20px; margin-right: 12px;"></i>
-                          </template>
-                          <v-list-item-title>Delete</v-list-item-title>
-                        </v-list-item>
-                      </v-list>
-                    </v-menu>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-            </v-card>
+                    <!-- Product Menu -->
+                    <v-col cols="auto">
+                      <v-menu>
+                        <template v-slot:activator="{ props }">
+                          <v-btn icon variant="text" v-bind="props">
+                            <i class='bx bx-dots-vertical-rounded' style="font-size: 20px;"></i>
+                          </v-btn>
+                        </template>
+                        <v-list>
+                          <v-list-item @click="openProductDrawer(category.id,product.id)">
+                            <template v-slot:prepend>
+                              <i class='bx bx-edit' style="font-size: 20px; margin-right: 12px;"></i>
+                            </template>
+                            <v-list-item-title>Edit</v-list-item-title>
+                          </v-list-item>
+                          <v-list-item @click="handleDuplicateProduct(product.id)">
+                            <template v-slot:prepend>
+                              <i class='bx bx-copy' style="font-size: 20px; margin-right: 12px;"></i>
+                            </template>
+                            <v-list-item-title>Duplicate</v-list-item-title>
+                          </v-list-item>
+                          <v-list-item @click="handleDeleteProduct(product.id,product.category_id)">
+                            <template v-slot:prepend>
+                              <i class='bx bx-trash' style="font-size: 20px; margin-right: 12px;"></i>
+                            </template>
+                            <v-list-item-title>Delete</v-list-item-title>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
+                    </v-col>
+                  </v-row>
+                </v-card-text>
+              </v-card>
+            </VueDraggable>
 
             <!-- Empty State -->
             <div v-if="!category.products || category.products.length === 0" class="pa-8 text-center text-grey">
@@ -1218,4 +1247,23 @@ i.bx {
   margin-left: 10px !important;
   padding: 0 10px !important;
 }
+.drag-handle {
+  cursor: grab;
+  user-select: none;
+}
+
+.drag-handle:active {
+  cursor: grabbing;
+}
+
+.ghost-product {
+  opacity: 0.5;
+  background: #f5f5f5;
+  border: 2px dashed #1976d2;
+}
+
+.product-card {
+  transition: transform 0.2s ease;
+}
+
 </style>

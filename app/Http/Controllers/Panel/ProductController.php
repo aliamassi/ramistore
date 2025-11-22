@@ -41,6 +41,7 @@ class ProductController extends BaseController
         ]);
     }
 
+
     public function storeVariant(Request $request)
     {
         $request->validate([

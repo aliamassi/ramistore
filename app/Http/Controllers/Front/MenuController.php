@@ -19,11 +19,19 @@ class MenuController extends Controller
         $setting = \App\Models\Setting::where('key', 'business_name')->where('value', $name)->first();
         if (empty($setting)) abort(404);
         $admin = Admin::find($setting->admin_id);
-        $categories = $admin->categories()->active()->orderBy('order')->with('products.variants')->get();
+        $categories = $admin
+            ->categories()
+            ->latest()
+            ->active()
+            ->with(['products' => function ($query) {
+                $query->with('variants')->withCount('variants')
+                    ->orderBy('order');
+            }])
+            ->get();
         $restaurant = $admin->settings->keyBy('key');
 
         // Get selected category from query parameter or default to 'Sandwiches'
-        $firstCategory = $admin->categories()->active()->orderBy('order')->first();
+        $firstCategory = $admin->categories()->active()->first();
         $selectedCategory = $request->query('category', $firstCategory->name);
 
 
