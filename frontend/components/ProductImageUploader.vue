@@ -2,10 +2,11 @@
 <template>
   <v-dialog v-model="open" max-width="550" persistent>
     <v-card rounded="l">
-      <v-card-title  class=" d-flex align-center justify-space-between product-header">
+      <v-card-title class=" d-flex align-center justify-space-between product-header">
         <div class="text-h6">Product images</div>
-        <button  @click="onCancel"  type="button" class="float-right  v-btn v-btn--icon v-theme--light v-btn--density-comfortable v-btn--size-default v-btn--variant-text">
-          <i  class="mdi-close mdi v-icon  v-theme--light v-icon--size-default" aria-hidden="true"></i>
+        <button @click="onCancel" type="button"
+                class="float-right  v-btn v-btn--icon v-theme--light v-btn--density-comfortable v-btn--size-default v-btn--variant-text">
+          <i class="mdi-close mdi v-icon  v-theme--light v-icon--size-default" aria-hidden="true"></i>
         </button>
       </v-card-title>
 
@@ -87,16 +88,16 @@
               </div>
 
               <!-- Star button centered at bottom -->
-<!--              <v-card-actions class="d-flex align-center justify-center">-->
-<!--                <v-btn-->
-<!--                    size="small"-->
-<!--                    variant="text"-->
-<!--                    :color="isMainExisting(img.id) ? 'primary' : ''"-->
-<!--                    @click="setAsMainExisting(img.id)"-->
-<!--                >-->
-<!--                  <v-icon size="16" class="mr-1" :icon="isMainExisting(img.id) ? 'bx-star' : 'bx-star-outline'"/>-->
-<!--                </v-btn>-->
-<!--              </v-card-actions>-->
+              <v-card-actions class="d-flex align-center justify-center">
+                <v-btn
+                    size="small"
+                    variant="text"
+                    :color="img.is_main ? 'primary' : ''"
+                    @click="setAsMainExisting(img.id)"
+                >
+                  <v-icon size="16" class="mr-1" icon="bx bx-star"/>
+                </v-btn>
+              </v-card-actions>
             </v-card>
           </v-col>
 
@@ -108,33 +109,40 @@
           >
             <v-card class="thumb-card" variant="outlined">
               <div class="image-wrapper">
-              <v-img style="width: 120px;height: 120px" class="upload-image" :src="src" aspect-ratio="1" cover/>
+                <v-img style="width: 120px;height: 120px" class="upload-image" :src="src" aspect-ratio="1" cover/>
+                <v-btn
+                    icon
+                    size="small"
+                    variant="text"
+                    color="error"
+                    @click="removeNew(i)"
+                    class="remove-btn"
+                >
+                  <v-icon size="20">bx-bxs-x-circle</v-icon>
+                </v-btn>
 
-              <v-btn
-                  icon
-                  size="small"
-                  variant="text"
-                  color="primary"
-                  @click="editNewImage(i)"
-                  class="edit-btn"
-              >
-                <v-icon size="20">mdi-pencil</v-icon>
-              </v-btn>
+                <v-btn
+                    icon
+                    size="small"
+                    variant="text"
+                    color="primary"
+                    @click="editNewImage(i)"
+                    class="edit-btn"
+                >
+                  <v-icon size="20">mdi-pencil</v-icon>
+                </v-btn>
               </div>
-<!--              <v-card-actions class="d-flex align-center justify-center">-->
-<!--                <v-btn-->
-<!--                    size="small"-->
-<!--                    variant="text"-->
-<!--                    :color="isMainNew(i) ? 'primary' : ''"-->
-<!--                    @click="setAsMainNew(i)"-->
-<!--                >-->
-<!--                  <v-icon size="16" class="mr-1" :icon="isMainNew(i) ? 'bx-star' : 'bx-star-outline'"/>-->
-<!--                </v-btn>-->
+              <!--              <v-card-actions class="d-flex align-center justify-center">-->
+              <!--                <v-btn-->
+              <!--                    size="small"-->
+              <!--                    variant="text"-->
+              <!--                    :color="isMainNew(i) ? 'primary' : ''"-->
+              <!--                    @click="setAsMainNew(i)"-->
+              <!--                >-->
+              <!--                  <v-icon size="16" class="mr-1" :icon="isMainNew(i) ? 'bx-star' : 'bx-star-outline'"/>-->
+              <!--                </v-btn>-->
 
-<!--                <v-btn size="small" variant="text" color="error" @click="removeNew(i)">-->
-<!--                  <v-icon size="16" class="mr-1">bx-bxs-x-circle</v-icon>-->
-<!--                </v-btn>-->
-<!--              </v-card-actions>-->
+              <!--              </v-card-actions>-->
             </v-card>
           </v-col>
         </v-row>
@@ -386,12 +394,11 @@ const onCancel = () => {
 }
 
 const onSave = () => {
+  console.log(' emit save ', mainSel);
   emit('save', {
     files: newFiles.value,
-    main: mainSel.value.type
-        ? {...mainSel.value}
-        : {type: 'existing', id: existingLocal.value[0]?.id}, // safety fallback
-    removedExistingIds: removedExistingIds.value,
+    mainImageId: mainSel.value.id, // safety fallback
+    removedImageIds: removedExistingIds.value,
   })
   open.value = false
 }
@@ -416,7 +423,7 @@ const onSave = () => {
 .tile-placeholder,
 .tile-upload {
   border-radius: 10px;
-  background:  #0047A3;
+  background: #0047A3;
   color: white;
   text-align: center;
   width: 120px;
@@ -433,21 +440,30 @@ const onSave = () => {
   border-radius: 12px 12px 0 0;
 
 }
-.thumb-card{
+
+.thumb-card {
   width: 120px !important;
   position: relative;
-  height: 120px !important;
+  height: auto !important;
   overflow: visible !important
 }
 
-.upload-image{
+.upload-image {
   width: 120px;
   height: 120px;
 }
 
+
 .image-wrapper {
   position: relative;
-  overflow: visible !important
+  overflow: visible !important;
+  width: 120px;
+  height: 120px;
+}
+
+.thumb-card :deep(.v-card-actions) {
+  padding: 4px 0;
+  min-height: 32px;
 }
 
 .remove-btn {
@@ -488,11 +504,13 @@ const onSave = () => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   transform: scale(1.1);
 }
-.product-header{
+
+.product-header {
   background-color: #016FFF;
 
 }
-.product-header .text-h6{
+
+.product-header .text-h6 {
   color: #ffffff !important;
 }
 </style>

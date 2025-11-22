@@ -24,7 +24,7 @@ class ProductResource extends JsonResource
                     'thumb'   => $m->hasGeneratedConversion('thumb') ? $m->getFullUrl('thumb') : null,
                     'mime'    => $m->mime_type,
                     'size'    => $m->size,
-                    'is_main' => (bool) $m->getCustomProperty('is_main'),
+                    'is_main' =>  $m->is_main,
                 ];
             }),
         ];

@@ -411,12 +411,14 @@ const showUploader = ref(false)
 const confirmChangePriceStatus = ref(false)
 let currentProductId = 1 // pass your product id
 const {uploadProductImages, updateProductWithImages, fetchProductImages, productImages, categories, settings} = useProduct()
-const onSaveImages = async ({files, mainIndex}: {
+const onSaveImages = async ({files, mainImageId,removedImageIds}: {
   files: File[],
-  mainIndex: number
+  mainImageId: any,
+  removedImageIds:number[]
 }) => {
+  console.log('mainImageId',mainImageId,'removedImageIds',removedImageIds);
   // 1) Editing an existing product: upload to server
-  const product = await uploadProductImages(currentProductId, files)
+  const product = await uploadProductImages(currentProductId, files,removedImageIds,mainImageId)
   emit("productUpdated", product)
   // If your API doesn’t have /product/:id/images, you can do:
   // await updateProductWithImages(currentProductId, { main_index: mainIndex }, files)

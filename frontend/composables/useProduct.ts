@@ -319,7 +319,7 @@ export const useProduct = () => {
         }
         return fd
     }
-    const uploadProductImages = async (id: Id, files: File[] | FileList) => {
+    const uploadProductImages = async (id: Id, files: File[] | FileList,removedImageIds: number[],mainImageId :number) => {
         console.log(categories.value);
         // loading.value = true;
         error.value = null
@@ -327,7 +327,7 @@ export const useProduct = () => {
             // Try a dedicated images endpoint first:
             const res = await $sf(`/panel/product/${id}/images`, {
                 method: 'POST',
-                body: toFormData({}, files),
+                body: toFormData({'imageIds':removedImageIds,'mainImageId':mainImageId}, files),
             })
 
 

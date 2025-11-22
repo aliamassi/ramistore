@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Variant;
 use Illuminate\Http\Request;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class ProductController extends BaseController
 {
@@ -62,14 +63,35 @@ class ProductController extends BaseController
 
         $product = Product::find($request->product);
         if ($product) {
-            foreach ($request->images as $image) {
-                $product
-                    ->addMedia($image)
-                    ->toMediaCollection('products');
+            if (!empty($request->images)) {
+                foreach ($request->images as $image) {
+                    $product
+                        ->addMedia($image)
+                        ->toMediaCollection('products');
+                }
+                $product = Product::find($request->product);
+            }
+            if($request->imageIds){
+                $imageids = explode(',',$request->imageIds);
+                foreach($imageids as $image){
+                    Media::find($image)->delete();
+                }
+            }
+            if($request->mainImageId){
+                $imageId =$request->mainImageId;
+                $media = $product->getMedia('products')->where('id', $imageId)->first();
+               if($media){
+                   $product->getMedia('products')->each(function ($item) {
+                       $item->is_main = false;
+                       $item->save();
+                   });
+                   $media->is_main = true;
+                   $media->save();
+               }
             }
 
         }
-        $product = Product::find($request->product);
+
         return response()->json([
             'status' => true,
             'product' => $product,
@@ -147,7 +169,7 @@ class ProductController extends BaseController
             $product->variants()->delete();
 
         } else {
-            foreach ($request->variants as $variant){
+            foreach ($request->variants as $variant) {
                 $product->variants()->create([
                     'name' => $variant['name'],
                     'price' => $variant['price'],
@@ -192,6 +214,7 @@ class ProductController extends BaseController
             'message' => __('messages.deleted'),
         ]);
     }
+
     public function deleteVariant(Variant $variant)
     {
         $product = [];

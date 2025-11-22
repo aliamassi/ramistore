@@ -38,8 +38,8 @@ class Product extends Model implements HasMedia
     // Method 1: Using accessor to always return current locale
     public function getImageAttribute()
     {
-        if ($this->getMedia('products')->first()) {
-            return $this->getMedia('products')->first()->getFullUrl();
+        if ($this->getMedia('products')->where('is_main',1)->first()) {
+            return $this->getMedia('products')->where('is_main',1)->first()->getFullUrl();
         }
         return null;
     }
