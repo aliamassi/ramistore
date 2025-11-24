@@ -13,16 +13,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #D4A574;
-            --primary-dark: #b88b5c;
-            --secondary: #2D3436;
-            --bg-color: #F8F9FA;
+            --primary: #6C63FF;
+            --primary-dark: #5B54E0;
+            --primary-light: #8B85FF;
+            --secondary: #00D4AA;
+            --secondary-dark: #00BF98;
+            --accent: #FFA94D;
+            --bg-color: #F8F9FD;
             --card-bg: #FFFFFF;
-            --text-main: #2D3436;
-            --text-light: #636E72;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
-            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
-            --shadow-lg: 0 16px 48px rgba(0,0,0,0.12);
+            --text-main: #2C3E50;
+            --text-light: #7F8C9A;
+            --success: #52C41A;
+            --shadow-sm: 0 2px 8px rgba(108, 99, 255, 0.08);
+            --shadow-md: 0 8px 24px rgba(108, 99, 255, 0.12);
+            --shadow-lg: 0 16px 48px rgba(108, 99, 255, 0.16);
             --radius-sm: 12px;
             --radius-md: 16px;
             --radius-lg: 24px;
@@ -72,7 +76,7 @@
         }
 
         .restaurant-banner {
-            background: linear-gradient(135deg, #2D3436 0%, #000000 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 40px 0;
             position: relative;
@@ -88,12 +92,12 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at top right, rgba(212, 165, 116, 0.2), transparent 60%);
+            background: radial-gradient(circle at top right, rgba(255, 169, 77, 0.2), transparent 60%);
             pointer-events: none;
         }
 
         [dir="rtl"] .restaurant-banner::after {
-            background: radial-gradient(circle at top left, rgba(212, 165, 116, 0.2), transparent 60%);
+            background: radial-gradient(circle at top left, rgba(255, 169, 77, 0.2), transparent 60%);
         }
 
         .banner-content {
@@ -227,9 +231,9 @@
         }
 
         .nav-pill.active {
-            background: var(--secondary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
-            box-shadow: 0 4px 12px rgba(45, 52, 54, 0.2);
+            box-shadow: 0 4px 12px rgba(108, 99, 255, 0.25);
         }
 
         .nav-pill:hover:not(.active) {

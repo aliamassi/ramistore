@@ -14,17 +14,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #D4A574;
-            --primary-dark: #b88b5c;
-            --secondary: #2D3436;
-            --bg-color: #F8F9FA;
+            --primary: #6C63FF;
+            --primary-dark: #5B54E0;
+            --primary-light: #8B85FF;
+            --secondary: #00D4AA;
+            --secondary-dark: #00BF98;
+            --accent: #FFA94D;
+            --bg-color: #F8F9FD;
             --card-bg: #FFFFFF;
-            --text-main: #2D3436;
-            --text-light: #636E72;
-            --success: #00b894;
-            --danger: #ff7675;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
-            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+            --text-main: #2C3E50;
+            --text-light: #7F8C9A;
+            --success: #52C41A;
+            --danger: #FF6B6B;
+            --whatsapp: #25D366;
+            --shadow-sm: 0 2px 8px rgba(108, 99, 255, 0.08);
+            --shadow-md: 0 8px 24px rgba(108, 99, 255, 0.12);
             --radius-md: 16px;
             --radius-lg: 24px;
         }
@@ -282,7 +286,7 @@
             width: 100%;
             max-width: 800px;
             margin: 0 auto;
-            background: #25D366; /* WhatsApp Green */
+            background: var(--whatsapp);
             color: white;
             border: none;
             padding: 16px;
@@ -294,8 +298,14 @@
             justify-content: center;
             gap: 10px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.2s;
             box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+
+        .checkout-btn:hover {
+            background: #22c55e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
         }
 
         .checkout-btn:active {
@@ -317,7 +327,7 @@
 
         .browse-btn {
             margin-top: 24px;
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
             padding: 12px 32px;
@@ -325,7 +335,12 @@
             font-weight: 600;
             font-size: 16px;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(212, 165, 116, 0.4);
+            box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .browse-btn:hover {
+            transform: translateY(-2px);
         }
 
         .success-msg {

@@ -13,16 +13,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #D4A574;
-            --primary-dark: #b88b5c;
-            --secondary: #2D3436;
-            --bg-color: #F8F9FA;
+            --primary: #6C63FF;
+            --primary-dark: #5B54E0;
+            --primary-light: #8B85FF;
+            --secondary: #00D4AA;
+            --secondary-dark: #00BF98;
+            --accent: #FFA94D;
+            --bg-color: #F8F9FD;
             --card-bg: #FFFFFF;
-            --text-main: #2D3436;
-            --text-light: #636E72;
-            --success: #00b894;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
-            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+            --text-main: #2C3E50;
+            --text-light: #7F8C9A;
+            --success: #52C41A;
+            --shadow-sm: 0 2px 8px rgba(108, 99, 255, 0.08);
+            --shadow-md: 0 8px 24px rgba(108, 99, 255, 0.12);
             --radius-md: 16px;
             --radius-lg: 24px;
             --radius-xl: 32px;
@@ -316,7 +319,7 @@
         .add-btn {
             flex: 1;
             height: 56px;
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
             border-radius: 16px;
@@ -328,7 +331,7 @@
             justify-content: space-between;
             padding: 0 24px;
             transition: transform 0.2s;
-            box-shadow: 0 4px 16px rgba(212, 165, 116, 0.4);
+            box-shadow: 0 4px 16px rgba(108, 99, 255, 0.3);
         }
 
         .add-btn:active {
