@@ -16,7 +16,7 @@ class MenuController extends Controller
     public function index(Request $request, $name)
     {
 
-        $setting = \App\Models\Setting::where('key', 'business_name')->where('value', $name)->first();
+        $setting = Setting::where('key', 'business_name')->where('value', $name)->first();
         if (empty($setting)) abort(404);
         $admin = Admin::find($setting->admin_id);
         $categories = $admin

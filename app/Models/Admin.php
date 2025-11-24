@@ -79,6 +79,10 @@ class Admin extends Authenticatable implements HasMedia
     public function setSettings($inputs)
     {
         foreach ($inputs as $key => $value) {
+            if(is_array($value)){
+                $value = json_encode($value);
+            }
+
             $this->settings()->updateOrCreate(
                 ['key' => $key],
                 ['value' => $value]

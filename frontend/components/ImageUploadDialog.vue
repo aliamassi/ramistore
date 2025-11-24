@@ -134,6 +134,7 @@ onBeforeUnmount(() => { revokeLastUrl() })
       :accept="accept"
       :capture="capture"
       class="hidden"
+      style="display: none"
       @change="onFilePicked"
   />
 

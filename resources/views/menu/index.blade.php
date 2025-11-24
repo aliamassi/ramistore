@@ -503,14 +503,14 @@
                     <div class="restaurant-name-main">
                         {{ $restaurant['business_name']->value ?? 'Restaurant name' }}
                     </div>
-{{--                    <div class="restaurant-subtitle">--}}
-{{--                        <span>{{ $setting['restaurant_tags']->value ?? 'Breakfast, Falafel, Arabic' }}</span>--}}
+                    <div class="restaurant-subtitle">
+                        <span>{{ implode(', ',$restaurant['tags']->value) ?? 'Breakfast, Falafel, Arabic' }}</span>
 {{--                        <span class="rating-badge">--}}
 {{--                            <i class="fa-solid fa-star"></i>--}}
 {{--                            <span>{{ $setting['restaurant_rating']->value ?? '4.6' }}</span>--}}
 {{--                            <span>({{ $setting['restaurant_reviews']->value ?? '1K+' }})</span>--}}
 {{--                        </span>--}}
-{{--                    </div>--}}
+                    </div>
                 </div>
             </div>
         </div>

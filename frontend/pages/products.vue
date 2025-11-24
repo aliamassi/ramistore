@@ -958,8 +958,8 @@ const duplicateCategory = () => {
         @confirm="confirmDelete"
         @cancel="cancelDelete"
       />
-            <ClientOnly>
-              <ImageUploadDialog
+      <ClientOnly>
+      <ImageUploadDialog
                   ref="uploaderRef"
                   title="Upload product image"
                   accept="image/*"
@@ -975,7 +975,6 @@ const duplicateCategory = () => {
                 </template>
               </ImageUploadDialog>
             </ClientOnly>
-
     </div>
     <div v-if="categoryCount == 0" class="d-flex justify-center">
       <v-btn @click="handleAddCategory"

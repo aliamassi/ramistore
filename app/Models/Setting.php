@@ -31,4 +31,13 @@ class Setting extends Model
         return $default;
     }
 
+    public function getValueAttribute($value)
+    {
+        $decoded = json_decode($value, true);
+        if (json_last_error() === JSON_ERROR_NONE && (is_array($decoded) || is_object($decoded))) {
+            return $decoded;
+        }
+        return $value;
+    }
+
 }

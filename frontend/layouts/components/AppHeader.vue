@@ -48,9 +48,9 @@
       <template v-slot:activator="{ props }">
         <v-btn variant="text" class="text-white" v-bind="props">
           <v-avatar size="28" class="mr-2" color="white">
-            <span class="text-primary font-weight-bold">SM</span>
+            <span class="text-primary font-weight-bold">{{ user?.name.slice(0, 2) }}</span>
           </v-avatar>
-          <span class="text-white mr-1">Smart</span>
+          <span class="text-white mr-1">{{ user.name }}</span>
           <v-icon >mdi-chevron-down</v-icon>
         </v-btn>
       </template>

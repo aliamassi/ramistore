@@ -12,14 +12,14 @@
 
 
       <!-- ===== LIST ===== -->
-      <v-list nav color="primary" class="text-white" >
+      <v-list nav color="primary" class="text-white" v-model:opened="openedGroups">
 
         <v-divider class="mx-4 my-2 divider-light" />
 
 
         <!-- Menu (expanded with children) -->
         <v-list-group
-            v-model="menuOpen"
+            value="Menu"
             class="group is-open mt-1"
             :expand-icon="'mdi-chevron-down'"
             :collapse-icon="'mdi-chevron-up'"
@@ -68,7 +68,7 @@
           </v-list-item>
         </v-list-group>
         <v-list-group
-            v-model="menuOpen"
+            value="Settings"
             class="group is-open mt-1"
             :expand-icon="'mdi-chevron-down'"
             :collapse-icon="'mdi-chevron-up'"
@@ -112,16 +112,28 @@ const model = defineModel<boolean>({ default: true })
 const route = useRoute()
 
 // Use ref instead of reactive for better v-model binding
-const menuOpen = ref(true)
+const openedGroups = ref<string[]>([])
+
+const activeKey = ref<'product' | 'welcome' | 'ordering'| 'business-settings'>('product')
 
 // Watch route and open menu group if on a menu-related page
 watch(() => route.path, (newPath) => {
-  if (newPath.includes('/products') || newPath.includes('/welcome') || newPath.includes('/ordering')|| newPath.includes('/business-settings')) {
-    menuOpen.value = true
+  if (newPath.includes('/products')) {
+    activeKey.value = 'product'
+    openedGroups.value = ['Menu']
+  } else if (newPath.includes('/welcome')) {
+    activeKey.value = 'welcome'
+    openedGroups.value = ['Menu']
+  } else if (newPath.includes('/ordering')) {
+    activeKey.value = 'ordering'
+    openedGroups.value = ['Menu']
+  } else if (newPath.includes('/business-settings')) {
+    activeKey.value = 'business-settings'
+    openedGroups.value = ['Settings']
   }
 }, { immediate: true })
 
-const activeKey = ref<'product' | 'welcome' | 'ordering'| 'business-settings'>('product')
+
 </script>
 
 <style scoped>

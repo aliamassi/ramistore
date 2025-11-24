@@ -40,6 +40,8 @@ class SettingsController extends BaseController
     {
         $request->validate([
             'business_name' => 'required',
+            'currency' => 'required',
+            'tags' => 'required',
         ]);
         $admin = $this->admin();
         $admin->setSettings($request->except('undefined', '_token', 'website_logo'));
