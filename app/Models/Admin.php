@@ -58,7 +58,8 @@ class Admin extends Authenticatable implements HasMedia
     public function getDomainAttribute(){
         $business_name = $this->settings()->where('key','=','business_name')->first();
 
-       return request()->getSchemeAndHttpHost()."/restaurant/$business_name->value";
+      if($business_name) return request()->getSchemeAndHttpHost()."/restaurant/$business_name->value";
+       return request()->getSchemeAndHttpHost();
     }
 
     public function registerMediaCollections(): void
