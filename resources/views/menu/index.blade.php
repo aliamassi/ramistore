@@ -142,6 +142,40 @@
             backdrop-filter: blur(4px);
         }
 
+        /* ===== Contact Info ===== */
+        .contact-info-bar {
+            margin-top: 24px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+            text-decoration: none;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: 50px;
+            transition: all 0.2s;
+            backdrop-filter: blur(4px);
+        }
+
+        .contact-item:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .contact-item i {
+            color: var(--primary);
+        }
+
         /* ===== Navigation ===== */
         .nav-scroller {
             background: white;
@@ -420,6 +454,16 @@
                 width: 100px;
                 height: 100px;
             }
+
+            .contact-info-bar {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .contact-item {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -451,6 +495,32 @@
                     </div>
                 </div>
             </div>
+
+            {{-- Contact Info Section --}}
+            @if(isset($restaurant['phone_number']) || isset($restaurant['email']) || isset($restaurant['address']))
+                <div class="contact-info-bar">
+                    @if(isset($restaurant['phone_number']))
+                        <a href="tel:{{ $restaurant['phone_number']->value }}" class="contact-item">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>{{ $restaurant['phone_number']->value }}</span>
+                        </a>
+                    @endif
+
+                    @if(isset($restaurant['contact_email']))
+                        <a href="mailto:{{ $restaurant['contact_email']->value }}" class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>{{ $restaurant['contact_email']->value }}</span>
+                        </a>
+                    @endif
+
+                    @if(isset($restaurant['address']))
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ $restaurant['address']->value }}</span>
+                        </div>
+                    @endif
+                </div>
+            @endif
         </div>
     </div>
 
