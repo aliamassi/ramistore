@@ -1,5 +1,5 @@
 @foreach($products as $item)
-    <div class="product-card" onclick="window.location.href='{{ route('menu.show', [$name, $item->id]) }}'">
+    <div class="product-card" onclick="window.location.href='{{ route('menu.show', [$name, $item->id]) }}{{ request()->has('lang') ? '?lang=' . request('lang') : '' }}'">
         <div class="product-info">
             <h3 class="product-name">{{ $item->name }}</h3>
             <p class="product-desc">{{ Str::limit($item->description, 60) }}</p>

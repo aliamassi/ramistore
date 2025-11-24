@@ -498,7 +498,10 @@
 
     <div class="restaurant-banner">
         <div class="container">
-            <div class="banner-content">
+            @php
+            $langParam = request()->has('lang') ? '?lang=' . request('lang') : '';
+        @endphp
+        <div class="header-controls">
                 <div class="logo-wrapper">
                     @if(!empty($user->logo))
                         <img src="{{ $user->logo }}" alt="Logo" class="logo-img">
@@ -555,7 +558,7 @@
         <div class="container">
             <div class="nav-list">
                 @foreach($categories as $category)
-                    <a href="{{ route('menu.index', ['name'=>$name, 'category' => $category->name]) }}"
+                    <a href="{{ route('menu.index', ['name'=>$name, 'category' => $category->name] + request()->only('lang')) }}"
                        class="nav-pill {{ $category->name === $selectedCategory ? 'active' : '' }}">
                         {{ $category->name }}
                     </a>
@@ -590,7 +593,7 @@
     </div>
 
     @if(!empty($cartCount) && $cartCount > 0)
-        <div class="floating-cart" onclick="window.location.href='{{ route('cart.index', $name) }}'">
+        <div class="floating-cart" onclick="window.location.href='{{ route('cart.index', $name) }}{{ request()->has('lang') ? '?lang=' . request('lang') : '' }}'">
             <div class="cart-info">
                 <div class="cart-count-badge">{{ $cartCount }}</div>
                 <span>Items in Cart</span>

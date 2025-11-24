@@ -542,8 +542,11 @@
                     btn.style.background = '#00b894';
                     btn.innerHTML = '<span><i class="fas fa-check"></i> Added</span>';
                     
+                    const langParam = new URLSearchParams(window.location.search).get('lang');
+                    const cartUrl = '{{ route("cart.index", $name) }}' + (langParam ? '?lang=' + langParam : '');
+                    
                     setTimeout(() => {
-                        window.location.href = '{{ route("cart.index", $name) }}';
+                        window.location.href = cartUrl;
                     }, 800);
                 } else {
                     throw new Error(data.message || 'Failed to add to cart');

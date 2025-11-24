@@ -344,7 +344,7 @@
 <div class="header">
     <div class="container">
         <div class="header-content">
-            <button class="back-btn" onclick="window.location.href='{{ route('menu.index', $name) }}'">
+            <button class="back-btn" onclick="window.location.href='{{ route('menu.index', $name) }}{{ request()->has('lang') ? '?lang=' . request('lang') : '' }}'">
                 <i class="fas fa-arrow-left"></i>
             </button>
             <div class="header-title">My Cart</div>
@@ -430,7 +430,7 @@
             </div>
             <h2>Your cart is empty</h2>
             <p>Looks like you haven't added anything yet.</p>
-            <button class="browse-btn" onclick="window.location.href='{{ route('menu.index', $name) }}'">
+            <button class="browse-btn" onclick="window.location.href='{{ route('menu.index', $name) }}{{ request()->has('lang') ? '?lang=' . request('lang') : '' }}'">
                 Start Ordering
             </button>
         </div>
