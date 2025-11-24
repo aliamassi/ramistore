@@ -38,7 +38,7 @@ class MenuController extends Controller
         $category = Category::where('name', $selectedCategory)
             ->active()
             ->first();
-        
+
         $products = collect();
         if ($category) {
             $products = $category->products()

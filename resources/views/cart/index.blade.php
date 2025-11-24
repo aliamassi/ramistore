@@ -1,5 +1,9 @@
+@php
+    $locale = app()->getLocale();
+    $dir = $locale == 'ar' ? 'rtl' : 'ltr';
+@endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ $locale }}" dir="{{ $dir }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,6 +11,7 @@
     <title>Shopping Cart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #D4A574;
@@ -36,6 +41,11 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             padding-bottom: 120px; /* Space for fixed checkout button */
+        }
+
+        [dir="rtl"] body {
+            font-family: 'Cairo', sans-serif;
+            text-align: right;
         }
 
         .container {
@@ -78,6 +88,10 @@
 
         .back-btn:hover {
             background: #E4E7EB;
+        }
+
+        [dir="rtl"] .back-btn i {
+            transform: rotate(180deg);
         }
 
         .header-title {
@@ -141,6 +155,11 @@
             font-size: 16px;
             color: var(--text-main);
             padding-right: 20px;
+        }
+
+        [dir="rtl"] .item-name {
+            padding-right: 0;
+            padding-left: 20px;
         }
 
         .item-variant {
@@ -213,6 +232,11 @@
 
         .remove-btn:hover {
             color: var(--danger);
+        }
+
+        [dir="rtl"] .remove-btn {
+            right: auto;
+            left: 10px;
         }
 
         /* ===== Summary ===== */

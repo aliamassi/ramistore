@@ -1,11 +1,16 @@
+@php
+    $locale = app()->getLocale();
+    $dir = $locale == 'ar' ? 'rtl' : 'ltr';
+@endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ $locale }}" dir="{{ $dir }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Menu - {{ $selectedCategory }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #D4A574;
@@ -36,6 +41,11 @@
             color: var(--text-main);
             line-height: 1.5;
             padding-bottom: 100px; /* Space for mobile cart bar */
+        }
+
+        [dir="rtl"] body {
+            font-family: 'Cairo', sans-serif;
+            text-align: right;
         }
 
         .container {
@@ -80,6 +90,10 @@
             bottom: 0;
             background: radial-gradient(circle at top right, rgba(212, 165, 116, 0.2), transparent 60%);
             pointer-events: none;
+        }
+
+        [dir="rtl"] .restaurant-banner::after {
+            background: radial-gradient(circle at top left, rgba(212, 165, 116, 0.2), transparent 60%);
         }
 
         .banner-content {
@@ -238,6 +252,10 @@
             gap: 12px;
         }
 
+        [dir="rtl"] .section-title {
+            flex-direction: row;
+        }
+
         .section-title::before {
             content: '';
             width: 4px;
@@ -352,6 +370,11 @@
             transform: scale(1.1);
         }
 
+        [dir="rtl"] .add-btn {
+            right: auto;
+            left: 8px;
+        }
+
         /* ===== Floating Cart ===== */
         .floating-cart {
             position: fixed;
@@ -401,6 +424,10 @@
         .view-cart-text {
             font-size: 16px;
             font-weight: 600;
+        }
+
+        [dir="rtl"] .cart-arrow {
+            transform: rotate(180deg);
         }
 
         .cart-arrow {

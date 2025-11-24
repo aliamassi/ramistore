@@ -1,11 +1,16 @@
+@php
+    $locale = app()->getLocale();
+    $dir = $locale == 'ar' ? 'rtl' : 'ltr';
+@endphp
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ $locale }}" dir="{{ $dir }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{{ $item->name }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #D4A574;
@@ -35,6 +40,11 @@
             background-color: var(--bg-color);
             color: var(--text-main);
             padding-bottom: 100px; /* Space for bottom bar */
+        }
+
+        [dir="rtl"] body {
+            font-family: 'Cairo', sans-serif;
+            text-align: right;
         }
 
         /* ===== Hero Section ===== */
@@ -88,6 +98,10 @@
         .control-btn:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: scale(1.05);
+        }
+
+        [dir="rtl"] .fa-arrow-left {
+            transform: rotate(180deg);
         }
 
         /* ===== Content Card ===== */
@@ -215,6 +229,15 @@
             opacity: 0;
             transform: scale(0.5);
             transition: all 0.2s;
+        }
+
+        [dir="rtl"] .option-card {
+            flex-direction: row-reverse;
+        }
+
+        [dir="rtl"] .option-info {
+            align-items: flex-end;
+            text-align: right;
         }
 
         .option-card.selected .check-circle::after {
