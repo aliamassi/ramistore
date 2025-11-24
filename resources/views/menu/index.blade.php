@@ -78,7 +78,7 @@
         .restaurant-banner {
             background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 50%, #EC4899 100%);
             color: white;
-            padding: 80px 0 120px;
+            padding: 40px 0 60px;
             position: relative;
             overflow: hidden;
         }
@@ -104,7 +104,7 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-radius: var(--radius-lg);
-            padding: 32px;
+            padding: 24px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
@@ -112,16 +112,16 @@
         .banner-content {
             display: flex;
             align-items: flex-start;
-            gap: 24px;
+            gap: 16px;
         }
 
         .logo-wrapper {
-            width: 100px;
-            height: 100px;
-            border-radius: 20px;
+            width: 70px;
+            height: 70px;
+            border-radius: 14px;
             background: white;
-            padding: 6px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 4px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             flex-shrink: 0;
             position: relative;
         }
@@ -129,9 +129,9 @@
         .logo-wrapper::after {
             content: '';
             position: absolute;
-            inset: -4px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
-            border-radius: 22px;
+            inset: -3px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.05));
+            border-radius: 18px;
             z-index: -1;
         }
 
@@ -156,48 +156,46 @@
         }
 
         .restaurant-info h1 {
-            font-size: 36px;
-            font-weight: 800;
-            margin-bottom: 12px;
-            letter-spacing: -0.5px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.3px;
         }
 
         .tags-wrapper {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         .tag-pill {
             background: rgba(255,255,255,0.25);
-            padding: 6px 16px;
+            padding: 4px 12px;
             border-radius: 100px;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 500;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.25);
         }
 
-        /* ===== Contact Info ===== */
         .contact-info-bar {
-            margin-top: 24px;
+            margin-top: 16px;
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            gap: 8px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.15);
         }
 
         .contact-item {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             color: white;
-            font-size: 15px;
+            font-size: 13px;
             text-decoration: none;
             background: rgba(255,255,255,0.2);
-            padding: 10px 18px;
+            padding: 6px 14px;
             border-radius: 50px;
             transition: all 0.3s;
             backdrop-filter: blur(10px);
@@ -212,7 +210,7 @@
 
         .contact-item i {
             color: var(--accent);
-            font-size: 16px;
+            font-size: 14px;
         }
 
         /* ===== Navigation ===== */
