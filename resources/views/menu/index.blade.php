@@ -2,598 +2,544 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Menu - {{ $selectedCategory }}</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #D4A574;
+            --primary-dark: #b88b5c;
+            --secondary: #2D3436;
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text-main: #2D3436;
+            --text-light: #636E72;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+            --shadow-lg: 0 16px 48px rgba(0,0,0,0.12);
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-
-        .cart-icon-symbol i {
-            color: #fff;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 100px; /* Space for mobile cart bar */
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
-        /* Header Navigation */
+        /* ===== Header ===== */
         .header {
-            background: linear-gradient(135deg, #D4A574 0%, #764ba2 100%);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
         }
 
-        /* ===== AWESOME Restaurant Name Header ===== */
-        .restaurant-header {
-            padding: 25px 15px 20px;
+        .header.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .restaurant-banner {
+            background: linear-gradient(135deg, #2D3436 0%, #000000 100%);
+            color: white;
+            padding: 40px 0;
             position: relative;
             overflow: hidden;
+            margin-bottom: -20px;
+            padding-bottom: 60px;
         }
 
-        /* Animated background pattern */
-        .restaurant-header::before {
+        .restaurant-banner::after {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
-            background-size: 30px 30px;
-            animation: backgroundMove 20s linear infinite;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at top right, rgba(212, 165, 116, 0.2), transparent 60%);
             pointer-events: none;
         }
 
-        @keyframes backgroundMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(30px, 30px); }
-        }
-
-        .restaurant-header-content {
+        .banner-content {
+            display: flex;
+            align-items: center;
+            gap: 24px;
             position: relative;
             z-index: 1;
-            display: flex;
-            align-items: center;
-            gap: 18px;
         }
 
-        .restaurant-logo-large {
-            width: 70px;
-            height: 70px;
-            border-radius: 18px;
-            overflow: hidden;
+        .logo-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-md);
+            background: white;
+            padding: 4px;
+            box-shadow: var(--shadow-md);
             flex-shrink: 0;
-            background: linear-gradient(135deg, #fff 0%, #f5f5f5 100%);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid rgba(255,255,255,0.3);
-            transition: transform 0.3s ease;
         }
 
-        .restaurant-logo-large:hover {
-            transform: scale(1.05) rotate(5deg);
-        }
-
-        .restaurant-logo-large img {
+        .logo-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 12px;
         }
 
-        .restaurant-name-section {
-            flex: 1;
+        .logo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            color: white;
+            font-size: 32px;
+            font-weight: 700;
+            border-radius: 12px;
         }
 
-        .restaurant-name-main {
+        .restaurant-info h1 {
             font-size: 28px;
             font-weight: 800;
-            color: #fff;
-            margin-bottom: 4px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            margin-bottom: 8px;
             letter-spacing: -0.5px;
-            line-height: 1.2;
         }
 
-        .restaurant-subtitle {
-            font-size: 14px;
-            color: rgba(255,255,255,0.9);
-            font-weight: 500;
+        .tags-wrapper {
             display: flex;
-            align-items: center;
-            gap: 8px;
             flex-wrap: wrap;
+            gap: 8px;
         }
 
-        .rating-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            background: rgba(255,255,255,0.25);
-            backdrop-filter: blur(10px);
-            padding: 4px 10px;
-            border-radius: 20px;
+        .tag-pill {
+            background: rgba(255,255,255,0.15);
+            padding: 4px 12px;
+            border-radius: 100px;
             font-size: 13px;
-            font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.3);
+            font-weight: 500;
+            backdrop-filter: blur(4px);
         }
 
-        .rating-badge i {
-            color: #ffd700;
-            font-size: 12px;
+        /* ===== Navigation ===== */
+        .nav-scroller {
+            background: white;
+            padding: 16px 0;
+            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            position: relative;
+            z-index: 10;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
         }
 
-        .nav-wrapper {
+        .nav-list {
             display: flex;
-            align-items: center;
-            padding: 0 15px;
-            background: rgba(255,255,255,0.95);
-            backdrop-filter: blur(10px);
-        }
-
-        .menu-icon {
-            width: 40px;
-            height: 40px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-
-        .menu-icon span {
-            width: 25px;
-            height: 2px;
-            background-color: #333;
-            margin: 3px 0;
-            transition: 0.3s;
-        }
-
-        .nav-categories {
-            display: flex;
+            gap: 12px;
             overflow-x: auto;
+            padding: 0 20px;
             scrollbar-width: none;
             -ms-overflow-style: none;
-            flex: 1;
         }
 
-        .nav-categories::-webkit-scrollbar {
+        .nav-list::-webkit-scrollbar {
             display: none;
         }
 
-        .nav-item {
-            padding: 18px 20px;
-            color: #999;
+        .nav-pill {
+            padding: 10px 20px;
+            background: #F0F2F5;
+            color: var(--text-light);
+            border-radius: 100px;
+            font-size: 15px;
+            font-weight: 600;
             text-decoration: none;
             white-space: nowrap;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nav-pill.active {
+            background: var(--secondary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(45, 52, 54, 0.2);
+        }
+
+        .nav-pill:hover:not(.active) {
+            background: #E4E7EB;
+            color: var(--text-main);
+        }
+
+        /* ===== Menu Grid ===== */
+        .menu-section {
+            padding: 30px 0;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            display: flex;
+            gap: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(0,0,0,0.03);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(0,0,0,0.08);
+        }
+
+        .product-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-name {
             font-size: 18px;
-            font-weight: 400;
-            transition: color 0.3s;
-            border-bottom: 3px solid transparent;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-main);
+            line-height: 1.3;
         }
 
-        .nav-item.active {
-            color: #D4A574;
-            font-weight: 500;
-            border-bottom-color: #D4A574;
+        .product-desc {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            line-height: 1.5;
         }
 
-        .nav-item:hover {
-            color: #555;
+        .product-meta {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        /* Cart icon in header (desktop/tablet) */
-        .cart-icon {
-            width: 40px;
-            height: 40px;
-            margin-left: 10px;
+        .price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--secondary);
+        }
+
+        .product-img-wrapper {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-img {
+            transform: scale(1.08);
+        }
+
+        .add-btn {
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #D4A574 0%, #764ba2 100%);
-            color: #fff;
+            background: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            color: var(--primary);
+            font-size: 18px;
+            transition: all 0.2s ease;
         }
 
-        .cart-icon:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+        .product-card:hover .add-btn {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
         }
 
-        /* Base: HIDE on non-mobile */
-        .cart-bar-mobile {
-            display: none;
+        /* ===== Floating Cart ===== */
+        .floating-cart {
             position: fixed;
+            bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
-            bottom: 12px;
             width: calc(100% - 40px);
-            max-width: 480px;
-            background: linear-gradient(135deg, #D4A574 0%, #764ba2 100%);
-            color: #fff;
-            padding: 14px 20px;
-            border-radius: 999px;
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
+            max-width: 500px;
+            background: var(--secondary);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 100px;
+            display: flex;
             align-items: center;
             justify-content: space-between;
-            font-weight: 600;
-            font-size: 15px;
-            z-index: 250;
+            box-shadow: 0 12px 32px rgba(45, 52, 54, 0.3);
+            z-index: 1000;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s ease;
+            backdrop-filter: blur(10px);
         }
 
-        .cart-bar-mobile:hover {
-            transform: translateX(-50%) scale(1.02);
+        .floating-cart:active {
+            transform: translateX(-50%) scale(0.98);
         }
 
-        .cart-bar-text {
-            flex: 1;
-            text-align: center;
+        .cart-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
         }
 
-        .cart-bar-pill {
-            width: 32px;
-            height: 32px;
-            margin-left: 12px;
+        .cart-count-badge {
+            background: var(--primary);
+            color: white;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            background-color: #fff;
-            color: #D4A574;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 14px;
             font-weight: 700;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        /* Content */
-        .content {
-            padding: 30px 15px;
-        }
-
-        .page-title {
-            font-size: 42px;
+        .view-cart-text {
+            font-size: 16px;
             font-weight: 600;
-            margin-bottom: 30px;
-            color: #222;
         }
 
-        /* Menu Items */
-        .menu-items {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0;
-        }
-
-        .menu-item {
-            background-color: #fff;
-            padding: 25px 15px;
-            border-bottom: 1px solid #e8e8e8;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background-color 0.2s;
-            cursor: pointer;
-        }
-
-        .menu-item:hover {
-            background-color: #fafafa;
-        }
-
-        .item-info {
-            flex: 1;
-            padding-right: 20px;
-        }
-
-        .item-name {
-            font-size: 22px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #222;
-        }
-
-        .item-description {
-            font-size: 15px;
-            color: #666;
-            line-height: 1.5;
-            margin-bottom: 20px;
-        }
-
-        .item-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .item-price {
-            font-size: 18px;
-            font-weight: 600;
-            color: #222;
-        }
-
-        .item-customizable {
-            font-size: 14px;
-            color: #999;
-        }
-
-        .item-image-wrapper {
-            position: relative;
-            flex-shrink: 0;
-        }
-
-        .item-image {
-            width: 140px;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 8px;
-            background-color: #e8e8e8;
-        }
-
-        .arrow-btn,
-        .plus-btn {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 45px;
-            height: 45px;
-            background-color: #fff;
+        .cart-arrow {
+            width: 32px;
+            height: 32px;
+            background: rgba(255,255,255,0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            cursor: pointer;
-            transition: transform 0.2s;
         }
 
-        .arrow-btn:hover,
-        .plus-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .arrow-btn::after {
-            content: '›';
-            font-size: 28px;
-            color: #D4A574;
-            font-weight: 300;
-        }
-
-        .plus-btn::after {
-            content: '+';
-            font-size: 28px;
-            color: #D4A574;
-            font-weight: 400;
-        }
-
+        /* ===== Empty State ===== */
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
-            color: #999;
+            padding: 80px 20px;
+            color: var(--text-light);
         }
 
-        .empty-state-title {
-            font-size: 24px;
-            margin-bottom: 10px;
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+            color: var(--primary);
         }
 
-        .empty-state-text {
-            font-size: 16px;
-        }
-
-        /* Desktop Styles */
-        @media (min-width: 768px) {
-            .restaurant-header {
-                padding: 35px 40px 25px;
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .restaurant-banner {
+                padding: 30px 0 50px;
             }
 
-            .restaurant-logo-large {
-                width: 85px;
-                height: 85px;
-                border-radius: 22px;
+            .logo-wrapper {
+                width: 64px;
+                height: 64px;
             }
 
-            .restaurant-name-main {
-                font-size: 36px;
+            .restaurant-info h1 {
+                font-size: 24px;
             }
 
-            .restaurant-subtitle {
-                font-size: 15px;
+            .product-grid {
+                grid-template-columns: 1fr;
             }
 
-            .nav-wrapper {
-                padding: 0 40px;
+            .product-card {
+                padding: 16px;
             }
 
-            .content {
-                padding: 50px 40px;
-            }
-
-            .page-title {
-                font-size: 52px;
-                margin-bottom: 40px;
-            }
-
-            .menu-items {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 30px;
-            }
-
-            .menu-item {
-                border-radius: 12px;
-                border: 1px solid #e8e8e8;
-                padding: 30px;
-            }
-
-            .item-image {
-                width: 200px;
-                height: 200px;
-            }
-
-            .item-name {
-                font-size: 26px;
-            }
-
-            .item-description {
-                font-size: 16px;
-            }
-        }
-
-        @media (min-width: 1200px) {
-            .menu-items {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-
-        @media (min-width: 1600px) {
-            .menu-items {
-                grid-template-columns: repeat(4, 1fr);
-            }
-        }
-
-        @media (max-width: 767px) {
-            .cart-bar-mobile {
-                display: flex;
-            }
-
-            .cart-icon {
-                display: none;
+            .product-img-wrapper {
+                width: 100px;
+                height: 100px;
             }
         }
     </style>
 </head>
 <body>
-<div class="header">
-    <div class="container">
 
-        {{-- NEW AWESOME Restaurant Name Header --}}
-        <div class="restaurant-header">
-            <div class="restaurant-header-content">
-                <div class="restaurant-logo-large">
+    <div class="restaurant-banner">
+        <div class="container">
+            <div class="banner-content">
+                <div class="logo-wrapper">
                     @if(!empty($user->logo))
-                        <img src="{{ $user->logo }}" alt="Logo">
+                        <img src="{{ $user->logo }}" alt="Logo" class="logo-img">
                     @else
-                        <span style="font-weight:700;font-size:28px;color:#D4A574;">
-                            {{ strtoupper(substr($restaurant['business_name']->value??'restaurant' ?? 'R',0,1)) }}
-                        </span>
+                        <div class="logo-placeholder">
+                            {{ strtoupper(substr($restaurant['business_name']->value ?? 'R', 0, 1)) }}
+                        </div>
                     @endif
                 </div>
-
-                <div class="restaurant-name-section">
-                    <div class="restaurant-name-main">
-                        {{ $restaurant['business_name']->value ?? 'Restaurant name' }}
-                    </div>
-                    <div class="restaurant-subtitle">
-                        <span>{{ isset($restaurant['tags'])? implode(', ',$restaurant['tags']->value) : 'tags' }}</span>
-{{--                        <span class="rating-badge">--}}
-{{--                            <i class="fa-solid fa-star"></i>--}}
-{{--                            <span>{{ $setting['restaurant_rating']->value ?? '4.6' }}</span>--}}
-{{--                            <span>({{ $setting['restaurant_reviews']->value ?? '1K+' }})</span>--}}
-{{--                        </span>--}}
+                <div class="restaurant-info">
+                    <h1>{{ $restaurant['business_name']->value ?? 'Restaurant Name' }}</h1>
+                    <div class="tags-wrapper">
+                        @if(isset($restaurant['tags']) && is_array($restaurant['tags']->value))
+                            @foreach($restaurant['tags']->value as $tag)
+                                <span class="tag-pill">{{ $tag }}</span>
+                            @endforeach
+                        @else
+                            <span class="tag-pill">Delicious Food</span>
+                            <span class="tag-pill">Best Service</span>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        {{-- Existing nav wrapper (categories + cart) --}}
-        <div class="nav-wrapper">
-            <nav class="nav-categories">
+    <div class="nav-scroller">
+        <div class="container">
+            <div class="nav-list">
                 @foreach($categories as $category)
-                    <a href="{{ route('menu.index', ['name'=>$name,'category' => $category->name]) }}"
-                       class="nav-item {{ $category->name === $selectedCategory ? 'active' : '' }}">
+                    <a href="{{ route('menu.index', ['name'=>$name, 'category' => $category->name]) }}"
+                       class="nav-pill {{ $category->name === $selectedCategory ? 'active' : '' }}">
                         {{ $category->name }}
                     </a>
                 @endforeach
-            </nav>
-            <div class="cart-icon"
-                 onclick="window.location.href='{{ route('cart.index',$name) }}'">
-                <span class="cart-icon-symbol">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                </span>
-                @if(!empty($cartCount))
-                    <span class="cart-count">{{ $cartCount }}</span>
-                @endif
             </div>
         </div>
-
     </div>
-</div>
 
-<div class="container">
-    <div class="content">
-        <h1 class="page-title">{{ $selectedCategory }}</h1>
+    <div class="container">
+        <div class="menu-section">
+            <h2 class="section-title">{{ $selectedCategory }}</h2>
 
-        @if($products->count() > 0)
-            <div class="menu-items">
-                @foreach($products as $item)
-                    <div class="menu-item" onclick="window.location.href='{{ route('menu.show', [$name,$item->id]) }}'">
-                        <div class="item-info">
-                            <h2 class="item-name">{{ $item->name }}</h2>
-                            <p class="item-description">{{ Str::limit($item->description, 50) }}</p>
-                            <div class="item-footer">
-                                <div class="item-price">{{ $setting['currency']->value??"$"}}  {{ number_format($item->price, 2) }}</div>
-                                @if($item->customizable)
-                                    <div class="item-customizable">Customizable</div>
+            @if($products->count() > 0)
+                <div class="product-grid">
+                    @foreach($products as $item)
+                        <div class="product-card" onclick="window.location.href='{{ route('menu.show', [$name, $item->id]) }}'">
+                            <div class="product-info">
+                                <h3 class="product-name">{{ $item->name }}</h3>
+                                <p class="product-desc">{{ Str::limit($item->description, 60) }}</p>
+                                <div class="product-meta">
+                                    <span class="price">{{ $setting['currency']->value ?? "$" }} {{ number_format($item->price, 2) }}</span>
+                                    @if($item->customizable)
+                                        <span style="font-size: 12px; color: var(--primary); font-weight: 600; margin-left: 8px;">
+                                            <i class="fas fa-sliders-h"></i> Custom
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                            <div class="product-img-wrapper">
+                                @if($item->image)
+                                    <img src="{{ asset($item->image) }}" alt="{{ $item->name }}" class="product-img">
+                                @else
+                                    <div style="width:100%; height:100%; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#ccc;">
+                                        <i class="fas fa-utensils" style="font-size: 24px;"></i>
+                                    </div>
                                 @endif
+                                <div class="add-btn">
+                                    <i class="fas fa-plus"></i>
+                                </div>
                             </div>
                         </div>
-                        <div class="item-image-wrapper">
-                            @if($item->image)
-                                <img src="{{ asset($item->image) }}" alt="{{ $item->name }}" class="item-image">
-                            @else
-                                <div class="item-image"></div>
-                            @endif
-                            @if($item->type == 'simple')
-                                <div class="plus-btn"
-                                     onclick="event.stopPropagation(); window.location.href='{{ route('menu.show', [$name,$item->id]) }}'"></div>
-                            @else
-                                <div class="arrow-btn"
-                                     onclick="event.stopPropagation(); window.location.href='{{ route('menu.show', [$name,$item->id]) }}'"></div>
-                            @endif
-                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="fas fa-utensils"></i>
                     </div>
-                @endforeach
-            </div>
-        @else
-            <div class="empty-state">
-                <div class="empty-state-title">No items available</div>
-                <div class="empty-state-text">Check back soon for new menu items!</div>
-            </div>
-        @endif
+                    <h3>No items available</h3>
+                    <p>Check back soon for delicious new additions!</p>
+                </div>
+            @endif
+        </div>
     </div>
-</div>
 
-<div class="cart-bar-mobile"
-     onclick="window.location.href='{{ route('cart.index',$name) }}'">
-    <span class="cart-bar-text">See Your Cart</span>
-    <span class="cart-bar-pill">
-        @if(!empty($cartCount))
-            {{ $cartCount }}
-        @else
-            🛒
-        @endif
-    </span>
-</div>
+    @if(!empty($cartCount) && $cartCount > 0)
+        <div class="floating-cart" onclick="window.location.href='{{ route('cart.index', $name) }}'">
+            <div class="cart-info">
+                <div class="cart-count-badge">{{ $cartCount }}</div>
+                <span>Items in Cart</span>
+            </div>
+            <div class="view-cart-text">View Cart</div>
+            <div class="cart-arrow">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </div>
+    @endif
 
+    <script>
+        // Simple scroll effect for header if we had one separate from banner
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('.nav-scroller');
+            if (window.scrollY > 150) {
+                nav.style.position = 'sticky';
+                nav.style.top = '0';
+                nav.style.borderRadius = '0';
+            } else {
+                nav.style.position = 'relative';
+                nav.style.borderRadius = '24px 24px 0 0';
+            }
+        });
+    </script>
 </body>
 </html>

@@ -2,35 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Shopping Cart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary: #D4A574;
+            --primary-dark: #b88b5c;
+            --secondary: #2D3436;
+            --bg-color: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text-main: #2D3436;
+            --text-light: #636E72;
+            --success: #00b894;
+            --danger: #ff7675;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+            --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+            --radius-md: 16px;
+            --radius-lg: 24px;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 120px; /* Space for fixed checkout button */
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
-        /* Header */
+        /* ===== Header ===== */
         .header {
-            background-color: #fff;
-            border-bottom: 1px solid #e0e0e0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
             position: sticky;
             top: 0;
             z-index: 100;
-            padding: 15px 20px;
+            padding: 16px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
         .header-content {
@@ -42,382 +64,353 @@
         .back-btn {
             width: 40px;
             height: 40px;
-            background-color: transparent;
+            border-radius: 50%;
             border: none;
+            background: #F0F2F5;
+            color: var(--text-main);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            font-size: 28px;
-            color: #333;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .back-btn:hover {
+            background: #E4E7EB;
         }
 
         .header-title {
-            font-size: 22px;
-            font-weight: 600;
-            color: #222;
+            font-size: 18px;
+            font-weight: 700;
         }
 
         .clear-btn {
             background: none;
             border: none;
-            color: #d4a574;
-            font-size: 15px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        /* Content */
-        .content {
-            padding: 20px;
-            min-height: calc(100vh - 200px);
-        }
-
-        .empty-cart {
-            text-align: center;
-            padding: 80px 20px;
-        }
-
-        .empty-cart-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
-
-        .empty-cart-title {
-            font-size: 24px;
+            color: var(--danger);
             font-weight: 600;
-            margin-bottom: 10px;
-            color: #222;
-        }
-
-        .empty-cart-text {
-            font-size: 16px;
-            color: #999;
-            margin-bottom: 30px;
-        }
-
-        .browse-btn {
-            background-color: #d4a574;
-            color: #fff;
-            border: none;
-            padding: 14px 40px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.2s;
+            padding: 8px;
         }
 
-        .browse-btn:hover {
-            background-color: #c49564;
-            transform: translateY(-2px);
-        }
-
-        /* Cart Items */
-        .cart-items {
-            background-color: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 20px;
+        /* ===== Cart Items ===== */
+        .cart-list {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
         .cart-item {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
+            padding: 16px;
             display: flex;
-            padding: 20px;
-            border-bottom: 1px solid #f0f0f0;
-            gap: 15px;
+            gap: 16px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
         }
 
-        .cart-item:last-child {
-            border-bottom: none;
-        }
-
-        .item-image {
-            width: 100px;
-            height: 100px;
+        .item-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
             object-fit: cover;
-            border-radius: 10px;
-            background-color: #f0f0f0;
-            flex-shrink: 0;
+            background: #f0f0f0;
         }
 
-        .item-details {
+        .item-info {
             flex: 1;
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 4px;
         }
 
         .item-name {
-            font-size: 18px;
             font-weight: 600;
-            color: #222;
-            margin-bottom: 5px;
+            font-size: 16px;
+            color: var(--text-main);
+            padding-right: 20px;
         }
 
-        .item-customization {
-            font-size: 14px;
-            color: #999;
-            margin-bottom: 10px;
+        .item-variant {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-bottom: 8px;
         }
 
-        .item-actions {
+        .item-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: auto;
+            margin-top: 8px;
         }
 
-        .quantity-control {
+        .qty-wrapper {
             display: flex;
             align-items: center;
-            gap: 15px;
-            background-color: #f5f5f5;
+            background: #F0F2F5;
             border-radius: 8px;
-            padding: 5px 10px;
+            padding: 4px;
         }
 
         .qty-btn {
-            background: none;
+            width: 28px;
+            height: 28px;
             border: none;
-            font-size: 20px;
-            color: #d4a574;
-            cursor: pointer;
-            width: 30px;
-            height: 30px;
+            background: white;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            color: var(--text-main);
+            font-size: 14px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
-        .qty-btn:hover {
-            opacity: 0.7;
+        .qty-btn:active {
+            transform: scale(0.95);
         }
 
-        .quantity {
-            font-size: 16px;
-            font-weight: 600;
-            color: #222;
-            min-width: 30px;
+        .qty-val {
+            width: 32px;
             text-align: center;
+            font-weight: 600;
+            font-size: 14px;
         }
 
         .item-price {
-            font-size: 18px;
-            font-weight: 600;
-            color: #222;
+            font-weight: 700;
+            color: var(--text-main);
+            font-size: 16px;
         }
 
         .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: none;
             border: none;
-            color: #ff4444;
-            font-size: 14px;
+            color: #ccc;
             cursor: pointer;
-            margin-top: 10px;
         }
 
-        /* Summary */
-        .cart-summary {
-            background-color: #fff;
-            border-radius: 12px;
+        .remove-btn:hover {
+            color: var(--danger);
+        }
+
+        /* ===== Summary ===== */
+        .summary-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-md);
             padding: 20px;
-            margin-bottom: 20px;
+            margin-top: 24px;
+            box-shadow: var(--shadow-sm);
         }
 
         .summary-row {
             display: flex;
             justify-content: space-between;
-            padding: 12px 0;
-            font-size: 16px;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: var(--text-light);
         }
 
         .summary-row.total {
-            border-top: 2px solid #f0f0f0;
-            margin-top: 10px;
-            padding-top: 20px;
-            font-size: 20px;
+            margin-top: 16px;
+            margin-bottom: 0;
+            padding-top: 16px;
+            border-top: 1px dashed #e0e0e0;
             font-weight: 700;
+            font-size: 18px;
+            color: var(--text-main);
         }
 
-        /* Checkout Button */
-        .checkout-section {
+        /* ===== Checkout Bar ===== */
+        .checkout-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 100;
+            background: white;
+            padding: 16px 20px 30px; /* Extra padding for safe area */
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+            z-index: 90;
         }
 
         .checkout-btn {
             width: 100%;
-            background-color: #25D366; /* WhatsApp green */
-            color: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #25D366; /* WhatsApp Green */
+            color: white;
             border: none;
-            padding: 18px;
-            border-radius: 15px;
-            font-size: 18px;
-            font-weight: 600;
+            padding: 16px;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
         }
 
-        .checkout-btn:hover {
-            background-color: #1ebe5b;
-            transform: translateY(-2px);
+        .checkout-btn:active {
+            transform: scale(0.98);
         }
 
-        .checkout-btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        /* Desktop */
-        @media (min-width: 768px) {
-            .content {
-                padding: 40px;
-                display: grid;
-                grid-template-columns: 1fr 400px;
-                gap: 30px;
-                align-items: start;
-            }
-
-            .cart-items {
-                margin-bottom: 0;
-            }
-
-            .item-image {
-                width: 120px;
-                height: 120px;
-            }
-
-            .checkout-section {
-                position: static;
-                box-shadow: none;
-                padding: 0;
-                grid-column: 2;
-            }
-
-            .cart-summary {
-                margin-bottom: 20px;
-            }
-        }
-
-        .success-message {
-            background-color: #d4f4dd;
-            color: #1e7e34;
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+        /* ===== Empty State ===== */
+        .empty-state {
             text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: #e0e0e0;
+        }
+
+        .browse-btn {
+            margin-top: 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(212, 165, 116, 0.4);
+        }
+
+        .success-msg {
+            background: rgba(0, 184, 148, 0.1);
+            color: var(--success);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            text-align: center;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
-<!-- Header -->
+
 <div class="header">
     <div class="container">
         <div class="header-content">
-            <button class="back-btn" onclick="window.location.href='{{ route('menu.index',$name) }}'">‹</button>
-            <h1 class="header-title">Shopping Cart</h1>
+            <button class="back-btn" onclick="window.location.href='{{ route('menu.index', $name) }}'">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="header-title">My Cart</div>
             @if($cartItems->count() > 0)
                 <button class="clear-btn" onclick="clearCart()">Clear</button>
             @else
-                <span style="width: 40px;"></span>
+                <div style="width: 40px;"></div>
             @endif
         </div>
     </div>
 </div>
 
 <div class="container">
-    <div class="content">
-        @if(session('success'))
-            <div class="success-message">{{ session('success') }}</div>
-        @endif
+    @if(session('success'))
+        <div class="success-msg">{{ session('success') }}</div>
+    @endif
 
-        @if($cartItems->count() > 0)
-            <!-- Cart Items -->
-            <div>
-                <div class="cart-items">
-                    @foreach($cartItems as $item)
-                        <div class="cart-item" id="cart-item-{{ $item->id }}">
-                            <img src="{{ $item->product->image ? asset($item->product->image) : 'https://via.placeholder.com/120' }}"
-                                 alt="{{ $item->product->name }}"
-                                 class="item-image">
-
-                            <div class="item-details">
+    @if($cartItems->count() > 0)
+        <div class="cart-list">
+            @foreach($cartItems as $item)
+                <div class="cart-item" id="cart-item-{{ $item->id }}">
+                    <button class="remove-btn" onclick="removeItem({{ $item->id }})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    
+                    <img src="{{ $item->product->image ? asset($item->product->image) : 'https://via.placeholder.com/120' }}"
+                         alt="{{ $item->product->name }}"
+                         class="item-img">
+                    
+                    <div class="item-info">
+                        <div>
+                            <div class="item-header">
                                 <div class="item-name">{{ $item->product->name }}</div>
-
-                                {{-- If this cart row is a variant --}}
-                                @if($item->variant)
-                                    <div class="item-variant">
-                                        {{ $item->variant->name }}
-                                        <span class="item-variant-unit">
-            • {{ $setting['currency']->value ?? '$' }}
-                                            {{ number_format($item->variant->price, 2) }} each
-        </span>
-                                    </div>
-                                @endif
-
-
-                                <div class="item-actions">
-                                    <div class="quantity-control">
-                                        <button class="qty-btn" onclick="updateQuantity({{ $item->id }}, -1)">−</button>
-                                        <span class="quantity" id="qty-{{ $item->id }}">{{ $item->quantity }}</span>
-                                        <button class="qty-btn" onclick="updateQuantity({{ $item->id }}, 1)">+</button>
-                                    </div>
-                                    <div class="item-price" id="price-{{ $item->id }}">
-                                        {{ $setting['currency']->value??"$"}} {{ number_format($item->subtotal, 2) }}
-                                    </div>
+                            </div>
+                            @if($item->variant)
+                                <div class="item-variant">
+                                    {{ $item->variant->name }}
                                 </div>
-
-                                <button class="remove-btn" onclick="removeItem({{ $item->id }})">Remove</button>
+                            @endif
+                        </div>
+                        
+                        <div class="item-controls">
+                            <div class="qty-wrapper">
+                                <button class="qty-btn" onclick="updateQuantity({{ $item->id }}, -1)">
+                                    <i class="fas fa-minus" style="font-size: 10px;"></i>
+                                </button>
+                                <div class="qty-val" id="qty-{{ $item->id }}">{{ $item->quantity }}</div>
+                                <button class="qty-btn" onclick="updateQuantity({{ $item->id }}, 1)">
+                                    <i class="fas fa-plus" style="font-size: 10px;"></i>
+                                </button>
+                            </div>
+                            <div class="item-price" id="price-{{ $item->id }}">
+                                {{ $setting['currency']->value ?? "$" }} {{ number_format($item->subtotal, 2) }}
                             </div>
                         </div>
-                    @endforeach
-                </div>
-            </div>
-
-            <!-- Summary & Checkout -->
-            <div>
-                <div class="cart-summary">
-                    <div class="summary-row">
-                        <span>Subtotal</span>
-                        <span id="subtotal">{{ $setting['currency']->value??"$"}} {{ number_format($cart->total, 2) }}</span>
-                    </div>
-                    {{--                    <div class="summary-row">--}}
-                    {{--                        <span>Delivery Fee</span>--}}
-                    {{--                        <span>{{ $setting['currency']->value??"$"}} 0.50</span>--}}
-                    {{--                    </div>--}}
-                    <div class="summary-row total">
-                        <span>Total</span>
-                        <span id="total">{{ $setting['currency']->value??"$"}} {{ number_format($cart->total + 0.50, 2) }}</span>
                     </div>
                 </div>
+            @endforeach
+        </div>
 
-                {{--                <div class="checkout-section">--}}
-                {{--                    <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>--}}
-                {{--                </div>--}}
-                <div class="checkout-section">
-                    <button class="checkout-btn" onclick="shareCartOnWhatsApp()">Share Cart on WhatsApp</button>
-                </div>
+        <div class="summary-card">
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="subtotal">{{ $setting['currency']->value ?? "$" }} {{ number_format($cart->total, 2) }}</span>
             </div>
-        @else
-            <!-- Empty Cart -->
-            <div class="empty-cart" style="grid-column: 1 / -1;">
-                <div class="empty-cart-icon">🛒</div>
-                <h2 class="empty-cart-title">Your cart is empty</h2>
-                <p class="empty-cart-text">Add some delicious items to get started!</p>
-                <button class="browse-btn" onclick="window.location.href='{{ route('menu.index',$name) }}'">
-                    Browse Menu
-                </button>
+            <div class="summary-row total">
+                <span>Total</span>
+                <span id="total">{{ $setting['currency']->value ?? "$" }} {{ number_format($cart->total, 2) }}</span>
             </div>
-        @endif
-    </div>
+        </div>
+
+        <div class="checkout-bar">
+            <button class="checkout-btn" onclick="shareCartOnWhatsApp()">
+                <i class="fab fa-whatsapp" style="font-size: 20px;"></i>
+                Send Order via WhatsApp
+            </button>
+        </div>
+
+    @else
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-shopping-basket"></i>
+            </div>
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't added anything yet.</p>
+            <button class="browse-btn" onclick="window.location.href='{{ route('menu.index', $name) }}'">
+                Start Ordering
+            </button>
+        </div>
+    @endif
 </div>
 
 <script>
@@ -452,12 +445,11 @@
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Failed to update quantity');
         }
     }
 
     async function removeItem(itemId) {
-        if (!confirm('Remove this item from cart?')) return;
+        if (!confirm('Remove this item?')) return;
 
         try {
             const response = await fetch(`/cart/${itemId}`, {
@@ -472,22 +464,25 @@
             const data = await response.json();
 
             if (data.success) {
-                document.getElementById(`cart-item-${itemId}`).remove();
-
-                if (data.cart_count === 0) {
-                    location.reload();
-                } else {
-                    updateTotals(data.cart_total);
-                }
+                const itemEl = document.getElementById(`cart-item-${itemId}`);
+                itemEl.style.opacity = '0';
+                itemEl.style.transform = 'translateX(20px)';
+                setTimeout(() => {
+                    itemEl.remove();
+                    if (data.cart_count === 0) {
+                        location.reload();
+                    } else {
+                        updateTotals(data.cart_total);
+                    }
+                }, 300);
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Failed to remove item');
         }
     }
 
     async function clearCart() {
-        if (!confirm('Clear all items from cart?')) return;
+        if (!confirm('Clear your entire cart?')) return;
 
         try {
             const response = await fetch('/cart', {
@@ -506,20 +501,15 @@
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Failed to clear cart');
         }
     }
 
     function updateTotals(subtotal) {
-        const deliveryFee = 0.50;
-        const total = parseFloat(subtotal) + deliveryFee;
+        // Assuming no extra fees for now based on previous code logic
+        const total = parseFloat(subtotal); 
 
         document.getElementById('subtotal').textContent = `{{ $setting['currency']->value??"$"}} ${subtotal}`;
         document.getElementById('total').textContent = `{{ $setting['currency']->value??"$"}} ${total.toFixed(2)}`;
-    }
-
-    function checkout() {
-        alert('Checkout functionality would be implemented here!\n\nThis would typically:\n- Collect delivery info\n- Process payment\n- Create order');
     }
 
     function shareCartOnWhatsApp() {
@@ -529,69 +519,34 @@
             return;
         }
 
-        let message = '🛒 *New Cart Order*\n\n';
+        let message = '🛒 *New Order*\n\n';
 
         items.forEach((item, index) => {
             const name = item.querySelector('.item-name')?.textContent.trim() || '';
-
-            // Variant name (for variant items)
+            
             let variantName = '';
             const variantEl = item.querySelector('.item-variant');
             if (variantEl) {
-                // first text node inside .item-variant is the variant name
-                const firstNode = variantEl.childNodes[0];
-                variantName = (firstNode && firstNode.textContent ? firstNode.textContent : '').trim();
+                variantName = variantEl.textContent.trim();
             }
 
-            // Customization (for old/simple items)
-            const customizationEl = item.querySelector('.item-customization');
-            const customization = customizationEl ? customizationEl.textContent.trim() : '';
-
-            const qty = item.querySelector('.quantity')?.textContent.trim() || '';
+            const qty = item.querySelector('.qty-val')?.textContent.trim() || '';
             const price = item.querySelector('.item-price')?.textContent.trim() || '';
-            const imgEl = item.querySelector('.item-image');
-            const imgSrc = imgEl ? imgEl.src : '';
 
-            // Product line
-            message += `${index + 1}. *${name}*  x${qty}\n`;
-
-            // Variant line (if exists)
-            if (variantName) {
-                message += `   Variant: ${variantName}\n`;
-            }
-
-            // Customization line (for non-variant items)
-            if (customization && !variantName) {
-                message += `   ${customization}\n`;
-            }
-
-            // Total line for this item
-            message += `   ${price}\n`;
-
-            // Image link
-            if (imgSrc) {
-                message += `   Image: ${imgSrc}\n`;
-            }
-
-            message += `\n`;
+            message += `*${qty}x ${name}*\n`;
+            if (variantName) message += `   ${variantName}\n`;
+            message += `   ${price}\n\n`;
         });
 
-        const subtotal = document.getElementById('subtotal')?.textContent.trim() || '';
         const total = document.getElementById('total')?.textContent.trim() || '';
-
-        message += `Subtotal: ${subtotal}\n`;
-        message += `Total: *${total}*\n`;
-        message += `\nPlease confirm this order.`;
+        message += `*Total: ${total}*\n`;
+        message += `\nPlease confirm my order.`;
 
         const encoded = encodeURIComponent(message);
-
-        // Your specific WhatsApp number in international format (no +, no spaces)
         const phone = "{{ env('WHATSAPP_PHONE') }}";
-
         const whatsappURL = `https://wa.me/${phone}?text=${encoded}`;
         window.open(whatsappURL, '_blank');
     }
-
 </script>
 </body>
 </html>
