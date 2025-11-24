@@ -31,7 +31,7 @@ class MenuController extends Controller
         $restaurant = $admin->settings->keyBy('key');
 
         // Get selected category from query parameter or default to 'Sandwiches'
-        $firstCategory = $admin->categories()->active()->first();
+        $firstCategory = $admin->categories()->latest()->active()->first();
         $selectedCategory = $request->query('category', $firstCategory->name);
 
 
