@@ -542,35 +542,13 @@
             <h2 class="section-title">{{ $selectedCategory }}</h2>
 
             @if($products->count() > 0)
-                <div class="product-grid">
-                    @foreach($products as $item)
-                        <div class="product-card" onclick="window.location.href='{{ route('menu.show', [$name, $item->id]) }}'">
-                            <div class="product-info">
-                                <h3 class="product-name">{{ $item->name }}</h3>
-                                <p class="product-desc">{{ Str::limit($item->description, 60) }}</p>
-                                <div class="product-meta">
-                                    <span class="price">{{ $setting['currency']->value ?? "$" }} {{ number_format($item->price, 2) }}</span>
-                                    @if($item->customizable)
-                                        <span style="font-size: 12px; color: var(--primary); font-weight: 600; margin-left: 8px;">
-                                            <i class="fas fa-sliders-h"></i> Custom
-                                        </span>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="product-img-wrapper">
-                                @if($item->image)
-                                    <img src="{{ asset($item->image) }}" alt="{{ $item->name }}" class="product-img">
-                                @else
-                                    <div style="width:100%; height:100%; background:#f0f0f0; display:flex; align-items:center; justify-content:center; color:#ccc;">
-                                        <i class="fas fa-utensils" style="font-size: 24px;"></i>
-                                    </div>
-                                @endif
-                                <div class="add-btn">
-                                    <i class="fas fa-plus"></i>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+                <div class="product-grid" id="product-grid">
+                    @include('menu.partials.products')
+                </div>
+
+                <!-- Load More Trigger -->
+                <div id="load-more-trigger" style="text-align: center; padding: 40px; display: none;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: var(--primary);"></i>
                 </div>
             @else
                 <div class="empty-state">
@@ -610,6 +588,59 @@
                 nav.style.borderRadius = '24px 24px 0 0';
             }
         });
+
+        // Infinite Scroll
+        let page = 1;
+        let hasMore = {{ $products->hasMorePages() ? 'true' : 'false' }};
+        let isLoading = false;
+        const trigger = document.getElementById('load-more-trigger');
+        const grid = document.getElementById('product-grid');
+
+        if (hasMore && trigger) {
+            trigger.style.display = 'block';
+
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting && hasMore && !isLoading) {
+                    loadMoreProducts();
+                }
+            }, { threshold: 0.1 });
+
+            observer.observe(trigger);
+        }
+
+        async function loadMoreProducts() {
+            if (isLoading) return;
+            isLoading = true;
+            page++;
+
+            try {
+                const url = new URL(window.location.href);
+                url.searchParams.set('page', page);
+                
+                const response = await fetch(url.toString(), {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (response.ok) {
+                    const html = await response.text();
+                    if (html.trim().length > 0) {
+                        grid.insertAdjacentHTML('beforeend', html);
+                    } else {
+                        hasMore = false;
+                        trigger.style.display = 'none';
+                    }
+                } else {
+                    hasMore = false;
+                    trigger.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error loading more products:', error);
+            } finally {
+                isLoading = false;
+            }
+        }
     </script>
 </body>
 </html>

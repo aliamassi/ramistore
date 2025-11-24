@@ -38,14 +38,25 @@ class MenuController extends Controller
         $category = Category::where('name', $selectedCategory)
             ->active()
             ->first();
-        $products = [];
+        
+        $products = collect();
         if ($category) {
             $products = $category->products()
                 ->active()
                 ->orderBy('order')
-                ->get();
+                ->paginate(12);
         }
+
         $setting = Setting::all()->keyBy('key');
+
+        if ($request->ajax()) {
+            return view('menu.partials.products', [
+                'products' => $products,
+                'name' => $name,
+                'setting' => $setting
+            ])->render();
+        }
+
         $sessionId = Session::getId();
         $cart = Cart::where('session_id', $sessionId)->first();
         $cartCount = !empty($cart) ? $cart->items()->count() : 0;
