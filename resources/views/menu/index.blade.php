@@ -504,7 +504,7 @@
                         {{ $restaurant['business_name']->value ?? 'Restaurant name' }}
                     </div>
                     <div class="restaurant-subtitle">
-                        <span>{{ implode(', ',$restaurant['tags']->value) ?? 'Breakfast, Falafel, Arabic' }}</span>
+                        <span>{{ isset($restaurant['tags'])? implode(', ',$restaurant['tags']->value) : 'tags' }}</span>
 {{--                        <span class="rating-badge">--}}
 {{--                            <i class="fa-solid fa-star"></i>--}}
 {{--                            <span>{{ $setting['restaurant_rating']->value ?? '4.6' }}</span>--}}
