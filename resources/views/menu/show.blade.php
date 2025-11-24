@@ -13,19 +13,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6C63FF;
-            --primary-dark: #5B54E0;
-            --primary-light: #8B85FF;
-            --secondary: #00D4AA;
-            --secondary-dark: #00BF98;
-            --accent: #FFA94D;
-            --bg-color: #F8F9FD;
+            --primary: #3B82F6;
+            --primary-dark: #2563EB;
+            --primary-light: #60A5FA;
+            --secondary: #8B5CF6;
+            --secondary-dark: #7C3AED;
+            --accent: #EC4899;
+            --bg-color: #F8FAFC;
             --card-bg: #FFFFFF;
-            --text-main: #2C3E50;
-            --text-light: #7F8C9A;
-            --success: #52C41A;
-            --shadow-sm: 0 2px 8px rgba(108, 99, 255, 0.08);
-            --shadow-md: 0 8px 24px rgba(108, 99, 255, 0.12);
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --success: #10B981;
+            --shadow-sm: 0 2px 8px rgba(59, 130, 246, 0.1);
+            --shadow-md: 0 8px 24px rgba(59, 130, 246, 0.15);
             --radius-md: 16px;
             --radius-lg: 24px;
             --radius-xl: 32px;
@@ -331,7 +331,7 @@
             justify-content: space-between;
             padding: 0 24px;
             transition: transform 0.2s;
-            box-shadow: 0 4px 16px rgba(108, 99, 255, 0.3);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
         }
 
         .add-btn:active {

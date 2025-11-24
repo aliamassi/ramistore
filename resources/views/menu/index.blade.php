@@ -13,20 +13,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6C63FF;
-            --primary-dark: #5B54E0;
-            --primary-light: #8B85FF;
-            --secondary: #00D4AA;
-            --secondary-dark: #00BF98;
-            --accent: #FFA94D;
-            --bg-color: #F8F9FD;
+            --primary: #3B82F6;
+            --primary-dark: #2563EB;
+            --primary-light: #60A5FA;
+            --secondary: #8B5CF6;
+            --secondary-dark: #7C3AED;
+            --accent: #EC4899;
+            --bg-color: #F8FAFC;
             --card-bg: #FFFFFF;
-            --text-main: #2C3E50;
-            --text-light: #7F8C9A;
-            --success: #52C41A;
-            --shadow-sm: 0 2px 8px rgba(108, 99, 255, 0.08);
-            --shadow-md: 0 8px 24px rgba(108, 99, 255, 0.12);
-            --shadow-lg: 0 16px 48px rgba(108, 99, 255, 0.16);
+            --text-main: #1E293B;
+            --text-light: #64748B;
+            --success: #10B981;
+            --shadow-sm: 0 2px 8px rgba(59, 130, 246, 0.1);
+            --shadow-md: 0 8px 24px rgba(59, 130, 246, 0.15);
+            --shadow-lg: 0 16px 48px rgba(59, 130, 246, 0.2);
             --radius-sm: 12px;
             --radius-md: 16px;
             --radius-lg: 24px;
@@ -76,46 +76,63 @@
         }
 
         .restaurant-banner {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 50%, #EC4899 100%);
             color: white;
-            padding: 40px 0;
+            padding: 80px 0 120px;
             position: relative;
             overflow: hidden;
-            margin-bottom: -20px;
-            padding-bottom: 60px;
         }
 
-        .restaurant-banner::after {
+        .restaurant-banner::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at top right, rgba(255, 169, 77, 0.2), transparent 60%);
-            pointer-events: none;
+            background: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
+            opacity: 0.3;
         }
 
-        [dir="rtl"] .restaurant-banner::after {
-            background: radial-gradient(circle at top left, rgba(255, 169, 77, 0.2), transparent 60%);
+        .banner-content-wrapper {
+            position: relative;
+            z-index: 2;
+        }
+
+        .restaurant-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .banner-content {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 24px;
-            position: relative;
-            z-index: 1;
         }
 
         .logo-wrapper {
-            width: 80px;
-            height: 80px;
-            border-radius: var(--radius-md);
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
             background: white;
-            padding: 4px;
-            box-shadow: var(--shadow-md);
+            padding: 6px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             flex-shrink: 0;
+            position: relative;
+        }
+
+        .logo-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1));
+            border-radius: 22px;
+            z-index: -1;
         }
 
         .logo-img {
@@ -139,10 +156,11 @@
         }
 
         .restaurant-info h1 {
-            font-size: 28px;
+            font-size: 36px;
             font-weight: 800;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .tags-wrapper {
@@ -152,12 +170,13 @@
         }
 
         .tag-pill {
-            background: rgba(255,255,255,0.15);
-            padding: 4px 12px;
+            background: rgba(255,255,255,0.25);
+            padding: 6px 16px;
             border-radius: 100px;
-            font-size: 13px;
-            font-weight: 500;
-            backdrop-filter: blur(4px);
+            font-size: 14px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         /* ===== Contact Info ===== */
@@ -173,25 +192,27 @@
         .contact-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            color: rgba(255,255,255,0.9);
-            font-size: 14px;
+            gap: 10px;
+            color: white;
+            font-size: 15px;
             text-decoration: none;
-            background: rgba(255,255,255,0.1);
-            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            padding: 10px 18px;
             border-radius: 50px;
-            transition: all 0.2s;
-            backdrop-filter: blur(4px);
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.25);
         }
 
         .contact-item:hover {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.3);
             transform: translateY(-2px);
-            color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .contact-item i {
-            color: var(--primary);
+            color: var(--accent);
+            font-size: 16px;
         }
 
         /* ===== Navigation ===== */
@@ -231,9 +252,9 @@
         }
 
         .nav-pill.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
-            box-shadow: 0 4px 12px rgba(108, 99, 255, 0.25);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
         }
 
         .nav-pill:hover:not(.active) {
@@ -501,60 +522,59 @@
 <body>
 
     <div class="restaurant-banner">
-        <div class="container">
-            @php
-            $langParam = request()->has('lang') ? '?lang=' . request('lang') : '';
-        @endphp
-        <div class="header-controls">
-                <div class="logo-wrapper">
-                    @if(!empty($user->logo))
-                        <img src="{{ $user->logo }}" alt="Logo" class="logo-img">
-                    @else
-                        <div class="logo-placeholder">
-                            {{ strtoupper(substr($restaurant['business_name']->value ?? 'R', 0, 1)) }}
-                        </div>
-                    @endif
-                </div>
-                <div class="restaurant-info">
-                    <h1>{{ $restaurant['business_name']->value ?? 'Restaurant Name' }}</h1>
-                    <div class="tags-wrapper">
-                        @if(isset($restaurant['tags']) && is_array($restaurant['tags']->value))
-                            @foreach($restaurant['tags']->value as $tag)
-                                <span class="tag-pill">{{ $tag }}</span>
-                            @endforeach
+        <div class="container banner-content-wrapper">
+            <div class="restaurant-card">
+                <div class="banner-content">
+                    <div class="logo-wrapper">
+                        @if(!empty($user->logo))
+                            <img src="{{ $user->logo }}" alt="Logo" class="logo-img">
                         @else
-                            <span class="tag-pill">Delicious Food</span>
-                            <span class="tag-pill">Best Service</span>
+                            <div class="logo-placeholder">
+                                {{ strtoupper(substr($restaurant['business_name']->value ?? 'R', 0, 1)) }}
+                            </div>
                         @endif
                     </div>
-                </div>
-            </div>
-
-            {{-- Contact Info Section --}}
-            @if(isset($restaurant['phone_number']) || isset($restaurant['email']) || isset($restaurant['address']))
-                <div class="contact-info-bar">
-                    @if(isset($restaurant['phone_number']))
-                        <a href="tel:{{ $restaurant['phone_number']->value }}" class="contact-item">
-                            <i class="fas fa-phone-alt"></i>
-                            <span>{{ $restaurant['phone_number']->value }}</span>
-                        </a>
-                    @endif
-
-                    @if(isset($restaurant['contact_email']))
-                        <a href="mailto:{{ $restaurant['contact_email']->value }}" class="contact-item">
-                            <i class="fas fa-envelope"></i>
-                            <span>{{ $restaurant['contact_email']->value }}</span>
-                        </a>
-                    @endif
-
-                    @if(isset($restaurant['address']))
-                        <div class="contact-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>{{ $restaurant['address']->value }}</span>
+                    <div class="restaurant-info">
+                        <h1>{{ $restaurant['business_name']->value ?? 'Restaurant Name' }}</h1>
+                        <div class="tags-wrapper">
+                            @if(isset($restaurant['tags']) && is_array($restaurant['tags']->value))
+                                @foreach($restaurant['tags']->value as $tag)
+                                    <span class="tag-pill">{{ $tag }}</span>
+                                @endforeach
+                            @else
+                                <span class="tag-pill">Delicious Food</span>
+                                <span class="tag-pill">Best Service</span>
+                            @endif
                         </div>
-                    @endif
+                    </div>
                 </div>
-            @endif
+
+                {{-- Contact Info Section --}}
+                @if(isset($restaurant['phone_number']) || isset($restaurant['contact_email']) || isset($restaurant['address']))
+                    <div class="contact-info-bar">
+                        @if(isset($restaurant['phone_number']))
+                            <a href="tel:{{ $restaurant['phone_number']->value }}" class="contact-item">
+                                <i class="fas fa-phone-alt"></i>
+                                <span>{{ $restaurant['phone_number']->value }}</span>
+                            </a>
+                        @endif
+
+                        @if(isset($restaurant['contact_email']))
+                            <a href="mailto:{{ $restaurant['contact_email']->value }}" class="contact-item">
+                                <i class="fas fa-envelope"></i>
+                                <span>{{ $restaurant['contact_email']->value }}</span>
+                            </a>
+                        @endif
+
+                        @if(isset($restaurant['address']))
+                            <div class="contact-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ $restaurant['address']->value }}</span>
+                            </div>
+                        @endif
+                    </div>
+                @endif
+            </div>
         </div>
     </div>
 
