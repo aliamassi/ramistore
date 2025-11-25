@@ -22,7 +22,7 @@ class CartController extends Controller
         if (!$cart) {
             $cart = Cart::create([
                 'session_id' => $sessionId,
-                'user_id'    => auth()->id(),
+                'user_id'    => auth()->check() ? auth()->id() : null,
             ]);
         }
 
