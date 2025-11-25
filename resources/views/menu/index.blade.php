@@ -305,32 +305,83 @@
             border: 1px solid rgba(0,0,0,0.08);
         }
 
-        .contact-item {
-            display: inline-flex;
-            align-items: center;
+        /* Compact Contact Info */
+        .contact-info-compact {
+            display: flex;
             gap: 8px;
-            background: #F8FAFC;
-            padding: 8px 16px;
-            border-radius: 50px;
-            border: 1px solid rgba(0,0,0,0.08);
-            text-decoration: none;
-            color: #1E293B;
-            transition: all 0.3s;
+            flex-wrap: wrap;
         }
 
-        .contact-item:hover {
+        .contact-icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #F8FAFC;
+            border: 1px solid rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--primary);
+            transition: all 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .contact-icon-btn:hover {
             background: var(--primary);
             color: white;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
-        .contact-item i {
-            color: var(--primary);
+        .contact-icon-btn i {
+            font-size: 16px;
         }
 
-        .contact-item:hover i {
+        /* Tooltip */
+        .contact-icon-btn::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: rgba(0, 0, 0, 0.8);
             color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+
+        .contact-icon-btn:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-4px);
+        }
+
+        @media (min-width: 768px) {
+            .contact-icon-btn {
+                width: auto;
+                padding: 8px 16px;
+                gap: 8px;
+            }
+
+            .contact-icon-btn .contact-text {
+                display: inline;
+            }
+
+            .contact-icon-btn::after {
+                display: none;
+            }
+        }
+
+        .contact-text {
+            display: none;
+            font-size: 13px;
         }
 
         /* Category Pills */
@@ -568,28 +619,34 @@
                 </div>
             </div>
 
-            {{-- Contact Info --}}
+            {{-- Contact Info - Compact Design --}}
             @if(isset($restaurant['phone_number']) || isset($restaurant['contact_email']) || isset($restaurant['address']))
-                <div class="d-flex flex-wrap gap-2 mt-3 pt-3 border-top">
+                <div class="contact-info-compact mt-3 pt-3 border-top">
                     @if(isset($restaurant['phone_number']))
-                        <a href="tel:{{ $restaurant['phone_number']->value }}" class="contact-item">
+                        <a href="tel:{{ $restaurant['phone_number']->value }}" 
+                           class="contact-icon-btn" 
+                           data-tooltip="{{ $restaurant['phone_number']->value }}">
                             <i class="fas fa-phone-alt"></i>
-                            <span>{{ $restaurant['phone_number']->value }}</span>
+                            <span class="contact-text">{{ $restaurant['phone_number']->value }}</span>
                         </a>
                     @endif
 
                     @if(isset($restaurant['contact_email']))
-                        <a href="mailto:{{ $restaurant['contact_email']->value }}" class="contact-item">
+                        <a href="mailto:{{ $restaurant['contact_email']->value }}" 
+                           class="contact-icon-btn" 
+                           data-tooltip="{{ $restaurant['contact_email']->value }}">
                             <i class="fas fa-envelope"></i>
-                            <span>{{ $restaurant['contact_email']->value }}</span>
+                            <span class="contact-text">{{ $restaurant['contact_email']->value }}</span>
                         </a>
                     @endif
 
                     @if(isset($restaurant['address']))
-                        <div class="contact-item">
+                        <button class="contact-icon-btn" 
+                                data-tooltip="{{ $restaurant['address']->value }}"
+                                onclick="alert('{{ $restaurant['address']->value }}')">
                             <i class="fas fa-map-marker-alt"></i>
-                            <span>{{ $restaurant['address']->value }}</span>
-                        </div>
+                            <span class="contact-text">{{ $restaurant['address']->value }}</span>
+                        </button>
                     @endif
                 </div>
             @endif
