@@ -198,6 +198,58 @@
             background-color: white;
         }
 
+        /* Carousel Navigation Buttons */
+        .carousel-control-prev,
+        .carousel-control-next {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transition: all 0.3s ease;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+        }
+
+        .carousel-control-prev {
+            left: 20px;
+        }
+
+        .carousel-control-next {
+            right: 20px;
+        }
+
+        .hero-carousel:hover .carousel-control-prev,
+        .hero-carousel:hover .carousel-control-next {
+            opacity: 1;
+        }
+
+        .carousel-control-prev:hover,
+        .carousel-control-next:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            width: 20px;
+            height: 20px;
+            filter: brightness(0) invert(1);
+        }
+
+        [dir="rtl"] .carousel-control-prev {
+            left: auto;
+            right: 20px;
+        }
+
+        [dir="rtl"] .carousel-control-next {
+            right: auto;
+            left: 20px;
+        }
+
         /* Restaurant Info Card */
         .restaurant-info-section {
             background: white;
@@ -434,7 +486,7 @@
                         </div>
                     @endif
                 </a>
-                
+
                 {{-- Left: Control Buttons --}}
                 <div class="nav-controls">
                     <button class="nav-btn" id="menuToggle" title="Menu">
@@ -486,6 +538,16 @@
                 <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=1200');"></div>
             @endif
         </div>
+
+        {{-- Previous/Next Navigation Buttons --}}
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
     </div>
 
     {{-- Restaurant Info Section --}}
