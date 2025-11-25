@@ -71,7 +71,7 @@ class MenuController extends Controller
             'name' => $name,
             'setting' => $setting,
             'restaurant' => $restaurant,
-            '$sliders' => $sliders
+            'sliders' => $sliders
         ]);
     }
 
