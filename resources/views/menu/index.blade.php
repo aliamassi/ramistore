@@ -420,18 +420,6 @@
     <nav class="top-navbar">
         <div class="container">
             <div class="d-flex align-items-center justify-content-between">
-                {{-- Left: Control Buttons --}}
-                <div class="nav-controls">
-                    <button class="nav-btn" id="menuToggle" title="Menu">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <button class="nav-btn" id="darkModeToggle" title="Dark Mode">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    <button class="nav-btn" id="langToggle" title="Language">
-                        <i class="fas fa-globe"></i>
-                    </button>
-                </div>
 
                 {{-- Right: Logo & Brand Name --}}
                 <a href="{{ route('menu.index', $name) }}" class="brand-logo">
@@ -446,6 +434,21 @@
                         </div>
                     @endif
                 </a>
+                
+                {{-- Left: Control Buttons --}}
+                <div class="nav-controls">
+                    <button class="nav-btn" id="menuToggle" title="Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <button class="nav-btn" id="darkModeToggle" title="Dark Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="nav-btn" id="langToggle" title="Language">
+                        <i class="fas fa-globe"></i>
+                    </button>
+                </div>
+
+
             </div>
         </div>
     </nav>
