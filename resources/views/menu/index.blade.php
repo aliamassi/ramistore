@@ -149,6 +149,46 @@
             color: white;
         }
 
+        /* Dark mode text colors */
+        body.dark-mode .product-card .text-muted,
+        body.dark-mode .product-desc,
+        body.dark-mode .small,
+        body.dark-mode p {
+            color: #94A3B8 !important;
+        }
+
+        body.dark-mode .product-name,
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3,
+        body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 {
+            color: #F1F5F9 !important;
+        }
+
+        body.dark-mode .tag-pill {
+            background: #475569;
+            color: #E2E8F0;
+            border-color: #64748B;
+        }
+
+        body.dark-mode .contact-icon-btn {
+            background: #475569;
+            border-color: #64748B;
+            color: var(--primary);
+        }
+
+        body.dark-mode .nav-pills .nav-link {
+            background: #475569;
+            color: #94A3B8;
+        }
+
+        body.dark-mode .nav-pills .nav-link:hover {
+            background: #64748B;
+            color: #E2E8F0;
+        }
+
+        body.dark-mode .floating-cart {
+            background: #7C3AED;
+        }
+
         @media (max-width: 576px) {
             .brand-name {
                 display: none;
