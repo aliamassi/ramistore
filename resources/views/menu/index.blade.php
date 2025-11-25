@@ -619,34 +619,40 @@
                 </div>
             </div>
 
-            {{-- Contact Info - Compact Design --}}
+            {{-- Contact Info - Compact Design with Bootstrap Grid --}}
             @if(isset($restaurant['phone_number']) || isset($restaurant['contact_email']) || isset($restaurant['address']))
-                <div class="contact-info-compact mt-3 pt-3 border-top">
+                <div class="row g-2 mt-3 pt-3 border-top">
                     @if(isset($restaurant['phone_number']))
-                        <a href="tel:{{ $restaurant['phone_number']->value }}" 
-                           class="contact-icon-btn" 
-                           data-tooltip="{{ $restaurant['phone_number']->value }}">
-                            <i class="fas fa-phone-alt"></i>
-                            <span class="contact-text">{{ $restaurant['phone_number']->value }}</span>
-                        </a>
+                        <div class="col">
+                            <a href="tel:{{ $restaurant['phone_number']->value }}" 
+                               class="contact-icon-btn w-100" 
+                               data-tooltip="{{ $restaurant['phone_number']->value }}">
+                                <i class="fas fa-phone-alt"></i>
+                                <span class="contact-text">{{ $restaurant['phone_number']->value }}</span>
+                            </a>
+                        </div>
                     @endif
 
                     @if(isset($restaurant['contact_email']))
-                        <a href="mailto:{{ $restaurant['contact_email']->value }}" 
-                           class="contact-icon-btn" 
-                           data-tooltip="{{ $restaurant['contact_email']->value }}">
-                            <i class="fas fa-envelope"></i>
-                            <span class="contact-text">{{ $restaurant['contact_email']->value }}</span>
-                        </a>
+                        <div class="col">
+                            <a href="mailto:{{ $restaurant['contact_email']->value }}" 
+                               class="contact-icon-btn w-100" 
+                               data-tooltip="{{ $restaurant['contact_email']->value }}">
+                                <i class="fas fa-envelope"></i>
+                                <span class="contact-text">{{ $restaurant['contact_email']->value }}</span>
+                            </a>
+                        </div>
                     @endif
 
                     @if(isset($restaurant['address']))
-                        <button class="contact-icon-btn" 
-                                data-tooltip="{{ $restaurant['address']->value }}"
-                                onclick="alert('{{ $restaurant['address']->value }}')">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span class="contact-text">{{ $restaurant['address']->value }}</span>
-                        </button>
+                        <div class="col">
+                            <button class="contact-icon-btn w-100" 
+                                    data-tooltip="{{ $restaurant['address']->value }}"
+                                    onclick="alert('{{ $restaurant['address']->value }}')">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span class="contact-text">{{ $restaurant['address']->value }}</span>
+                            </button>
+                        </div>
                     @endif
                 </div>
             @endif
