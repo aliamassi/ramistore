@@ -8,13 +8,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Menu - {{ $selectedCategory }}</title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <style>
         :root {
             --primary: #3B82F6;
@@ -31,6 +31,128 @@
 
         [dir="rtl"] body {
             font-family: 'Cairo', sans-serif;
+        }
+
+        /* Top Navigation Bar */
+        .top-navbar {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            border: none;
+            background: #F8FAFC;
+            color: #64748B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+        }
+
+        .nav-btn:hover {
+            background: #E2E8F0;
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .brand-logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .brand-logo-placeholder {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .brand-name {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .brand-name-main {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E293B;
+            line-height: 1;
+        }
+
+
+        [dir="rtl"] .brand-name {
+            text-align: right;
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #1E293B;
+            color: #E2E8F0;
+        }
+
+        body.dark-mode .top-navbar,
+        body.dark-mode .restaurant-info-section,
+        body.dark-mode .category-nav,
+        body.dark-mode .product-card {
+            background: #334155;
+        }
+
+        body.dark-mode .brand-name-main {
+            color: white;
+        }
+
+        body.dark-mode .nav-btn {
+            background: #475569;
+            color: #94A3B8;
+        }
+
+        body.dark-mode .nav-btn:hover {
+            background: #64748B;
+            color: white;
+        }
+
+        @media (max-width: 576px) {
+            .brand-name {
+                display: none;
+            }
         }
 
         /* Slider Styles */
@@ -294,14 +416,48 @@
 </head>
 <body>
 
+    {{-- Top Navigation Bar --}}
+    <nav class="top-navbar">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
+                {{-- Left: Control Buttons --}}
+                <div class="nav-controls">
+                    <button class="nav-btn" id="menuToggle" title="Menu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <button class="nav-btn" id="darkModeToggle" title="Dark Mode">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button class="nav-btn" id="langToggle" title="Language">
+                        <i class="fas fa-globe"></i>
+                    </button>
+                </div>
+
+                {{-- Right: Logo & Brand Name --}}
+                <a href="{{ route('menu.index', $name) }}" class="brand-logo">
+                    <div class="brand-name">
+                        <div class="brand-name-main">{{ $restaurant['business_name']->value ?? 'Restaurant' }}</div>
+                    </div>
+                    @if(!empty($user->logo))
+                        <img src="{{ $user->logo }}" alt="Logo" class="brand-logo-img">
+                    @else
+                        <div class="brand-logo-placeholder">
+                            {{ strtoupper(substr($restaurant['business_name']->value ?? 'R', 0, 1)) }}
+                        </div>
+                    @endif
+                </a>
+            </div>
+        </div>
+    </nav>
+
     {{-- Bootstrap Carousel Slider --}}
     <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel">
         <div class="carousel-indicators">
             @if(!empty($sliders) && count($sliders) > 0)
                 @foreach($sliders as $index => $slider)
-                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ $index }}" 
-                            class="{{ $index === 0 ? 'active' : '' }}" 
-                            aria-current="{{ $index === 0 ? 'true' : 'false' }}" 
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ $index }}"
+                            class="{{ $index === 0 ? 'active' : '' }}"
+                            aria-current="{{ $index === 0 ? 'true' : 'false' }}"
                             aria-label="Slide {{ $index + 1 }}"></button>
                 @endforeach
             @else
@@ -311,11 +467,11 @@
                 <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
             @endif
         </div>
-        
+
         <div class="carousel-inner">
             @if(!empty($sliders) && count($sliders) > 0)
                 @foreach($sliders as $index => $slider)
-                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}" 
+                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}"
                          style="background-image: url('/storage/{{ $slider->image_path }}');">
                     </div>
                 @endforeach
@@ -333,17 +489,7 @@
     <div class="restaurant-info-section">
         <div class="container">
             <div class="d-flex align-items-start gap-3">
-                <div class="logo-wrapper flex-shrink-0">
-                    @if(!empty($user->logo))
-                        <img src="{{ $user->logo }}" alt="Logo" class="logo-img">
-                    @else
-                        <div class="logo-placeholder">
-                            {{ strtoupper(substr($restaurant['business_name']->value ?? 'R', 0, 1)) }}
-                        </div>
-                    @endif
-                </div>
                 <div class="flex-grow-1">
-                    <h1 class="fs-4 fw-bold mb-2">{{ $restaurant['business_name']->value ?? 'Restaurant Name' }}</h1>
                     <div class="d-flex flex-wrap gap-2">
                         @if(isset($restaurant['tags']) && is_array($restaurant['tags']->value))
                             @foreach($restaurant['tags']->value as $tag)
@@ -446,12 +592,57 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         // Initialize carousel with autoplay
         const carousel = new bootstrap.Carousel(document.getElementById('heroCarousel'), {
             interval: 5000,
             ride: 'carousel'
+        });
+
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+        const darkModeIcon = darkModeToggle.querySelector('i');
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.classList.add('dark-mode');
+            darkModeIcon.classList.remove('fa-moon');
+            darkModeIcon.classList.add('fa-sun');
+            darkModeToggle.classList.add('active');
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            darkModeToggle.classList.toggle('active');
+
+            if (body.classList.contains('dark-mode')) {
+                darkModeIcon.classList.remove('fa-moon');
+                darkModeIcon.classList.add('fa-sun');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                darkModeIcon.classList.remove('fa-sun');
+                darkModeIcon.classList.add('fa-moon');
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+
+        // Language Toggle
+        const langToggle = document.getElementById('langToggle');
+        langToggle.addEventListener('click', () => {
+            const currentLang = '{{ $locale }}';
+            const newLang = currentLang === 'ar' ? 'en' : 'ar';
+            const url = new URL(window.location.href);
+            url.searchParams.set('lang', newLang);
+            window.location.href = url.toString();
+        });
+
+        // Menu Toggle (you can implement sidebar or dropdown menu here)
+        const menuToggle = document.getElementById('menuToggle');
+        menuToggle.addEventListener('click', () => {
+            // Scroll to categories section
+            document.querySelector('.category-nav').scrollIntoView({ behavior: 'smooth' });
         });
 
         // Infinite Scroll
