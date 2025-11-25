@@ -133,6 +133,7 @@ const {
   settings,
   duplicateProduct,
   updateProductOrder,
+  updateCategoryOrder,
 } = useProduct()
 const {user} = useSanctum()
 
@@ -180,6 +181,18 @@ const handleProductDragEnd = async (categoryId: number, newProducts: any[]) => {
   } catch (err) {
     console.error('Failed to reorder products:', err)
     setAlert?.('Failed to reorder products', 'error')
+    // Optionally refresh categories to revert changes
+    await fetchCategories()
+  }
+}
+
+const handleCategoryDragEnd = async (newCategories: any[]) => {
+  try {
+    // Send order to backend
+    const categoryIds = newCategories.map(c => c.id)
+    await updateCategoryOrder(categoryIds)
+  } catch (err) {
+    console.error('Failed to reorder categories:', err)
     // Optionally refresh categories to revert changes
     await fetchCategories()
   }
@@ -650,18 +663,26 @@ const duplicateCategory = () => {
         </v-row>
 
       </div>
-      <v-card
-        v-for="category in categories"
-        :key="category.id"
-        elevation="1"
-        class="category-card"
-
+      
+      <!-- Categories with Drag & Drop -->
+      <VueDraggable
+        v-model="categories"
+        :animation="200"
+        handle=".category-drag-handle"
+        ghost-class="ghost-category"
+        @end="handleCategoryDragEnd(categories)"
       >
+        <v-card
+          v-for="category in categories"
+          :key="category.id"
+          elevation="1"
+          class="category-card"
+        >
         <!-- Category Header -->
         <v-card-text class="pa-2 category-card-header" @click="toggleCategory(category.id)">
           <v-row align="center" no-gutters>
             <!-- Drag Handle -->
-            <v-col cols="auto" class="mr-3">
+            <v-col cols="auto" class="mr-3 category-drag-handle" style="cursor: grab;">
               <i class='mdi-drag mdi v-icon notranslate v-theme--light v-icon--size-default'></i>
             </v-col>
 
@@ -930,6 +951,8 @@ const duplicateCategory = () => {
           </div>
         </v-expand-transition>
       </v-card>
+      </VueDraggable>
+      
       <!-- Loading Overlay -->
       <v-overlay :model-value="loading" class="align-center justify-center">
         <v-progress-circular indeterminate size="64"></v-progress-circular>

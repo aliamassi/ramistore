@@ -30,12 +30,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('product/variant/{variant}', [ProductController::class,'deleteVariant']);
     Route::apiResource('category', CategoryController::class);
     Route::put('category/{category}/visibility', [CategoryController::class,'changeVisibility']);
-    Route::post('category/{category}/products/reorder', [CategoryController::class,'reorder']);
+    Route::post('category/{category}/products/reorder', [CategoryController::class,'reorderProducts']);
+    Route::post('category/reorder', [CategoryController::class,'reorder']);
 
     Route::post('admin/upload', [AdminController::class,'uploadImage']);
     Route::get('settings', [SettingsController::class,'index']);
     Route::post('settings', [SettingsController::class,'store']);
-    
+
     // Slider routes
     Route::apiResource('slider', \App\Http\Controllers\Admin\SliderController::class);
     Route::post('slider/reorder', [\App\Http\Controllers\Admin\SliderController::class, 'updateOrder']);

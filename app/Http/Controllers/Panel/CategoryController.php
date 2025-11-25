@@ -47,7 +47,7 @@ class CategoryController extends BaseController
             'setting' => $setting,
         ]);
     }
-    public function reorder(Category $category,Request $request)
+    public function reorderProducts(Category $category,Request $request)
     {
         $request->validate([
             'product_ids' => 'required'
@@ -62,6 +62,23 @@ class CategoryController extends BaseController
             'status' => true,
             'message' => __('messages.success'),
             'products' => $products
+        ]);
+    }
+    public function reorder(Request $request)
+    {
+        $request->validate([
+            'category_ids' => 'required'
+        ]);
+         $category_ids = $request->category_ids;
+         foreach ($category_ids as $order=> $category_id){
+             Category::find($category_id)->update(['order'=>$order]);
+         }
+
+//         $products = Product::with('variants')->orderBy('order')->whereIn('id',$product_ids)->get();
+        return response()->json([
+            'status' => true,
+            'message' => __('messages.success'),
+//            'products' => $products
         ]);
     }
     public function changeVisibility($category, Request $request)

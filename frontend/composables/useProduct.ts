@@ -1,6 +1,6 @@
 // composables/useProduct.ts
-import {ref, computed, inject} from 'vue'
-import {useSanctumFetch} from '#imports'
+import { ref, computed, inject } from 'vue'
+import { useSanctumFetch } from '#imports'
 
 type Id = number | string
 type AnyObj = Record<string, any>
@@ -105,7 +105,7 @@ export const useProduct = () => {
             console.log('%%%%%%%%%%%%%%', res);
             if (res.message === "Unauthenticated") {
                 const route = useRoute()
-                navigateTo(`/login?redirect=${encodeURIComponent(route.fullPath)}`, {replace: true})
+                navigateTo(`/login?redirect=${encodeURIComponent(route.fullPath)}`, { replace: true })
             }
             categories.value = normList(res)
         } catch (e) {
@@ -113,7 +113,7 @@ export const useProduct = () => {
             console.log(e, e.status);
             if (e?.status === 401) {
                 const route = useRoute()
-                navigateTo(`/login?redirect=${encodeURIComponent(route.fullPath)}`, {replace: true})
+                navigateTo(`/login?redirect=${encodeURIComponent(route.fullPath)}`, { replace: true })
             }
         } finally {
             loading.value = false
@@ -129,7 +129,7 @@ export const useProduct = () => {
         try {
             const res = await $sf('/panel/settings', {
                 method: 'POST',
-                body:  payload,
+                body: payload,
             })
             // const newProduct = normItem(res)
 
@@ -143,7 +143,7 @@ export const useProduct = () => {
     }
     const updateProductOrder = async (categoryId: number, productIds: number[]) => {
         try {
-           const updateProductOrderResult =  await $sf(`/panel/category/${categoryId}/products/reorder`, {
+            const updateProductOrderResult = await $sf(`/panel/category/${categoryId}/products/reorder`, {
                 method: 'POST',
                 body: { product_ids: productIds }
             })
@@ -156,6 +156,20 @@ export const useProduct = () => {
             return updateProductOrderResult
         } catch (err) {
             console.error('Failed to update product order:', err)
+            throw err
+        }
+    }
+
+    const updateCategoryOrder = async (categoryIds: number[]) => {
+        try {
+            await $sf('/panel/category/reorder', {
+                method: 'POST',
+                body: { category_ids: categoryIds }
+            })
+            setAlert?.('Categories reordered successfully!', 'success')
+        } catch (err) {
+            console.error('Failed to update category order:', err)
+            setAlert?.('Failed to reorder categories', 'error')
             throw err
         }
     }
@@ -291,7 +305,7 @@ export const useProduct = () => {
             loading.value = false
         }
     }
-    const addProductVariant = async ( variantData: AnyObj | FormData) => {
+    const addProductVariant = async (variantData: AnyObj | FormData) => {
         // loading.value = true;
         error.value = null
         try {
@@ -302,14 +316,14 @@ export const useProduct = () => {
             const productVariant = res.product
             let catId = productVariant.category_id
             let catIdx = categories.value.findIndex(c => c?.id === catId)
-            console.log('addProductVariant catIdx',catIdx);
+            console.log('addProductVariant catIdx', catIdx);
             if (catIdx !== -1) {
                 const productsVariant = categories.value[catIdx].products
                 const pIdx = productsVariant.findIndex((p: any) => p?.id === productVariant.id)
-                console.log('addProductVariant pIdx',pIdx);
-                console.log('addProductVariant pId',productVariant.id);
+                console.log('addProductVariant pIdx', pIdx);
+                console.log('addProductVariant pId', productVariant.id);
 
-                if (pIdx !== -1){
+                if (pIdx !== -1) {
                     // productsVariant.splice(pIdx, 1, productVariant)
                     categories.value[catIdx].products[pIdx] = productVariant
                 }
@@ -336,7 +350,7 @@ export const useProduct = () => {
         }
         return fd
     }
-    const uploadProductImages = async (id: Id, files: File[] | FileList,removedImageIds: number[],mainImageId :number) => {
+    const uploadProductImages = async (id: Id, files: File[] | FileList, removedImageIds: number[], mainImageId: number) => {
         console.log(categories.value);
         // loading.value = true;
         error.value = null
@@ -344,7 +358,7 @@ export const useProduct = () => {
             // Try a dedicated images endpoint first:
             const res = await $sf(`/panel/product/${id}/images`, {
                 method: 'POST',
-                body: toFormData({'imageIds':removedImageIds,'mainImageId':mainImageId}, files),
+                body: toFormData({ 'imageIds': removedImageIds, 'mainImageId': mainImageId }, files),
             })
 
 
@@ -404,10 +418,10 @@ export const useProduct = () => {
         try {
             await $sf(`/panel/category/${id}`, {
                 method: 'PUT',
-                body: {category_id: id, name: name},
+                body: { category_id: id, name: name },
             })
             const idx = categories.value.findIndex(c => c?.id === id)
-            if (idx !== -1) categories.value[idx] = {...categories.value[idx], name}
+            if (idx !== -1) categories.value[idx] = { ...categories.value[idx], name }
             setAlert?.('Category updated successfully!', 'success')
         } catch (e) {
             onErr(e, 'Failed to update category')
@@ -421,7 +435,7 @@ export const useProduct = () => {
         try {
             const res = await $sf(`/panel/product/${id}/visibility`, {
                 method: 'PUT',
-                body: {id: id, action: action},
+                body: { id: id, action: action },
             })
             const idx = categories.value.findIndex(c => c?.id === res.category.id)
             if (idx !== -1) categories.value[idx] = res.category
@@ -438,7 +452,7 @@ export const useProduct = () => {
         try {
             const res = await $sf(`/panel/category/${id}/visibility`, {
                 method: 'PUT',
-                body: {id: id, action: action},
+                body: { id: id, action: action },
             })
             const idx = categories.value.findIndex(c => c?.id === res.category.id)
             if (idx !== -1) categories.value[idx] = res.category
@@ -454,7 +468,7 @@ export const useProduct = () => {
         // loading.value = true;
         error.value = null
         try {
-            await $sf(`/panel/product/${id}`, {method: 'DELETE'})
+            await $sf(`/panel/product/${id}`, { method: 'DELETE' })
             const catIdx = categories.value.findIndex(c => c?.id === categoryId)
             console.log('catIdx', catIdx);
 
@@ -477,7 +491,7 @@ export const useProduct = () => {
         // loading.value = true;
         error.value = null
         try {
-            const deleteVariantResponse = await $sf(`/panel/product/variant/${id}`, {method: 'DELETE'})
+            const deleteVariantResponse = await $sf(`/panel/product/variant/${id}`, { method: 'DELETE' })
             const catIdx = categories.value.findIndex(c => c?.id === deleteVariantResponse.product.category_id)
             console.log('catIdx', catIdx);
 
@@ -486,7 +500,7 @@ export const useProduct = () => {
                 const prodIdx = cat.products.findIndex(p => p?.id === deleteVariantResponse.product.id);
                 console.log('prodIdx', prodIdx);
                 if (prodIdx !== -1) {
-                    cat.products.splice(prodIdx, 1,deleteVariantResponse.product)
+                    cat.products.splice(prodIdx, 1, deleteVariantResponse.product)
                 }
             }
             setAlert?.('Product variant deleted successfully!', 'success')
@@ -502,7 +516,7 @@ export const useProduct = () => {
         // loading.value = true;
         error.value = null
         try {
-            await $sf(`/panel/category/${id}`, {method: 'DELETE'})
+            await $sf(`/panel/category/${id}`, { method: 'DELETE' })
             const idx = categories.value.findIndex(c => c?.id === id)
             if (idx !== -1) {
                 const deleted = categories.value.splice(idx, 1)[0]
@@ -546,16 +560,16 @@ export const useProduct = () => {
     }
     return {
         // State
-        products, categories, loading, error,settings,
+        products, categories, loading, error, settings,
         // Computed
         productImages, categoryCount, productCount, getProductById, getProductsByCategory, getProductByCategoryAndId, setAlert,
         // Methods
-        fetchProducts, fetchCategories,fetchSettings,
-        addCategory, addProduct,deleteVariant,
-        updateProduct, updateCategory,updateProductVariant,updateProductType,
+        fetchProducts, fetchCategories, fetchSettings,
+        addCategory, addProduct, deleteVariant,
+        updateProduct, updateCategory, updateProductVariant, updateProductType,
         deleteProduct, deleteCategory,
-        duplicateProduct, reorderProducts,addProductVariant,
-        uploadProductImages, updateProductOrder,  saveSetting, updateProductWithImages, fetchProductImages, changeProductVisibility, changeCategoryVisibility
+        duplicateProduct, reorderProducts, addProductVariant,
+        uploadProductImages, updateProductOrder, updateCategoryOrder, saveSetting, updateProductWithImages, fetchProductImages, changeProductVisibility, changeCategoryVisibility
 
     }
 }
