@@ -22,7 +22,7 @@ class MenuController extends Controller
         $admin = Admin::find($setting->admin_id);
         $categories = $admin
             ->categories()
-            ->latest()
+            ->orderBy('order')
             ->active()
             ->with(['products' => function ($query) {
                 $query->with('variants')->withCount('variants')
