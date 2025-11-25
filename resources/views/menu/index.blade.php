@@ -172,7 +172,13 @@
         body.dark-mode .contact-icon-btn {
             background: #475569;
             border-color: #64748B;
-            color: var(--primary);
+            color: #38BDF8; /* Bright sky blue for better visibility */
+        }
+
+        body.dark-mode .contact-icon-btn:hover {
+            background: #38BDF8;
+            color: #1E293B;
+            border-color: #38BDF8;
         }
 
         body.dark-mode .nav-pills .nav-link {
