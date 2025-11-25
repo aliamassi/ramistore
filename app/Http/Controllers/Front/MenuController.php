@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Front;
 use App\Models\Admin;
 use App\Models\Cart;
 use App\Models\Setting;
+use App\Models\Slider;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
@@ -60,7 +61,7 @@ class MenuController extends Controller
         $sessionId = Session::getId();
         $cart = Cart::where('session_id', $sessionId)->first();
         $cartCount = !empty($cart) ? $cart->items()->count() : 0;
-
+        $sliders = Slider::active()->orderBy('order')->get();
         return view('menu.index', [
             'categories' => $categories,
             'selectedCategory' => $selectedCategory,
@@ -69,7 +70,8 @@ class MenuController extends Controller
             'user' => $admin,
             'name' => $name,
             'setting' => $setting,
-            'restaurant' => $restaurant
+            'restaurant' => $restaurant,
+            '$sliders' => $sliders
         ]);
     }
 
