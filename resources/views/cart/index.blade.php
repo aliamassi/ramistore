@@ -2,7 +2,7 @@
     $locale = app()->getLocale();
     $dir = $locale == 'ar' ? 'rtl' : 'ltr';
 @endphp
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="{{ $locale }}" dir="{{ $dir }}">
 <head>
     <meta charset="UTF-8">
@@ -384,11 +384,11 @@
                     <button class="remove-btn" onclick="removeItem({{ $item->id }})">
                         <i class="fas fa-times"></i>
                     </button>
-                    
+
                     <img src="{{ $item->product->image ? asset($item->product->image) : 'https://via.placeholder.com/120' }}"
                          alt="{{ $item->product->name }}"
                          class="item-img">
-                    
+
                     <div class="item-info">
                         <div>
                             <div class="item-header">
@@ -400,7 +400,7 @@
                                 </div>
                             @endif
                         </div>
-                        
+
                         <div class="item-controls">
                             <div class="qty-wrapper">
                                 <button class="qty-btn" onclick="updateQuantity({{ $item->id }}, -1)">
@@ -545,7 +545,7 @@
 
     function updateTotals(subtotal) {
         // Assuming no extra fees for now based on previous code logic
-        const total = parseFloat(subtotal); 
+        const total = parseFloat(subtotal);
 
         document.getElementById('subtotal').textContent = `{{ $setting['currency']->value??"$"}} ${subtotal}`;
         document.getElementById('total').textContent = `{{ $setting['currency']->value??"$"}} ${total.toFixed(2)}`;
@@ -562,7 +562,7 @@
 
         items.forEach((item, index) => {
             const name = item.querySelector('.item-name')?.textContent.trim() || '';
-            
+
             let variantName = '';
             const variantEl = item.querySelector('.item-variant');
             if (variantEl) {

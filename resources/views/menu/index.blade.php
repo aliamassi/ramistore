@@ -8,111 +8,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Menu - {{ $selectedCategory }}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
         :root {
             --primary: #3B82F6;
             --primary-dark: #2563EB;
-            --primary-light: #60A5FA;
             --secondary: #8B5CF6;
-            --secondary-dark: #7C3AED;
             --accent: #EC4899;
-            --bg-color: #F8FAFC;
-            --card-bg: #FFFFFF;
-            --text-main: #1E293B;
-            --text-light: #64748B;
-            --success: #10B981;
-            --shadow-sm: 0 2px 8px rgba(59, 130, 246, 0.1);
-            --shadow-md: 0 8px 24px rgba(59, 130, 246, 0.15);
-            --shadow-lg: 0 16px 48px rgba(59, 130, 246, 0.2);
-            --radius-sm: 12px;
-            --radius-md: 16px;
-            --radius-lg: 24px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.5;
-            padding-bottom: 100px; /* Space for mobile cart bar */
+            background-color: #F8FAFC;
+            padding-bottom: 100px;
         }
 
         [dir="rtl"] body {
             font-family: 'Cairo', sans-serif;
-            text-align: right;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* ===== Header ===== */
-        .header {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-        }
-
-        .header.scrolled {
-            background: rgba(255, 255, 255, 0.98);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .restaurant-banner {
-            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 50%, #EC4899 100%);
-            color: white;
-            padding: 40px 0 60px;
+        /* Slider Styles */
+        .hero-carousel {
+            height: 400px;
             position: relative;
             overflow: hidden;
         }
 
-        .restaurant-banner::before {
+        .hero-carousel .carousel-item {
+            height: 400px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        .hero-carousel .carousel-item::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');
-            opacity: 0.3;
+            inset: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 50%, rgba(0,0,0,0.5) 100%);
+            z-index: 1;
         }
 
-        .banner-content-wrapper {
-            position: relative;
+        .carousel-indicators {
             z-index: 2;
+            margin-bottom: 20px;
         }
 
-        .restaurant-card {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        .carousel-indicators [data-bs-target] {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.4);
+            border: none;
+            transition: all 0.3s ease;
         }
 
-        .banner-content {
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
+        .carousel-indicators .active {
+            width: 30px;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        /* Restaurant Info Card */
+        .restaurant-info-section {
+            background: white;
+            padding: 2rem 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
 
         .logo-wrapper {
@@ -122,7 +90,6 @@
             background: white;
             padding: 4px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-            flex-shrink: 0;
             position: relative;
         }
 
@@ -155,207 +122,98 @@
             border-radius: 12px;
         }
 
-        .restaurant-info h1 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.3px;
-        }
-
-        .tags-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
         .tag-pill {
-            background: rgba(255,255,255,0.25);
+            background: #F8FAFC;
             padding: 4px 12px;
             border-radius: 100px;
             font-size: 12px;
             font-weight: 500;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.25);
-        }
-
-        .contact-info-bar {
-            margin-top: 16px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding-top: 16px;
-            border-top: 1px solid rgba(255,255,255,0.15);
+            border: 1px solid rgba(0,0,0,0.08);
         }
 
         .contact-item {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: white;
-            font-size: 13px;
-            text-decoration: none;
-            background: rgba(255,255,255,0.2);
-            padding: 6px 14px;
+            background: #F8FAFC;
+            padding: 8px 16px;
             border-radius: 50px;
+            border: 1px solid rgba(0,0,0,0.08);
+            text-decoration: none;
+            color: #1E293B;
             transition: all 0.3s;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.25);
         }
 
         .contact-item:hover {
-            background: rgba(255,255,255,0.3);
+            background: var(--primary);
+            color: white;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
         .contact-item i {
-            color: var(--accent);
-            font-size: 14px;
+            color: var(--primary);
         }
 
-        /* ===== Navigation ===== */
-        .nav-scroller {
+        .contact-item:hover i {
+            color: white;
+        }
+
+        /* Category Pills */
+        .category-nav {
             background: white;
-            padding: 16px 0;
-            border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-            position: relative;
-            z-index: 10;
+            padding: 1rem 0;
+            border-radius: 24px 24px 0 0;
             box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .nav-list {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding: 0 20px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .nav-list::-webkit-scrollbar {
-            display: none;
-        }
-
-        .nav-pill {
+        .nav-pills .nav-link {
             padding: 10px 20px;
             background: #F0F2F5;
-            color: var(--text-light);
+            color: #64748B;
             border-radius: 100px;
-            font-size: 15px;
             font-weight: 600;
-            text-decoration: none;
             white-space: nowrap;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             border: 1px solid transparent;
         }
 
-        .nav-pill.active {
+        .nav-pills .nav-link:hover {
+            background: #E4E7EB;
+            color: #1E293B;
+        }
+
+        .nav-pills .nav-link.active {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
         }
 
-        .nav-pill:hover:not(.active) {
-            background: #E4E7EB;
-            color: var(--text-main);
-        }
-
-        /* ===== Menu Grid ===== */
-        .menu-section {
-            padding: 30px 0;
-        }
-
-        .section-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 24px;
-            color: var(--text-main);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        [dir="rtl"] .section-title {
-            flex-direction: row;
-        }
-
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 24px;
-            background: var(--primary);
-            border-radius: 4px;
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 24px;
-        }
-
+        /* Product Cards */
         .product-card {
-            background: var(--card-bg);
-            border-radius: var(--radius-md);
+            background: white;
+            border-radius: 16px;
             padding: 20px;
-            display: flex;
-            gap: 20px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid rgba(0,0,0,0.03);
-            position: relative;
-            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+            height: 100%;
         }
 
         .product-card:hover {
             transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
             border-color: rgba(0,0,0,0.08);
-        }
-
-        .product-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .product-name {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--text-main);
-            line-height: 1.3;
-        }
-
-        .product-desc {
-            font-size: 14px;
-            color: var(--text-light);
-            margin-bottom: 16px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            line-height: 1.5;
-        }
-
-        .product-meta {
-            margin-top: auto;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .price {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--secondary);
         }
 
         .product-img-wrapper {
             width: 120px;
             height: 120px;
-            border-radius: var(--radius-sm);
+            border-radius: 12px;
             overflow: hidden;
-            flex-shrink: 0;
             position: relative;
         }
 
@@ -383,8 +241,7 @@
             right: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             color: var(--primary);
-            font-size: 18px;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
         }
 
         .product-card:hover .add-btn {
@@ -393,12 +250,7 @@
             transform: scale(1.1);
         }
 
-        [dir="rtl"] .add-btn {
-            right: auto;
-            left: 8px;
-        }
-
-        /* ===== Floating Cart ===== */
+        /* Floating Cart */
         .floating-cart {
             position: fixed;
             bottom: 24px;
@@ -410,30 +262,18 @@
             color: white;
             padding: 16px 24px;
             border-radius: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
             box-shadow: 0 12px 32px rgba(45, 52, 54, 0.3);
             z-index: 1000;
             cursor: pointer;
-            transition: transform 0.2s ease;
-            backdrop-filter: blur(10px);
+            transition: transform 0.2s;
         }
 
         .floating-cart:active {
             transform: translateX(-50%) scale(0.98);
         }
 
-        .cart-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 600;
-        }
-
         .cart-count-badge {
             background: var(--primary);
-            color: white;
             width: 28px;
             height: 28px;
             border-radius: 50%;
@@ -444,201 +284,174 @@
             font-weight: 700;
         }
 
-        .view-cart-text {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        [dir="rtl"] .cart-arrow {
-            transform: rotate(180deg);
-        }
-
-        .cart-arrow {
-            width: 32px;
-            height: 32px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* ===== Empty State ===== */
-        .empty-state {
-            text-align: center;
-            padding: 80px 20px;
-            color: var(--text-light);
-        }
-
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-            color: var(--primary);
-        }
-
-        /* Mobile Responsive */
         @media (max-width: 768px) {
-            .restaurant-banner {
-                padding: 30px 0 50px;
-            }
-
-            .logo-wrapper {
-                width: 64px;
-                height: 64px;
-            }
-
-            .restaurant-info h1 {
-                font-size: 24px;
-            }
-
-            .product-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .product-card {
-                padding: 16px;
-            }
-
-            .product-img-wrapper {
-                width: 100px;
-                height: 100px;
-            }
-
-            .contact-info-bar {
-                flex-direction: column;
-                gap: 10px;
-                align-items: flex-start;
-            }
-
-            .contact-item {
-                width: 100%;
+            .hero-carousel,
+            .hero-carousel .carousel-item {
+                height: 300px;
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="restaurant-banner">
-        <div class="container banner-content-wrapper">
-            <div class="restaurant-card">
-                <div class="banner-content">
-                    <div class="logo-wrapper">
-                        @if(!empty($user->logo))
-                            <img src="{{ $user->logo }}" alt="Logo" class="logo-img">
-                        @else
-                            <div class="logo-placeholder">
-                                {{ strtoupper(substr($restaurant['business_name']->value ?? 'R', 0, 1)) }}
-                            </div>
-                        @endif
-                    </div>
-                    <div class="restaurant-info">
-                        <h1>{{ $restaurant['business_name']->value ?? 'Restaurant Name' }}</h1>
-                        <div class="tags-wrapper">
-                            @if(isset($restaurant['tags']) && is_array($restaurant['tags']->value))
-                                @foreach($restaurant['tags']->value as $tag)
-                                    <span class="tag-pill">{{ $tag }}</span>
-                                @endforeach
-                            @else
-                                <span class="tag-pill">Delicious Food</span>
-                                <span class="tag-pill">Best Service</span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Contact Info Section --}}
-                @if(isset($restaurant['phone_number']) || isset($restaurant['contact_email']) || isset($restaurant['address']))
-                    <div class="contact-info-bar">
-                        @if(isset($restaurant['phone_number']))
-                            <a href="tel:{{ $restaurant['phone_number']->value }}" class="contact-item">
-                                <i class="fas fa-phone-alt"></i>
-                                <span>{{ $restaurant['phone_number']->value }}</span>
-                            </a>
-                        @endif
-
-                        @if(isset($restaurant['contact_email']))
-                            <a href="mailto:{{ $restaurant['contact_email']->value }}" class="contact-item">
-                                <i class="fas fa-envelope"></i>
-                                <span>{{ $restaurant['contact_email']->value }}</span>
-                            </a>
-                        @endif
-
-                        @if(isset($restaurant['address']))
-                            <div class="contact-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>{{ $restaurant['address']->value }}</span>
-                            </div>
-                        @endif
-                    </div>
-                @endif
-            </div>
-        </div>
-    </div>
-
-    <div class="nav-scroller">
-        <div class="container">
-            <div class="nav-list">
-                @foreach($categories as $category)
-                    <a href="{{ route('menu.index', ['name'=>$name, 'category' => $category->name] + request()->only('lang')) }}"
-                       class="nav-pill {{ $category->name === $selectedCategory ? 'active' : '' }}">
-                        {{ $category->name }}
-                    </a>
+    {{-- Bootstrap Carousel Slider --}}
+    <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            @if(!empty($sliders) && count($sliders) > 0)
+                @foreach($sliders as $index => $slider)
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ $index }}" 
+                            class="{{ $index === 0 ? 'active' : '' }}" 
+                            aria-current="{{ $index === 0 ? 'true' : 'false' }}" 
+                            aria-label="Slide {{ $index + 1 }}"></button>
                 @endforeach
-            </div>
+            @else
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+            @endif
+        </div>
+        
+        <div class="carousel-inner">
+            @if(!empty($sliders) && count($sliders) > 0)
+                @foreach($sliders as $index => $slider)
+                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}" 
+                         style="background-image: url('/storage/{{ $slider->image_path }}');">
+                    </div>
+                @endforeach
+            @else
+                {{-- Fallback slides --}}
+                <div class="carousel-item active" style="background-image: url('https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=1200');"></div>
+                <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=1200');"></div>
+                <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1601050690597-df0568f70950?w=1200');"></div>
+                <div class="carousel-item" style="background-image: url('https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=1200');"></div>
+            @endif
         </div>
     </div>
 
-    <div class="container">
-        <div class="menu-section">
-            <h2 class="section-title">{{ $selectedCategory }}</h2>
-
-            @if($products->count() > 0)
-                <div class="product-grid" id="product-grid">
-                    @include('menu.partials.products')
+    {{-- Restaurant Info Section --}}
+    <div class="restaurant-info-section">
+        <div class="container">
+            <div class="d-flex align-items-start gap-3">
+                <div class="logo-wrapper flex-shrink-0">
+                    @if(!empty($user->logo))
+                        <img src="{{ $user->logo }}" alt="Logo" class="logo-img">
+                    @else
+                        <div class="logo-placeholder">
+                            {{ strtoupper(substr($restaurant['business_name']->value ?? 'R', 0, 1)) }}
+                        </div>
+                    @endif
                 </div>
-
-                <!-- Load More Trigger -->
-                <div id="load-more-trigger" style="text-align: center; padding: 40px; display: none;">
-                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; color: var(--primary);"></i>
-                </div>
-            @else
-                <div class="empty-state">
-                    <div class="empty-icon">
-                        <i class="fas fa-utensils"></i>
+                <div class="flex-grow-1">
+                    <h1 class="fs-4 fw-bold mb-2">{{ $restaurant['business_name']->value ?? 'Restaurant Name' }}</h1>
+                    <div class="d-flex flex-wrap gap-2">
+                        @if(isset($restaurant['tags']) && is_array($restaurant['tags']->value))
+                            @foreach($restaurant['tags']->value as $tag)
+                                <span class="tag-pill">{{ $tag }}</span>
+                            @endforeach
+                        @else
+                            <span class="tag-pill">Delicious Food</span>
+                            <span class="tag-pill">Best Service</span>
+                        @endif
                     </div>
-                    <h3>No items available</h3>
-                    <p>Check back soon for delicious new additions!</p>
+                </div>
+            </div>
+
+            {{-- Contact Info --}}
+            @if(isset($restaurant['phone_number']) || isset($restaurant['contact_email']) || isset($restaurant['address']))
+                <div class="d-flex flex-wrap gap-2 mt-3 pt-3 border-top">
+                    @if(isset($restaurant['phone_number']))
+                        <a href="tel:{{ $restaurant['phone_number']->value }}" class="contact-item">
+                            <i class="fas fa-phone-alt"></i>
+                            <span>{{ $restaurant['phone_number']->value }}</span>
+                        </a>
+                    @endif
+
+                    @if(isset($restaurant['contact_email']))
+                        <a href="mailto:{{ $restaurant['contact_email']->value }}" class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>{{ $restaurant['contact_email']->value }}</span>
+                        </a>
+                    @endif
+
+                    @if(isset($restaurant['address']))
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>{{ $restaurant['address']->value }}</span>
+                        </div>
+                    @endif
                 </div>
             @endif
         </div>
     </div>
 
+    {{-- Category Navigation --}}
+    <div class="category-nav">
+        <div class="container">
+            <ul class="nav nav-pills flex-nowrap overflow-auto">
+                @foreach($categories as $category)
+                    <li class="nav-item">
+                        <a href="{{ route('menu.index', ['name'=>$name, 'category' => $category->name] + request()->only('lang')) }}"
+                           class="nav-link {{ $category->name === $selectedCategory ? 'active' : '' }}">
+                            {{ $category->name }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+
+    {{-- Products Section --}}
+    <div class="container py-4">
+        <h2 class="fs-3 fw-bold mb-4 d-flex align-items-center gap-3">
+            <span style="width: 4px; height: 24px; background: var(--primary); border-radius: 4px;"></span>
+            {{ $selectedCategory }}
+        </h2>
+
+        @if($products->count() > 0)
+            <div class="row g-4" id="product-grid">
+                @include('menu.partials.products')
+            </div>
+
+            <!-- Load More Trigger -->
+            <div id="load-more-trigger" class="text-center py-5" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        @else
+            <div class="text-center py-5 text-muted">
+                <i class="fas fa-utensils fs-1 mb-3 opacity-50"></i>
+                <h3 class="fs-5 fw-bold">No items available</h3>
+                <p>Check back soon for delicious new additions!</p>
+            </div>
+        @endif
+    </div>
+
+    {{-- Floating Cart --}}
     @if(!empty($cartCount) && $cartCount > 0)
         <div class="floating-cart" onclick="window.location.href='{{ route('cart.index', $name) }}{{ request()->has('lang') ? '?lang=' . request('lang') : '' }}'">
-            <div class="cart-info">
-                <div class="cart-count-badge">{{ $cartCount }}</div>
-                <span>Items in Cart</span>
-            </div>
-            <div class="view-cart-text">View Cart</div>
-            <div class="cart-arrow">
-                <i class="fas fa-arrow-right"></i>
+            <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3 fw-semibold">
+                    <div class="cart-count-badge">{{ $cartCount }}</div>
+                    <span>Items in Cart</span>
+                </div>
+                <div class="fw-semibold">View Cart</div>
+                <div style="width: 32px; height: 32px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-arrow-right"></i>
+                </div>
             </div>
         </div>
     @endif
 
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
-        // Simple scroll effect for header if we had one separate from banner
-        window.addEventListener('scroll', function() {
-            const nav = document.querySelector('.nav-scroller');
-            if (window.scrollY > 150) {
-                nav.style.position = 'sticky';
-                nav.style.top = '0';
-                nav.style.borderRadius = '0';
-            } else {
-                nav.style.position = 'relative';
-                nav.style.borderRadius = '24px 24px 0 0';
-            }
+        // Initialize carousel with autoplay
+        const carousel = new bootstrap.Carousel(document.getElementById('heroCarousel'), {
+            interval: 5000,
+            ride: 'carousel'
         });
 
         // Infinite Scroll
@@ -668,7 +481,7 @@
             try {
                 const url = new URL(window.location.href);
                 url.searchParams.set('page', page);
-                
+
                 const response = await fetch(url.toString(), {
                     headers: {
                         'X-Requested-With': 'XMLHttpRequest'

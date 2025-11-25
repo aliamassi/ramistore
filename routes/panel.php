@@ -35,6 +35,10 @@ Route::middleware('auth')->group(function () {
     Route::post('admin/upload', [AdminController::class,'uploadImage']);
     Route::get('settings', [SettingsController::class,'index']);
     Route::post('settings', [SettingsController::class,'store']);
+    
+    // Slider routes
+    Route::apiResource('slider', \App\Http\Controllers\Admin\SliderController::class);
+    Route::post('slider/reorder', [\App\Http\Controllers\Admin\SliderController::class, 'updateOrder']);
 });
 //Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //

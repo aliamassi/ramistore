@@ -66,6 +66,18 @@
           >
             <v-list-item-title>Ordering settings</v-list-item-title>
           </v-list-item>
+
+          <v-list-item
+              class="child-item"
+              :class="activeKey === 'sliders' ? 'active-child' : ''"
+              @click="activeKey = 'sliders'"
+          >
+            <v-list-item-title>
+              <nuxt-link to="/sliders">
+                Sliders
+              </nuxt-link>
+            </v-list-item-title>
+          </v-list-item>
         </v-list-group>
         <v-list-group
             value="Settings"
@@ -114,7 +126,7 @@ const route = useRoute()
 // Use ref instead of reactive for better v-model binding
 const openedGroups = ref<string[]>([])
 
-const activeKey = ref<'product' | 'welcome' | 'ordering'| 'business-settings'>('product')
+const activeKey = ref<'product' | 'welcome' | 'ordering'| 'business-settings' | 'sliders'>('product')
 
 // Watch route and open menu group if on a menu-related page
 watch(() => route.path, (newPath) => {

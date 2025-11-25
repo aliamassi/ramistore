@@ -2,7 +2,7 @@
     $locale = app()->getLocale();
     $dir = $locale == 'ar' ? 'rtl' : 'ltr';
 @endphp
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="{{ $locale }}" dir="{{ $dir }}">
 <head>
     <meta charset="UTF-8">
@@ -383,188 +383,188 @@
 </head>
 <body>
 
-    <!-- Hero Section -->
-    <div class="hero-section" style="background-image: url('{{ $item->image ? asset($item->image) : 'https://via.placeholder.com/800x600?text=Delicious+Food' }}');">
-        <div class="hero-overlay"></div>
-        <div class="header-controls">
-            <button class="control-btn" onclick="window.history.back()">
-                <i class="fas fa-arrow-left"></i>
-            </button>
-            <button class="control-btn">
-                <i class="fas fa-share-alt"></i>
-            </button>
-        </div>
+<!-- Hero Section -->
+<div class="hero-section" style="background-image: url('{{ $item->image ? asset($item->image) : 'https://via.placeholder.com/800x600?text=Delicious+Food' }}');">
+    <div class="hero-overlay"></div>
+    <div class="header-controls">
+        <button class="control-btn" onclick="window.history.back()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <button class="control-btn">
+            <i class="fas fa-share-alt"></i>
+        </button>
     </div>
+</div>
 
-    <!-- Content Card -->
-    <div class="content-card">
-        <div class="container">
-            <div class="item-header">
-                <h1 class="item-title">{{ $item->name }}</h1>
-                <p class="item-desc">{{ $item->description }}</p>
-            </div>
+<!-- Content Card -->
+<div class="content-card">
+    <div class="container">
+        <div class="item-header">
+            <h1 class="item-title">{{ $item->name }}</h1>
+            <p class="item-desc">{{ $item->description }}</p>
+        </div>
 
-            <form id="add-to-cart-form">
-                @csrf
-                <input type="hidden" name="product_id" value="{{ $item->id }}">
-                <input type="hidden" name="quantity" id="form-qty" value="1">
+        <form id="add-to-cart-form">
+            @csrf
+            <input type="hidden" name="product_id" value="{{ $item->id }}">
+            <input type="hidden" name="quantity" id="form-qty" value="1">
 
-                {{-- VARIANTS (type = variants) --}}
-                @if($item->type === 'variants' && $item->variants->count() > 0)
-                    <div class="section-label">
-                        <span>Choose Option</span>
-                        <span class="required-badge">Required</span>
-                    </div>
-                    <div class="options-list">
-                        @foreach($item->variants as $index => $variant)
-                            <div class="option-card {{ $index === 0 ? 'selected' : '' }}"
-                                 onclick="selectOption(this, '{{ $variant->id }}', {{ $variant->price }})">
-                                <div class="option-info">
-                                    <span class="option-name">{{ $variant->name }}</span>
-                                    <span class="option-price">{{ $setting['currency']->value ?? '$' }} {{ number_format($variant->price, 2) }}</span>
-                                </div>
-                                <div class="check-circle"></div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <input type="hidden" name="variant_id" id="selected-variant-id" value="{{ $item->variants->first()->id }}">
-                    <input type="hidden" id="current-price" value="{{ $item->variants->first()->price }}">
-                
-                {{-- SIMPLE PRODUCT OPTIONS --}}
-                @elseif($item->customizable && $item->customizationOptions->count() > 0)
-                    <div class="section-label">
-                        <span>Quick Choices</span>
-                        <span class="required-badge">Optional</span>
-                    </div>
-                    <div class="options-list">
-                        @foreach($item->customizationOptions as $option)
-                            <div class="option-card {{ $option->is_default ? 'selected' : '' }}"
-                                 onclick="selectOption(this, '{{ $option->id }}', {{ $item->price }})">
-                                <div class="option-info">
-                                    <span class="option-name">{{ $option->name }}</span>
-                                    <span class="option-price">{{ $option->detail }}</span>
-                                </div>
-                                <div class="check-circle"></div>
-                            </div>
-                        @endforeach
-                    </div>
-                    <input type="hidden" name="customization_option_id" id="selected-option-id" value="{{ $item->customizationOptions->where('is_default', true)->first()->id ?? '' }}">
-                    <input type="hidden" id="current-price" value="{{ $item->price }}">
-                @else
-                    <input type="hidden" id="current-price" value="{{ $item->price }}">
-                @endif
-
-                <div class="comments-wrapper">
-                    <div class="section-label">Special Instructions</div>
-                    <textarea name="comments" class="comments-input" placeholder="Add a note for the kitchen (e.g. no onions, extra spicy)..."></textarea>
+            {{-- VARIANTS (type = variants) --}}
+            @if($item->type === 'variants' && $item->variants->count() > 0)
+                <div class="section-label">
+                    <span>Choose Option</span>
+                    <span class="required-badge">Required</span>
                 </div>
-            </form>
-        </div>
-    </div>
+                <div class="options-list">
+                    @foreach($item->variants as $index => $variant)
+                        <div class="option-card {{ $index === 0 ? 'selected' : '' }}"
+                             onclick="selectOption(this, '{{ $variant->id }}', {{ $variant->price }})">
+                            <div class="option-info">
+                                <span class="option-name">{{ $variant->name }}</span>
+                                <span class="option-price">{{ $setting['currency']->value ?? '$' }} {{ number_format($variant->price, 2) }}</span>
+                            </div>
+                            <div class="check-circle"></div>
+                        </div>
+                    @endforeach
+                </div>
+                <input type="hidden" name="variant_id" id="selected-variant-id" value="{{ $item->variants->first()->id }}">
+                <input type="hidden" id="current-price" value="{{ $item->variants->first()->price }}">
 
-    <!-- Bottom Bar -->
-    <div class="bottom-bar">
-        <div class="bottom-bar-inner" style="width: 100%; display: flex; gap: 16px; max-width: 800px; margin: 0 auto;">
-            <div class="qty-control">
-                <button class="qty-btn" onclick="updateQty(-1)">
-                    <i class="fas fa-minus" style="font-size: 14px;"></i>
-                </button>
-                <div class="qty-val" id="display-qty">1</div>
-                <button class="qty-btn" onclick="updateQty(1)">
-                    <i class="fas fa-plus" style="font-size: 14px;"></i>
-                </button>
+                {{-- SIMPLE PRODUCT OPTIONS --}}
+            @elseif($item->customizable && $item->customizationOptions->count() > 0)
+                <div class="section-label">
+                    <span>Quick Choices</span>
+                    <span class="required-badge">Optional</span>
+                </div>
+                <div class="options-list">
+                    @foreach($item->customizationOptions as $option)
+                        <div class="option-card {{ $option->is_default ? 'selected' : '' }}"
+                             onclick="selectOption(this, '{{ $option->id }}', {{ $item->price }})">
+                            <div class="option-info">
+                                <span class="option-name">{{ $option->name }}</span>
+                                <span class="option-price">{{ $option->detail }}</span>
+                            </div>
+                            <div class="check-circle"></div>
+                        </div>
+                    @endforeach
+                </div>
+                <input type="hidden" name="customization_option_id" id="selected-option-id" value="{{ $item->customizationOptions->where('is_default', true)->first()->id ?? '' }}">
+                <input type="hidden" id="current-price" value="{{ $item->price }}">
+            @else
+                <input type="hidden" id="current-price" value="{{ $item->price }}">
+            @endif
+
+            <div class="comments-wrapper">
+                <div class="section-label">Special Instructions</div>
+                <textarea name="comments" class="comments-input" placeholder="Add a note for the kitchen (e.g. no onions, extra spicy)..."></textarea>
             </div>
-            
-            <button class="add-btn" onclick="addToCart()">
-                <span>Add to Cart</span>
-                <span id="total-price">{{ $setting['currency']->value ?? '$' }} {{ number_format($item->type === 'variants' ? $item->variants->first()->price : $item->price, 2) }}</span>
+        </form>
+    </div>
+</div>
+
+<!-- Bottom Bar -->
+<div class="bottom-bar">
+    <div class="bottom-bar-inner" style="width: 100%; display: flex; gap: 16px; max-width: 800px; margin: 0 auto;">
+        <div class="qty-control">
+            <button class="qty-btn" onclick="updateQty(-1)">
+                <i class="fas fa-minus" style="font-size: 14px;"></i>
+            </button>
+            <div class="qty-val" id="display-qty">1</div>
+            <button class="qty-btn" onclick="updateQty(1)">
+                <i class="fas fa-plus" style="font-size: 14px;"></i>
             </button>
         </div>
+
+        <button class="add-btn" onclick="addToCart()">
+            <span>Add to Cart</span>
+            <span id="total-price">{{ $setting['currency']->value ?? '$' }} {{ number_format($item->type === 'variants' ? $item->variants->first()->price : $item->price, 2) }}</span>
+        </button>
     </div>
+</div>
 
-    <script>
-        let quantity = 1;
-        
-        function updateQty(change) {
-            quantity += change;
-            if (quantity < 1) quantity = 1;
-            
-            document.getElementById('display-qty').textContent = quantity;
-            document.getElementById('form-qty').value = quantity;
-            updateTotal();
-        }
+<script>
+    let quantity = 1;
 
-        function selectOption(element, id, price) {
-            // Deselect all
-            document.querySelectorAll('.option-card').forEach(el => el.classList.remove('selected'));
-            
-            // Select clicked
-            element.classList.add('selected');
-            
-            // Update hidden inputs
-            const variantInput = document.getElementById('selected-variant-id');
-            if (variantInput) variantInput.value = id;
-            
-            const optionInput = document.getElementById('selected-option-id');
-            if (optionInput) optionInput.value = id;
-            
-            // Update price
-            document.getElementById('current-price').value = price;
-            updateTotal();
-        }
+    function updateQty(change) {
+        quantity += change;
+        if (quantity < 1) quantity = 1;
 
-        function updateTotal() {
-            const price = parseFloat(document.getElementById('current-price').value);
-            const total = price * quantity;
-            document.getElementById('total-price').textContent = `{{ $setting['currency']->value ?? '$' }} ${total.toFixed(2)}`;
-        }
+        document.getElementById('display-qty').textContent = quantity;
+        document.getElementById('form-qty').value = quantity;
+        updateTotal();
+    }
 
-        async function addToCart() {
-            const btn = document.querySelector('.add-btn');
-            const originalContent = btn.innerHTML;
-            
-            btn.disabled = true;
-            btn.innerHTML = '<span>Adding...</span>';
+    function selectOption(element, id, price) {
+        // Deselect all
+        document.querySelectorAll('.option-card').forEach(el => el.classList.remove('selected'));
 
-            try {
-                const form = document.getElementById('add-to-cart-form');
-                const formData = new FormData(form);
+        // Select clicked
+        element.classList.add('selected');
 
-                const response = await fetch('{{ route("cart.add", $name) }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                });
+        // Update hidden inputs
+        const variantInput = document.getElementById('selected-variant-id');
+        if (variantInput) variantInput.value = id;
 
-                const data = await response.json();
+        const optionInput = document.getElementById('selected-option-id');
+        if (optionInput) optionInput.value = id;
 
-                if (data.success) {
-                    btn.style.background = '#00b894';
-                    btn.innerHTML = '<span><i class="fas fa-check"></i> Added</span>';
-                    
-                    const langParam = new URLSearchParams(window.location.search).get('lang');
-                    const cartUrl = '{{ route("cart.index", $name) }}' + (langParam ? '?lang=' + langParam : '');
-                    
-                    setTimeout(() => {
-                        window.location.href = cartUrl;
-                    }, 800);
-                } else {
-                    throw new Error(data.message || 'Failed to add to cart');
-                }
-            } catch (error) {
-                console.error(error);
-                btn.style.background = '#ff7675';
-                btn.innerHTML = '<span>Error</span>';
+        // Update price
+        document.getElementById('current-price').value = price;
+        updateTotal();
+    }
+
+    function updateTotal() {
+        const price = parseFloat(document.getElementById('current-price').value);
+        const total = price * quantity;
+        document.getElementById('total-price').textContent = `{{ $setting['currency']->value ?? '$' }} ${total.toFixed(2)}`;
+    }
+
+    async function addToCart() {
+        const btn = document.querySelector('.add-btn');
+        const originalContent = btn.innerHTML;
+
+        btn.disabled = true;
+        btn.innerHTML = '<span>Adding...</span>';
+
+        try {
+            const form = document.getElementById('add-to-cart-form');
+            const formData = new FormData(form);
+
+            const response = await fetch('{{ route("cart.add", $name) }}', {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                btn.style.background = '#00b894';
+                btn.innerHTML = '<span><i class="fas fa-check"></i> Added</span>';
+
+                const langParam = new URLSearchParams(window.location.search).get('lang');
+                const cartUrl = '{{ route("cart.index", $name) }}' + (langParam ? '?lang=' + langParam : '');
+
                 setTimeout(() => {
-                    btn.disabled = false;
-                    btn.style.background = ''; // Reset to CSS default (primary)
-                    btn.innerHTML = originalContent;
-                }, 2000);
+                    window.location.href = cartUrl;
+                }, 800);
+            } else {
+                throw new Error(data.message || 'Failed to add to cart');
             }
+        } catch (error) {
+            console.error(error);
+            btn.style.background = '#ff7675';
+            btn.innerHTML = '<span>Error</span>';
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.style.background = ''; // Reset to CSS default (primary)
+                btn.innerHTML = originalContent;
+            }, 2000);
         }
-    </script>
+    }
+</script>
 </body>
 </html>
