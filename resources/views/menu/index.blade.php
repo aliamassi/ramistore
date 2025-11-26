@@ -920,45 +920,7 @@
             interval: 5000,
             ride: 'carousel'
         });
-
-        // Dark Mode Toggle
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        const body = document.body;
-        const darkModeIcon = darkModeToggle.querySelector('i');
-
-        // Check for saved dark mode preference
-        if (localStorage.getItem('darkMode') === 'enabled') {
-            body.classList.add('dark-mode');
-            darkModeIcon.classList.remove('fa-moon');
-            darkModeIcon.classList.add('fa-sun');
-            darkModeToggle.classList.add('active');
-        }
-
-        darkModeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            darkModeToggle.classList.toggle('active');
-
-            if (body.classList.contains('dark-mode')) {
-                darkModeIcon.classList.remove('fa-moon');
-                darkModeIcon.classList.add('fa-sun');
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                darkModeIcon.classList.remove('fa-sun');
-                darkModeIcon.classList.add('fa-moon');
-                localStorage.setItem('darkMode', 'disabled');
-            }
-        });
-
-        // Language Toggle
-        const langToggle = document.getElementById('langToggle');
-        langToggle.addEventListener('click', () => {
-            const currentLang = '{{ app()->getLocale() }}';
-            const newLang = currentLang === 'ar' ? 'en' : 'ar';
-            const url = new URL(window.location.href);
-            url.searchParams.set('lang', newLang);
-            window.location.href = url.toString();
-        });
-
+        
         // Mobile Menu Toggle
         const menuToggle = document.getElementById('menuToggle');
         const mobileMenu = document.getElementById('mobileMenu');
