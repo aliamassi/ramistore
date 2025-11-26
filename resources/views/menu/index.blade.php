@@ -1,20 +1,8 @@
-@php
-    $locale = app()->getLocale();
-    $dir = $locale == 'ar' ? 'rtl' : 'ltr';
-@endphp
-<!DOCTYPE html>
-<html lang="{{ $locale }}" dir="{{ $dir }}">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Menu - {{ $selectedCategory }}</title>
+@extends('layouts._layout')
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+@section('title', __('Contact Us') . ' - ' . ($restaurant['business_name']->value ?? 'Restaurant'))
 
+@push('styles')
     <style>
         :root {
             --primary: #3B82F6;
@@ -758,87 +746,9 @@
             }
         }
     </style>
-</head>
-<body>
+@endpush
 
-    {{-- Top Navigation Bar --}}
-    <nav class="top-navbar">
-        <div class="container">
-            <div class="d-flex align-items-center justify-content-between w-100">
-
-                {{-- Left: Logo & Brand Name --}}
-                <a href="{{ route('menu.index', $name) }}" class="brand-logo">
-                    <div class="brand-name">
-                        <div class="brand-name-main">{{ $restaurant['business_name']->value ?? 'Restaurant' }}</div>
-                    </div>
-                    @if(!empty($user->logo))
-                        <img src="{{ $user->logo }}" alt="Logo" class="brand-logo-img">
-                    @else
-                        <div class="brand-logo-placeholder">
-                            {{ strtoupper(substr($restaurant['business_name']->value ?? 'R', 0, 1)) }}
-                        </div>
-                    @endif
-                </a>
-
-                {{-- Center: Navigation Menu (Desktop) --}}
-                <nav class="nav-menu">
-                    <a href="{{ route('menu.index', $name) }}" class="nav-link {{ request()->routeIs('menu.index') ? 'active' : '' }}">
-                        {{ __('Home') }}
-                    </a>
-                    <a href="{{ route('menu.about', $name) }}" class="nav-link {{ request()->routeIs('menu.about') ? 'active' : '' }}">
-                        {{ __('About') }}
-                    </a>
-                    <a href="{{ route('menu.contact', $name) }}" class="nav-link {{ request()->routeIs('menu.contact') ? 'active' : '' }}">
-                        {{ __('Contact') }}
-                    </a>
-                </nav>
-
-                {{-- Right: Control Buttons --}}
-                <div class="nav-controls">
-                    <button class="nav-btn" id="menuToggle" title="Menu">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    <button class="nav-btn" id="darkModeToggle" title="Dark Mode">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                    <button class="nav-btn" id="langToggle" title="Language">
-                        <i class="fas fa-globe"></i>
-                    </button>
-                </div>
-
-
-            </div>
-        </div>
-    </nav>
-
-    {{-- Mobile Menu Overlay --}}
-    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
-
-    {{-- Mobile Menu Sidebar --}}
-    <div class="mobile-menu" id="mobileMenu">
-        <div class="mobile-menu-header">
-            <div class="brand-name-main">{{ __('Menu') }}</div>
-            <button class="mobile-menu-close" id="mobileMenuClose">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-
-        <div class="mobile-nav-links">
-            <a href="{{ route('menu.index', $name) }}" class="mobile-nav-link {{ request()->routeIs('menu.index') ? 'active' : '' }}">
-                <i class="fas fa-home"></i>
-                {{ __('Home') }}
-            </a>
-            <a href="{{ route('menu.about', $name) }}" class="mobile-nav-link {{ request()->routeIs('menu.about') ? 'active' : '' }}">
-                <i class="fas fa-info-circle"></i>
-                {{ __('About') }}
-            </a>
-            <a href="{{ route('menu.contact', $name) }}" class="mobile-nav-link {{ request()->routeIs('menu.contact') ? 'active' : '' }}">
-                <i class="fas fa-envelope"></i>
-                {{ __('Contact') }}
-            </a>
-        </div>
-    </div>
-
+@section('content')
     {{-- Bootstrap Carousel Slider --}}
     <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel">
         <div class="carousel-indicators">
@@ -903,42 +813,42 @@
             </div>
 
             {{-- Contact Info - Compact Design with Bootstrap Grid --}}
-{{--            @if(isset($restaurant['phone_number']) || isset($restaurant['contact_email']) || isset($restaurant['address']))--}}
-{{--                <div class="row g-2 mt-3 pt-3 border-top">--}}
-{{--                    @if(isset($restaurant['phone_number']))--}}
-{{--                        <div class="col">--}}
-{{--                            <a href="tel:{{ $restaurant['phone_number']->value }}" --}}
-{{--                               class="contact-icon-btn w-100" --}}
-{{--                               data-tooltip="{{ $restaurant['phone_number']->value }}">--}}
-{{--                                <i class="fas fa-phone-alt"></i>--}}
-{{--                                <span class="contact-text">{{ $restaurant['phone_number']->value }}</span>--}}
-{{--                            </a>--}}
-{{--                        </div>--}}
-{{--                    @endif--}}
+            {{--            @if(isset($restaurant['phone_number']) || isset($restaurant['contact_email']) || isset($restaurant['address']))--}}
+            {{--                <div class="row g-2 mt-3 pt-3 border-top">--}}
+            {{--                    @if(isset($restaurant['phone_number']))--}}
+            {{--                        <div class="col">--}}
+            {{--                            <a href="tel:{{ $restaurant['phone_number']->value }}" --}}
+            {{--                               class="contact-icon-btn w-100" --}}
+            {{--                               data-tooltip="{{ $restaurant['phone_number']->value }}">--}}
+            {{--                                <i class="fas fa-phone-alt"></i>--}}
+            {{--                                <span class="contact-text">{{ $restaurant['phone_number']->value }}</span>--}}
+            {{--                            </a>--}}
+            {{--                        </div>--}}
+            {{--                    @endif--}}
 
-{{--                    @if(isset($restaurant['contact_email']))--}}
-{{--                        <div class="col">--}}
-{{--                            <a href="mailto:{{ $restaurant['contact_email']->value }}" --}}
-{{--                               class="contact-icon-btn w-100" --}}
-{{--                               data-tooltip="{{ $restaurant['contact_email']->value }}">--}}
-{{--                                <i class="fas fa-envelope"></i>--}}
-{{--                                <span class="contact-text">{{ $restaurant['contact_email']->value }}</span>--}}
-{{--                            </a>--}}
-{{--                        </div>--}}
-{{--                    @endif--}}
+            {{--                    @if(isset($restaurant['contact_email']))--}}
+            {{--                        <div class="col">--}}
+            {{--                            <a href="mailto:{{ $restaurant['contact_email']->value }}" --}}
+            {{--                               class="contact-icon-btn w-100" --}}
+            {{--                               data-tooltip="{{ $restaurant['contact_email']->value }}">--}}
+            {{--                                <i class="fas fa-envelope"></i>--}}
+            {{--                                <span class="contact-text">{{ $restaurant['contact_email']->value }}</span>--}}
+            {{--                            </a>--}}
+            {{--                        </div>--}}
+            {{--                    @endif--}}
 
-{{--                    @if(isset($restaurant['address']))--}}
-{{--                        <div class="col">--}}
-{{--                            <button class="contact-icon-btn w-100" --}}
-{{--                                    data-tooltip="{{ $restaurant['address']->value }}"--}}
-{{--                                    onclick="alert('{{ $restaurant['address']->value }}')">--}}
-{{--                                <i class="fas fa-map-marker-alt"></i>--}}
-{{--                                <span class="contact-text">{{ $restaurant['address']->value }}</span>--}}
-{{--                            </button>--}}
-{{--                        </div>--}}
-{{--                    @endif--}}
-{{--                </div>--}}
-{{--            @endif--}}
+            {{--                    @if(isset($restaurant['address']))--}}
+            {{--                        <div class="col">--}}
+            {{--                            <button class="contact-icon-btn w-100" --}}
+            {{--                                    data-tooltip="{{ $restaurant['address']->value }}"--}}
+            {{--                                    onclick="alert('{{ $restaurant['address']->value }}')">--}}
+            {{--                                <i class="fas fa-map-marker-alt"></i>--}}
+            {{--                                <span class="contact-text">{{ $restaurant['address']->value }}</span>--}}
+            {{--                            </button>--}}
+            {{--                        </div>--}}
+            {{--                    @endif--}}
+            {{--                </div>--}}
+            {{--            @endif--}}
         </div>
     </div>
 
@@ -1001,8 +911,8 @@
         </div>
     @endif
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+@endsection
+@push('scripts')
 
     <script>
         // Initialize carousel with autoplay
@@ -1042,7 +952,7 @@
         // Language Toggle
         const langToggle = document.getElementById('langToggle');
         langToggle.addEventListener('click', () => {
-            const currentLang = '{{ $locale }}';
+            const currentLang = '{{ app()->getLocale() }}';
             const newLang = currentLang === 'ar' ? 'en' : 'ar';
             const url = new URL(window.location.href);
             url.searchParams.set('lang', newLang);
@@ -1129,5 +1039,4 @@
             }
         }
     </script>
-</body>
-</html>
+@endpush

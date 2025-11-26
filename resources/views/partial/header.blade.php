@@ -23,10 +23,10 @@
                     {{ __('Home') }}
                 </a>
                 <a href="{{ route('menu.about', $name) }}" class="nav-link {{ request()->routeIs('menu.about') ? 'active' : '' }}">
-                    {{ __('About') }}
+                    {{ __('About Us') }}
                 </a>
                 <a href="{{ route('menu.contact', $name) }}" class="nav-link {{ request()->routeIs('menu.contact') ? 'active' : '' }}">
-                    {{ __('Contact') }}
+                    {{ __('Contact Us') }}
                 </a>
             </nav>
 
@@ -66,11 +66,11 @@
         </a>
         <a href="{{ route('menu.about', $name) }}" class="mobile-nav-link {{ request()->routeIs('menu.about') ? 'active' : '' }}">
             <i class="fas fa-info-circle"></i>
-            {{ __('About') }}
+            {{ __('About Us') }}
         </a>
         <a href="{{ route('menu.contact', $name) }}" class="mobile-nav-link {{ request()->routeIs('menu.contact') ? 'active' : '' }}">
             <i class="fas fa-envelope"></i>
-            {{ __('Contact') }}
+            {{ __('Contact Us') }}
         </a>
     </div>
 </div>
