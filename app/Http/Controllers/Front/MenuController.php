@@ -81,4 +81,26 @@ class MenuController extends Controller
         $setting = Setting::all()->keyBy('key');
         return view('menu.show', compact('name','item', 'setting'));
     }
+
+    public function about($name)
+    {
+        $setting = Setting::where('key', 'business_name')->where('value', $name)->first();
+        if (empty($setting)) abort(404);
+        
+        $admin = Admin::find($setting->admin_id);
+        $restaurant = $admin->settings->keyBy('key');
+        
+        return view('menu.about', compact('name', 'restaurant', 'admin'))->with('user', $admin);
+    }
+
+    public function contact($name)
+    {
+        $setting = Setting::where('key', 'business_name')->where('value', $name)->first();
+        if (empty($setting)) abort(404);
+        
+        $admin = Admin::find($setting->admin_id);
+        $restaurant = $admin->settings->keyBy('key');
+        
+        return view('menu.contact', compact('name', 'restaurant', 'admin'))->with('user', $admin);
+    }
 }

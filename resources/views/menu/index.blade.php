@@ -122,6 +122,202 @@
             text-align: right;
         }
 
+        /* Navigation Menu */
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin: 0 auto;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #64748B;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s;
+            position: relative;
+            padding: 8px 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--primary);
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            z-index: 1000;
+            padding: 2rem;
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        [dir="rtl"] .mobile-menu {
+            right: auto;
+            left: -100%;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        [dir="rtl"] .mobile-menu.active {
+            right: auto;
+            left: 0;
+        }
+
+        .mobile-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .mobile-menu-close {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background: #F8FAFC;
+            color: #64748B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .mobile-menu-close:hover {
+            background: #E2E8F0;
+            color: var(--primary);
+        }
+
+        .mobile-nav-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .mobile-nav-link {
+            text-decoration: none;
+            color: #1E293B;
+            font-weight: 500;
+            font-size: 16px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .mobile-nav-link:hover {
+            background: #F8FAFC;
+            color: var(--primary);
+        }
+
+        .mobile-nav-link.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .nav-btn#menuToggle {
+                display: none;
+            }
+        }
+
+        /* Dark mode for navigation */
+        body.dark-mode .nav-link {
+            color: #94A3B8;
+        }
+
+        body.dark-mode .nav-link:hover,
+        body.dark-mode .nav-link.active {
+            color: #38BDF8;
+        }
+
+        body.dark-mode .mobile-menu {
+            background: #334155;
+        }
+
+        body.dark-mode .mobile-menu-header {
+            border-bottom-color: #475569;
+        }
+
+        body.dark-mode .mobile-nav-link {
+            color: #E2E8F0;
+        }
+
+        body.dark-mode .mobile-nav-link:hover {
+            background: #475569;
+        }
+
+        body.dark-mode .mobile-menu-close {
+            background: #475569;
+            color: #94A3B8;
+        }
+
+        body.dark-mode .mobile-menu-close:hover {
+            background: #64748B;
+            color: white;
+        }
+
         /* Dark mode styles */
         body.dark-mode {
             background-color: #1E293B;
@@ -568,9 +764,9 @@
     {{-- Top Navigation Bar --}}
     <nav class="top-navbar">
         <div class="container">
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-between w-100">
 
-                {{-- Right: Logo & Brand Name --}}
+                {{-- Left: Logo & Brand Name --}}
                 <a href="{{ route('menu.index', $name) }}" class="brand-logo">
                     <div class="brand-name">
                         <div class="brand-name-main">{{ $restaurant['business_name']->value ?? 'Restaurant' }}</div>
@@ -584,7 +780,20 @@
                     @endif
                 </a>
 
-                {{-- Left: Control Buttons --}}
+                {{-- Center: Navigation Menu (Desktop) --}}
+                <nav class="nav-menu">
+                    <a href="{{ route('menu.index', $name) }}" class="nav-link {{ request()->routeIs('menu.index') ? 'active' : '' }}">
+                        {{ __('Home') }}
+                    </a>
+                    <a href="{{ route('menu.about', $name) }}" class="nav-link {{ request()->routeIs('menu.about') ? 'active' : '' }}">
+                        {{ __('About') }}
+                    </a>
+                    <a href="{{ route('menu.contact', $name) }}" class="nav-link {{ request()->routeIs('menu.contact') ? 'active' : '' }}">
+                        {{ __('Contact') }}
+                    </a>
+                </nav>
+
+                {{-- Right: Control Buttons --}}
                 <div class="nav-controls">
                     <button class="nav-btn" id="menuToggle" title="Menu">
                         <i class="fas fa-bars"></i>
@@ -601,6 +810,34 @@
             </div>
         </div>
     </nav>
+
+    {{-- Mobile Menu Overlay --}}
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+    {{-- Mobile Menu Sidebar --}}
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="brand-name-main">{{ __('Menu') }}</div>
+            <button class="mobile-menu-close" id="mobileMenuClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="mobile-nav-links">
+            <a href="{{ route('menu.index', $name) }}" class="mobile-nav-link {{ request()->routeIs('menu.index') ? 'active' : '' }}">
+                <i class="fas fa-home"></i>
+                {{ __('Home') }}
+            </a>
+            <a href="{{ route('menu.about', $name) }}" class="mobile-nav-link {{ request()->routeIs('menu.about') ? 'active' : '' }}">
+                <i class="fas fa-info-circle"></i>
+                {{ __('About') }}
+            </a>
+            <a href="{{ route('menu.contact', $name) }}" class="mobile-nav-link {{ request()->routeIs('menu.contact') ? 'active' : '' }}">
+                <i class="fas fa-envelope"></i>
+                {{ __('Contact') }}
+            </a>
+        </div>
+    </div>
 
     {{-- Bootstrap Carousel Slider --}}
     <div id="heroCarousel" class="carousel slide hero-carousel" data-bs-ride="carousel">
@@ -666,42 +903,42 @@
             </div>
 
             {{-- Contact Info - Compact Design with Bootstrap Grid --}}
-            @if(isset($restaurant['phone_number']) || isset($restaurant['contact_email']) || isset($restaurant['address']))
-                <div class="row g-2 mt-3 pt-3 border-top">
-                    @if(isset($restaurant['phone_number']))
-                        <div class="col">
-                            <a href="tel:{{ $restaurant['phone_number']->value }}" 
-                               class="contact-icon-btn w-100" 
-                               data-tooltip="{{ $restaurant['phone_number']->value }}">
-                                <i class="fas fa-phone-alt"></i>
-                                <span class="contact-text">{{ $restaurant['phone_number']->value }}</span>
-                            </a>
-                        </div>
-                    @endif
+{{--            @if(isset($restaurant['phone_number']) || isset($restaurant['contact_email']) || isset($restaurant['address']))--}}
+{{--                <div class="row g-2 mt-3 pt-3 border-top">--}}
+{{--                    @if(isset($restaurant['phone_number']))--}}
+{{--                        <div class="col">--}}
+{{--                            <a href="tel:{{ $restaurant['phone_number']->value }}" --}}
+{{--                               class="contact-icon-btn w-100" --}}
+{{--                               data-tooltip="{{ $restaurant['phone_number']->value }}">--}}
+{{--                                <i class="fas fa-phone-alt"></i>--}}
+{{--                                <span class="contact-text">{{ $restaurant['phone_number']->value }}</span>--}}
+{{--                            </a>--}}
+{{--                        </div>--}}
+{{--                    @endif--}}
 
-                    @if(isset($restaurant['contact_email']))
-                        <div class="col">
-                            <a href="mailto:{{ $restaurant['contact_email']->value }}" 
-                               class="contact-icon-btn w-100" 
-                               data-tooltip="{{ $restaurant['contact_email']->value }}">
-                                <i class="fas fa-envelope"></i>
-                                <span class="contact-text">{{ $restaurant['contact_email']->value }}</span>
-                            </a>
-                        </div>
-                    @endif
+{{--                    @if(isset($restaurant['contact_email']))--}}
+{{--                        <div class="col">--}}
+{{--                            <a href="mailto:{{ $restaurant['contact_email']->value }}" --}}
+{{--                               class="contact-icon-btn w-100" --}}
+{{--                               data-tooltip="{{ $restaurant['contact_email']->value }}">--}}
+{{--                                <i class="fas fa-envelope"></i>--}}
+{{--                                <span class="contact-text">{{ $restaurant['contact_email']->value }}</span>--}}
+{{--                            </a>--}}
+{{--                        </div>--}}
+{{--                    @endif--}}
 
-                    @if(isset($restaurant['address']))
-                        <div class="col">
-                            <button class="contact-icon-btn w-100" 
-                                    data-tooltip="{{ $restaurant['address']->value }}"
-                                    onclick="alert('{{ $restaurant['address']->value }}')">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span class="contact-text">{{ $restaurant['address']->value }}</span>
-                            </button>
-                        </div>
-                    @endif
-                </div>
-            @endif
+{{--                    @if(isset($restaurant['address']))--}}
+{{--                        <div class="col">--}}
+{{--                            <button class="contact-icon-btn w-100" --}}
+{{--                                    data-tooltip="{{ $restaurant['address']->value }}"--}}
+{{--                                    onclick="alert('{{ $restaurant['address']->value }}')">--}}
+{{--                                <i class="fas fa-map-marker-alt"></i>--}}
+{{--                                <span class="contact-text">{{ $restaurant['address']->value }}</span>--}}
+{{--                            </button>--}}
+{{--                        </div>--}}
+{{--                    @endif--}}
+{{--                </div>--}}
+{{--            @endif--}}
         </div>
     </div>
 
@@ -812,11 +1049,31 @@
             window.location.href = url.toString();
         });
 
-        // Menu Toggle (you can implement sidebar or dropdown menu here)
+        // Mobile Menu Toggle
         const menuToggle = document.getElementById('menuToggle');
-        menuToggle.addEventListener('click', () => {
-            // Scroll to categories section
-            document.querySelector('.category-nav').scrollIntoView({ behavior: 'smooth' });
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+        function openMobileMenu() {
+            mobileMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        menuToggle.addEventListener('click', openMobileMenu);
+        mobileMenuClose.addEventListener('click', closeMobileMenu);
+        mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
         });
 
         // Infinite Scroll

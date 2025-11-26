@@ -64,6 +64,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Menu Routes
 Route::get('/restaurant/{name}', [MenuController::class, 'index'])->name('menu.index');
 Route::get('/menu/{name}/{id}', [MenuController::class, 'show'])->name('menu.show');
+Route::get('/restaurant/{name}/about', [MenuController::class, 'about'])->name('menu.about');
+Route::get('/restaurant/{name}/contact', [MenuController::class, 'contact'])->name('menu.contact');
 
 // Cart Routes
 Route::prefix('cart')->name('cart.')->group(function () {
